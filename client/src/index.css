@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(251, 33%, 98%);
+  --foreground: hsl(222, 20%, 20%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(222, 20%, 20%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(222, 20%, 20%);
+  --primary: hsl(202, 89%, 53%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(222, 20%, 20%);
+  --secondary-foreground: hsl(0, 0%, 100%);
+  --muted: hsl(240, 2%, 90%);
+  --muted-foreground: hsl(222, 20%, 20%);
+  --accent: hsl(212, 51%, 93%);
+  --accent-foreground: hsl(202, 89%, 53%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --border: hsl(201, 30%, 91%);
+  --input: hsl(200, 23%, 97%);
+  --ring: hsl(202, 89%, 53%);
+  
+  /* Lab theme colors */
+  --lab-blue: hsl(199, 89%, 48%);
+  --lab-green: hsl(142, 71%, 45%);
+  --lab-amber: hsl(38, 92%, 50%);
+  --lab-red: hsl(0, 84%, 60%);
+  --lab-bg: hsl(210, 20%, 98%);
+  --lab-surface: hsl(0, 0%, 100%);
+  
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  --radius: 1rem;
+}
+
+.dark {
+  --background: hsl(0, 0%, 0%);
+  --foreground: hsl(200, 7%, 91%);
+  --card: hsl(228, 10%, 10%);
+  --card-foreground: hsl(0, 0%, 85%);
+  --popover: hsl(0, 0%, 0%);
+  --popover-foreground: hsl(200, 7%, 91%);
+  --primary: hsl(202, 88%, 53%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(195, 15%, 95%);
+  --secondary-foreground: hsl(222, 20%, 20%);
+  --muted: hsl(0, 0%, 9%);
+  --muted-foreground: hsl(210, 3%, 46%);
+  --accent: hsl(206, 70%, 8%);
+  --accent-foreground: hsl(202, 88%, 53%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --border: hsl(210, 5%, 15%);
+  --input: hsl(208, 28%, 18%);
+  --ring: hsl(202, 89%, 53%);
+  
+  /* Dark lab theme colors */
+  --lab-blue: hsl(199, 89%, 48%);
+  --lab-green: hsl(142, 71%, 45%);
+  --lab-amber: hsl(38, 92%, 50%);
+  --lab-red: hsl(0, 84%, 60%);
+  --lab-bg: hsl(210, 20%, 5%);
+  --lab-surface: hsl(228, 10%, 10%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-lab-bg text-foreground;
+    font-family: var(--font-sans);
+  }
+}
+
+@layer components {
+  .science-gradient {
+    background: linear-gradient(135deg, var(--lab-blue) 0%, var(--lab-green) 100%);
+  }
+  
+  .glass-effect {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+  }
+  
+  .lab-shadow {
+    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.1);
+  }
+  
+  .lab-shadow-strong {
+    box-shadow: 0 8px 32px rgba(14, 165, 233, 0.15);
+  }
+  
+  .achievement-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  .bubble-animation {
+    animation: bubble 3s ease-in-out infinite;
+  }
+  
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+@keyframes glow {
+  from { 
+    box-shadow: 0 0 20px hsl(38, 92%, 50%, 0.5); 
+  }
+  to { 
+    box-shadow: 0 0 30px hsl(38, 92%, 50%, 0.8); 
+  }
+}
+
+@keyframes bubble {
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-10px); 
+  }
+}
