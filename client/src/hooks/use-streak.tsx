@@ -31,9 +31,10 @@ export function useStreak() {
       return;
     } else if (daysDiff === 1) {
       // Consecutive day, increment streak
+      const currentStreak = (stats.currentStreak || 0) + 1;
       updateStreak.mutate({
-        currentStreak: stats.currentStreak + 1,
-        longestStreak: Math.max(stats.longestStreak, stats.currentStreak + 1),
+        currentStreak,
+        longestStreak: Math.max(stats.longestStreak || 0, currentStreak),
         lastLogDate: today
       });
     } else {

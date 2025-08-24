@@ -15,10 +15,7 @@ export default function TodayLog() {
   const today = new Date().toISOString().split('T')[0];
   
   const { data: todayEntries, isLoading } = useQuery<TimelineEntry[]>({
-    queryKey: ["/api/timeline"],
-    queryOptions: {
-      params: { date: today }
-    }
+    queryKey: ["/api/timeline", today],
   });
 
   const formatTime = (timestamp: Date | string) => {
@@ -67,7 +64,7 @@ export default function TodayLog() {
   return (
     <section className="mb-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-800">Today's Lab Log</h2>
+        <h2 className="text-lg font-bold text-gray-800">📊 Today's Data</h2>
         <SymptomLogger />
       </div>
       
@@ -134,8 +131,8 @@ export default function TodayLog() {
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Utensils className="text-gray-400" size={24} />
           </div>
-          <p className="text-gray-500 mb-4">No entries logged today yet</p>
-          <p className="text-sm text-gray-400">Start logging foods to begin your experiment!</p>
+          <p className="text-gray-500 mb-4">No data points recorded yet!</p>
+          <p className="text-sm text-gray-400">Start collecting data to begin your food experiment! 🧪</p>
         </div>
       )}
     </section>

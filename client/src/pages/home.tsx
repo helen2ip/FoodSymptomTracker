@@ -23,12 +23,12 @@ export default function Home() {
         <FrequentFoods />
         <TodayLog />
         
-        {/* Lab Insights Preview */}
+        {/* Lab Results Preview */}
         <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-800">Lab Discoveries</h2>
+            <h2 className="text-lg font-bold text-gray-800">🔬 Recent Results</h2>
             <div className="flex items-center space-x-1 text-lab-amber">
-              <span className="text-sm font-medium">2 New</span>
+              <span className="text-sm font-mono bg-lab-amber/10 px-2 py-1 rounded-full">2 NEW</span>
             </div>
           </div>
           
@@ -47,8 +47,8 @@ export default function Home() {
             </div>
             
             <p className="text-gray-700 mb-4">
-              <strong>Hypothesis confirmed!</strong> Skin reactions appear within 2-3 hours after consuming dairy products. 
-              This pattern occurred in 4 out of 5 recent tests.
+              <strong>HYPOTHESIS CONFIRMED!</strong> Skin reactions detected 2-3 hrs after dairy consumption. 
+              Pattern observed in 4/5 test runs. 🧪✅
             </p>
             
             <div className="flex items-center justify-between">
@@ -80,15 +80,15 @@ export default function Home() {
                 <span className="text-lab-blue text-sm">🧪</span>
               </div>
               <div>
-                <h3 className="font-medium text-gray-800 mb-1">Next Experiment</h3>
+                <h3 className="font-medium text-gray-800 mb-1">🧪 Next Test</h3>
                 <p className="text-sm text-gray-600">
-                  Try eliminating dairy for 3 days to test the correlation. We'll track the results!
+                  Eliminate dairy for 3 days to verify hypothesis. Let's run this experiment!
                 </p>
                 <button 
-                  className="mt-2 text-lab-blue text-sm font-medium"
+                  className="mt-2 text-lab-blue text-sm font-mono font-bold bg-lab-blue/10 px-3 py-1 rounded-full"
                   data-testid="button-start-experiment"
                 >
-                  Start 3-Day Challenge →
+                  RUN_TEST.exe →
                 </button>
               </div>
             </div>

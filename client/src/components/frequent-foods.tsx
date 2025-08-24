@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Utensils, TrendingUp } from "lucide-react";
 
 const foodIcons = [
-  "🍞", "🍎", "🧀", "☕", "🥛", "🥜", "🥗", "🍌"
+  "🍞", "🍎", "🧀", "☕", "🥛", "🥜", "🥗", "🍌", "🥕", "🍊"
 ];
 
 export default function FrequentFoods() {
@@ -42,8 +42,7 @@ export default function FrequentFoods() {
   const handleFoodClick = (foodName: string) => {
     addFoodMutation.mutate({
       foodName,
-      timestamp: new Date(),
-      category: "frequent"
+      timestamp: new Date()
     });
   };
 
@@ -55,7 +54,7 @@ export default function FrequentFoods() {
           <span className="text-sm text-gray-500">Most logged</span>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          {[...Array(6)].map((_, i) => (
+          {[...Array(8)].map((_, i) => (
             <div key={i} className="bg-white p-4 rounded-2xl lab-shadow animate-pulse">
               <div className="flex flex-col items-center space-y-2">
                 <div className="w-12 h-12 bg-gray-200 rounded-full" />
@@ -72,21 +71,21 @@ export default function FrequentFoods() {
   return (
     <section className="mb-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-800">Lab Favorites</h2>
-        <span className="text-sm text-gray-500">Most logged</span>
+        <h2 className="text-lg font-bold text-gray-800">🧪 Quick Add Specimens</h2>
+        <span className="text-sm text-lab-purple font-medium">Your go-to foods</span>
       </div>
       
       <div className="grid grid-cols-2 gap-3">
-        {frequentFoods?.slice(0, 6).map((food, index) => (
+        {frequentFoods?.slice(0, 8).map((food, index) => (
           <button
             key={food.id}
-            className="bg-white p-4 rounded-2xl lab-shadow hover:lab-shadow-strong transition-all active:scale-95 border border-lab-blue/10 hover:border-lab-blue/20"
+            className="bg-white p-4 rounded-2xl lab-shadow hover:lab-shadow-strong transition-all active:scale-95 border border-lab-purple/20 hover:border-lab-purple/40 hover:bg-lab-purple/5"
             onClick={() => handleFoodClick(food.foodName)}
             disabled={addFoodMutation.isPending}
             data-testid={`button-frequent-food-${index}`}
           >
             <div className="flex flex-col items-center space-y-2">
-              <div className={`w-12 h-12 science-gradient rounded-full flex items-center justify-center bubble-animation`} 
+              <div className={`w-12 h-12 bg-gradient-to-br from-lab-purple to-lab-blue rounded-full flex items-center justify-center bubble-animation shadow-lg`} 
                    style={{ animationDelay: `${index * 0.5}s` }}>
                 <span className="text-xl">
                   {foodIcons[index % foodIcons.length]}
@@ -95,9 +94,8 @@ export default function FrequentFoods() {
               <span className="font-medium text-sm text-center" data-testid={`text-food-name-${index}`}>
                 {food.foodName}
               </span>
-              <div className="flex items-center space-x-1 text-xs text-gray-500">
-                <TrendingUp size={12} className="text-lab-blue" />
-                <span data-testid={`text-food-count-${index}`}>{food.logCount || 0}</span>
+              <div className="flex items-center space-x-1 text-xs text-lab-purple">
+                <span className="font-mono bg-lab-purple/10 px-2 py-1 rounded-full">×{food.logCount || 0}</span>
               </div>
             </div>
           </button>

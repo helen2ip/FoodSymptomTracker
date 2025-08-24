@@ -4,10 +4,10 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { path: "/", icon: Home, label: "Lab", testId: "nav-home" },
-  { path: "/timeline", icon: Clock, label: "Timeline", testId: "nav-timeline" },
-  { path: "/insights", icon: TrendingUp, label: "Insights", testId: "nav-insights", hasNotification: true },
+  { path: "/timeline", icon: Clock, label: "Data", testId: "nav-timeline" },
+  { path: "/insights", icon: TrendingUp, label: "Results", testId: "nav-insights", hasNotification: true },
   { path: "/achievements", icon: Trophy, label: "Awards", testId: "nav-achievements" },
-  { path: "/settings", icon: Settings, label: "Settings", testId: "nav-settings" },
+  { path: "/settings", icon: Settings, label: "Config", testId: "nav-settings" },
 ];
 
 export default function BottomNav() {

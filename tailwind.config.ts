@@ -48,6 +48,7 @@ export default {
         'lab-green': "var(--lab-green)",
         'lab-amber': "var(--lab-amber)",
         'lab-red': "var(--lab-red)",
+        'lab-purple': "var(--lab-purple)",
         'lab-bg': "var(--lab-bg)",
         'lab-surface': "var(--lab-surface)",
       },

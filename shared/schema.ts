@@ -41,10 +41,20 @@ export const userStats = pgTable("user_stats", {
 export const insertFoodEntrySchema = createInsertSchema(foodEntries).omit({
   id: true,
   logCount: true
+}).extend({
+  timestamp: z.union([z.date(), z.string()]).transform(val => 
+    typeof val === 'string' ? new Date(val) : val
+  ).optional().default(() => new Date()),
+  category: z.string().nullable().optional()
 });
 
 export const insertSymptomEntrySchema = createInsertSchema(symptomEntries).omit({
   id: true
+}).extend({
+  timestamp: z.union([z.date(), z.string()]).transform(val => 
+    typeof val === 'string' ? new Date(val) : val
+  ).optional().default(() => new Date()),
+  notes: z.string().nullable().optional()
 });
 
 export const insertCorrelationSchema = createInsertSchema(correlations).omit({

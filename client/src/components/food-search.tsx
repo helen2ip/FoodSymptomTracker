@@ -54,8 +54,7 @@ export default function FoodSearch() {
   const handleAddFood = (foodName: string) => {
     addFoodMutation.mutate({
       foodName,
-      timestamp: new Date(),
-      category: "other"
+      timestamp: new Date()
     });
   };
 
@@ -74,8 +73,8 @@ export default function FoodSearch() {
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search foods & ingredients..."
-          className="w-full pl-12 pr-16 py-4 bg-white rounded-2xl lab-shadow border-2 border-transparent focus:border-lab-blue focus:outline-none text-lg"
+          placeholder="🔍 What did you consume?"
+          className="w-full pl-12 pr-16 py-4 bg-white rounded-2xl lab-shadow border-2 border-transparent focus:border-lab-purple focus:outline-none text-lg placeholder:text-gray-500"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyPress={handleKeyPress}
@@ -84,7 +83,7 @@ export default function FoodSearch() {
           data-testid="input-food-search"
         />
         <button
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 science-gradient rounded-full flex items-center justify-center hover:scale-105 transition-transform"
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-lab-purple to-lab-blue rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-lg"
           onClick={() => query.trim() && handleAddFood(query.trim())}
           disabled={!query.trim() || addFoodMutation.isPending}
           data-testid="button-add-food-quick"
@@ -103,8 +102,8 @@ export default function FoodSearch() {
               onClick={() => handleAddFood(food)}
               data-testid={`button-food-suggestion-${index}`}
             >
-              <div className="w-8 h-8 bg-lab-green/10 rounded-full flex items-center justify-center">
-                <span className="text-lab-green text-sm">🥗</span>
+              <div className="w-8 h-8 bg-lab-purple/10 rounded-full flex items-center justify-center">
+                <span className="text-lab-purple text-sm">🧪</span>
               </div>
               <span className="font-medium">{food}</span>
             </button>

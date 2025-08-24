@@ -25,12 +25,13 @@
   --input: hsl(200, 23%, 97%);
   --ring: hsl(202, 89%, 53%);
   
-  /* Lab theme colors */
-  --lab-blue: hsl(199, 89%, 48%);
-  --lab-green: hsl(142, 71%, 45%);
-  --lab-amber: hsl(38, 92%, 50%);
-  --lab-red: hsl(0, 84%, 60%);
-  --lab-bg: hsl(210, 20%, 98%);
+  /* Geeky science lab colors */
+  --lab-blue: hsl(220, 85%, 55%);
+  --lab-green: hsl(150, 70%, 50%);
+  --lab-amber: hsl(45, 95%, 55%);
+  --lab-red: hsl(350, 80%, 60%);
+  --lab-purple: hsl(270, 70%, 60%);
+  --lab-bg: hsl(220, 15%, 97%);
   --lab-surface: hsl(0, 0%, 100%);
   
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
@@ -59,13 +60,14 @@
   --input: hsl(208, 28%, 18%);
   --ring: hsl(202, 89%, 53%);
   
-  /* Dark lab theme colors */
-  --lab-blue: hsl(199, 89%, 48%);
-  --lab-green: hsl(142, 71%, 45%);
-  --lab-amber: hsl(38, 92%, 50%);
-  --lab-red: hsl(0, 84%, 60%);
-  --lab-bg: hsl(210, 20%, 5%);
-  --lab-surface: hsl(228, 10%, 10%);
+  /* Dark geeky science lab colors */
+  --lab-blue: hsl(220, 85%, 55%);
+  --lab-green: hsl(150, 70%, 50%);
+  --lab-amber: hsl(45, 95%, 55%);
+  --lab-red: hsl(350, 80%, 60%);
+  --lab-purple: hsl(270, 70%, 60%);
+  --lab-bg: hsl(220, 20%, 8%);
+  --lab-surface: hsl(220, 15%, 12%);
 }
 
 @layer base {
@@ -81,7 +83,7 @@
 
 @layer components {
   .science-gradient {
-    background: linear-gradient(135deg, var(--lab-blue) 0%, var(--lab-green) 100%);
+    background: linear-gradient(135deg, var(--lab-purple) 0%, var(--lab-blue) 50%, var(--lab-green) 100%);
   }
   
   .glass-effect {

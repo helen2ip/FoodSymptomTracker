@@ -17,7 +17,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/foods/frequent", async (req, res) => {
     try {
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : 6;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 8;
       const foods = await storage.getFrequentFoods(limit);
       res.json(foods);
     } catch (error) {

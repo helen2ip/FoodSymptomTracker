@@ -78,8 +78,8 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
   };
 
   const defaultTrigger = (
-    <Button variant="outline" className="text-lab-blue border-lab-blue/20 hover:bg-lab-blue/5">
-      + Log Symptom
+    <Button variant="outline" className="text-lab-red border-lab-red/20 hover:bg-lab-red/5 font-mono">
+      📊 LOG_REACTION
     </Button>
   );
 
@@ -92,17 +92,17 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <AlertTriangle className="text-lab-red" size={20} />
-            <span>Log Symptom</span>
+            <span className="font-mono">📊 RECORD_REACTION.exe</span>
           </DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="symptom-name">Symptom</Label>
+            <Label htmlFor="symptom-name" className="font-mono text-sm">REACTION_TYPE</Label>
             <Input
               id="symptom-name"
               type="text"
-              placeholder="e.g., Skin itching, Bloating..."
+              placeholder="🔍 e.g., Skin itching, Bloating..."
               value={symptomName}
               onChange={(e) => handleSymptomNameChange(e.target.value)}
               data-testid="input-symptom-name"
@@ -147,7 +147,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
           </div>
 
           <div>
-            <Label htmlFor="severity">Severity (1-5)</Label>
+            <Label htmlFor="severity" className="font-mono text-sm">INTENSITY_SCALE (1-5)</Label>
             <div className="flex items-center space-x-2 mt-2">
               {[1, 2, 3, 4, 5].map((level) => (
                 <button
@@ -175,10 +175,10 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
           </div>
 
           <div>
-            <Label htmlFor="notes">Notes (optional)</Label>
+            <Label htmlFor="notes" className="font-mono text-sm">OBSERVATION_NOTES (optional)</Label>
             <Textarea
               id="notes"
-              placeholder="Additional details about the symptom..."
+              placeholder="📝 Record additional observations about the reaction..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
@@ -199,10 +199,10 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
             <Button
               type="submit"
               disabled={!symptomName.trim() || addSymptomMutation.isPending}
-              className="flex-1 science-gradient text-white"
+              className="flex-1 science-gradient text-white font-mono"
               data-testid="button-submit-symptom"
             >
-              {addSymptomMutation.isPending ? "Logging..." : "Log Symptom"}
+              {addSymptomMutation.isPending ? "PROCESSING..." : "RECORD_DATA"}
             </Button>
           </div>
         </form>

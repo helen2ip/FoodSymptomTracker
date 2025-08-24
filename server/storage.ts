@@ -91,7 +91,7 @@ export class MemStorage implements IStorage {
     });
   }
 
-  async getFrequentFoods(limit = 6): Promise<FoodEntry[]> {
+  async getFrequentFoods(limit = 8): Promise<FoodEntry[]> {
     return Array.from(this.foodEntries.values())
       .sort((a, b) => (b.logCount || 0) - (a.logCount || 0))
       .slice(0, limit);
@@ -103,7 +103,8 @@ export class MemStorage implements IStorage {
       ...insertEntry,
       id,
       logCount: 1,
-      timestamp: insertEntry.timestamp || new Date()
+      timestamp: insertEntry.timestamp || new Date(),
+      category: insertEntry.category || null
     };
     
     this.foodEntries.set(id, entry);
@@ -140,7 +141,8 @@ export class MemStorage implements IStorage {
     const entry: SymptomEntry = {
       ...insertEntry,
       id,
-      timestamp: insertEntry.timestamp || new Date()
+      timestamp: insertEntry.timestamp || new Date(),
+      notes: insertEntry.notes || null
     };
     
     this.symptomEntries.set(id, entry);

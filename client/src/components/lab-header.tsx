@@ -25,8 +25,8 @@ export default function LabHeader() {
               <FlaskConical size={20} />
             </div>
             <div>
-              <h1 className="text-xl font-bold">Food Lab</h1>
-              <p className="text-sm opacity-90">Day {stats?.currentStreak || 0} Experiment</p>
+              <h1 className="text-xl font-bold">🧪 Food Lab</h1>
+              <p className="text-sm opacity-90">Experiment #{stats?.currentStreak || 0}</p>
             </div>
           </div>
           <div className="text-right">
@@ -36,39 +36,42 @@ export default function LabHeader() {
                 {stats?.currentStreak || 0}
               </span>
             </div>
-            <p className="text-xs opacity-80">Day streak</p>
+            <p className="text-xs opacity-80 font-mono">STREAK</p>
           </div>
         </div>
         
-        {/* Progress beakers */}
+        {/* Progress test tubes */}
         <div className="flex justify-between items-end mb-2">
-          <div className="flex space-x-2">
+          <div className="flex space-x-3">
             <div className="flex flex-col items-center">
-              <div className="w-6 h-8 bg-white/30 rounded-b-full relative overflow-hidden">
-                <div className="absolute bottom-0 left-0 right-0 h-6 bg-lab-green rounded-b-full" />
+              <div className="w-5 h-10 bg-white/20 rounded-b-full relative overflow-hidden border border-white/30">
+                <div className="absolute bottom-0 left-0 right-0 h-7 bg-lab-green rounded-b-full" />
+                <div className="absolute top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-white/50 rounded-full" />
               </div>
-              <span className="text-xs mt-1">Foods</span>
+              <span className="text-xs mt-1 font-mono">DATA</span>
             </div>
             <div className="flex flex-col items-center">
-              <div className="w-6 h-8 bg-white/30 rounded-b-full relative overflow-hidden">
-                <div className="absolute bottom-0 left-0 right-0 h-3 bg-lab-red rounded-b-full" />
+              <div className="w-5 h-10 bg-white/20 rounded-b-full relative overflow-hidden border border-white/30">
+                <div className="absolute bottom-0 left-0 right-0 h-4 bg-lab-red rounded-b-full" />
+                <div className="absolute top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-white/50 rounded-full" />
               </div>
-              <span className="text-xs mt-1">Symptoms</span>
+              <span className="text-xs mt-1 font-mono">SYMPTOMS</span>
             </div>
             <div className="flex flex-col items-center">
-              <div className="w-6 h-8 bg-white/30 rounded-b-full relative overflow-hidden">
-                <div className="absolute bottom-0 left-0 right-0 h-5 bg-lab-amber rounded-b-full" />
+              <div className="w-5 h-10 bg-white/20 rounded-b-full relative overflow-hidden border border-white/30">
+                <div className="absolute bottom-0 left-0 right-0 h-6 bg-lab-amber rounded-b-full" />
+                <div className="absolute top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-white/50 rounded-full" />
               </div>
-              <span className="text-xs mt-1">Insights</span>
+              <span className="text-xs mt-1 font-mono">RESULTS</span>
             </div>
           </div>
           
           {/* Achievement notification */}
           {stats?.achievements && stats.achievements.length > 0 && (
-            <div className="achievement-glow bg-lab-amber/20 px-3 py-1 rounded-full">
+            <div className="achievement-glow bg-lab-amber/20 px-3 py-1 rounded-full border border-lab-amber/30">
               <div className="flex items-center space-x-1">
-                <Trophy className="text-lab-amber" size={14} />
-                <span className="text-xs font-medium">
+                <span className="text-lab-amber text-sm">🏆</span>
+                <span className="text-xs font-mono font-bold">
                   {stats.achievements[stats.achievements.length - 1]}!
                 </span>
               </div>
