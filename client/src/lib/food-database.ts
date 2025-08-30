@@ -5,12 +5,12 @@ export const foodCategories = {
     "Banana", "Green Banana", "Plantain", "Orange", "Navel Orange", "Blood Orange", "Mandarin",
     "Grapes", "Red Grapes", "Green Grapes", "Strawberries", "Blueberries", "Raspberries", 
     "Blackberries", "Cranberries", "Dried Cranberries", "Elderberry", "Gooseberry",
-    "Pineapple", "Fresh Pineapple", "Mango", "Kiwi", "Kiwi Fruit", "Peach", "White Peach", "Yellow Peach",
+    "Pineapple", "Fresh Pineapple", "Mango", "Kiwi Fruit", "Peach", "White Peach", "Yellow Peach",
     "Pear", "Asian Pear", "Plum", "Cherries", "Sweet Cherries", "Tart Cherries",
     "Watermelon", "Cantaloupe", "Honeydew", "Casaba Melon", "Lemon", "Lime", "Key Lime",
     "Grapefruit", "Pink Grapefruit", "Ruby Red Grapefruit", "Avocado", "Hass Avocado",
-    "Coconut", "Fresh Coconut", "Coconut Meat", "Dates", "Medjool Dates", "Figs", "Fresh Figs", "Dried Figs",
-    "Apricot", "Fresh Apricot", "Dried Apricot", "Nectarine", "Papaya", "Passion Fruit", "Dragon Fruit",
+    "Coconut", "Fresh Coconut", "Coconut Meat", "Dates", "Medjool Dates", "Figs", "Dried Figs",
+    "Apricot", "Dried Apricot", "Nectarine", "Papaya", "Passion Fruit", "Dragon Fruit",
     "Pomegranate", "Persimmon", "Star Fruit", "Lychee", "Rambutan", "Jackfruit", "Durian"
   ],
   vegetables: [
@@ -20,7 +20,7 @@ export const foodCategories = {
     "Cucumber", "English Cucumber", "Persian Cucumber", "Bell Pepper", "Red Bell Pepper", "Green Bell Pepper",
     "Yellow Bell Pepper", "Orange Bell Pepper", "Jalapeño", "Serrano Pepper", "Habanero", "Poblano",
     "Onion", "Red Onion", "White Onion", "Yellow Onion", "Green Onion", "Scallions", "Shallot",
-    "Garlic", "Garlic Cloves", "Potatoes", "Russet Potato", "Red Potato", "Yukon Gold",
+    "Garlic", "Potatoes", "Russet Potato", "Red Potato", "Yukon Gold",
     "Sweet Potatoes", "Purple Sweet Potato", "Yam", "Zucchini", "Yellow Squash",
     "Eggplant", "Japanese Eggplant", "Celery", "Celery Stalks", "Cauliflower", "Purple Cauliflower",
     "Brussels Sprouts", "Asparagus", "White Asparagus", "Green Beans", "Yellow Beans", "Wax Beans",
@@ -111,12 +111,24 @@ export const foodCategories = {
 };
 
 export const commonSymptoms = [
-  "Skin Allergies", "Skin Itching", "Skin Rash", "Hives",
+  // Digestive symptoms (most common food intolerance symptoms)
   "Bloating", "Gas", "Stomach Pain", "Nausea", "Heartburn", "Acid Reflux",
-  "Diarrhea", "Constipation", "Cramps", 
-  "Headache", "Migraine", "Fatigue", "Dizziness",
-  "Runny Nose", "Sneezing", "Congestion", "Watery Eyes",
-  "Joint Pain", "Muscle Aches", "Back Pain"
+  "Diarrhea", "Constipation", "Cramps", "Stomach Cramps", "Indigestion",
+  
+  // Skin reactions (common allergy symptoms)
+  "Skin Rash", "Skin Itching", "Hives", "Eczema", "Swelling", "Red Skin",
+  
+  // Respiratory symptoms
+  "Runny Nose", "Sneezing", "Congestion", "Watery Eyes", "Itchy Eyes", "Cough",
+  "Wheezing", "Difficulty Breathing", "Throat Irritation", "Sinus Pressure",
+  
+  // Neurological symptoms
+  "Headache", "Migraine", "Fatigue", "Dizziness", "Brain Fog", "Irritability",
+  "Mood Changes", "Anxiety", "Sleep Issues",
+  
+  // Other common symptoms
+  "Joint Pain", "Muscle Aches", "Back Pain", "Inflammation", "Low Energy",
+  "Feeling Unwell", "Food Cravings", "Weight Changes"
 ];
 
 export function searchFoods(query: string, limit = 10): string[] {
