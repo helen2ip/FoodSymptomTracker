@@ -100,7 +100,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <AlertTriangle className="text-lab-red" size={20} />
-            <span className="font-mono">📊 RECORD_REACTION.exe</span>
+            <span className="font-mono">RECORD_REACTION.exe</span>
           </DialogTitle>
         </DialogHeader>
         

@@ -6,6 +6,15 @@ Food Lab is a comprehensive mobile-first web application designed to help users 
 
 The application follows a scientific approach to food sensitivity detection, encouraging users to track their daily food consumption and any symptoms they experience. Through data analysis and pattern recognition, the app provides actionable insights to help users identify problematic foods and make informed dietary decisions.
 
+## Recent Changes
+
+### August 30, 2025
+- **Enhanced symptom tracking**: Replaced generic common symptoms with personalized recent symptoms feature - shows user's 5 most recently logged symptoms as clickable quick-select options
+- **Improved code organization**: Moved all symptom-related functionality from `food-database.ts` to dedicated `symptom-database.ts` file for better separation of concerns
+- **Expanded food database**: Comprehensive 500+ food database includes specific varieties, brands, and user-requested items like cranberries
+- **Database cleanup**: Removed singular/plural duplicates throughout food database for improved UX (cranberry→cranberries, walnut→walnuts, etc.)
+- **Working features verified**: Frontend-backend integration confirmed working correctly for frequent foods display and symptom logging
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.

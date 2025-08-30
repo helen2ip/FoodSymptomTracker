@@ -80,7 +80,7 @@ export default function Home() {
                 <span className="text-lab-blue text-sm">🧪</span>
               </div>
               <div>
-                <h3 className="font-medium text-gray-800 mb-1">🧪 Next Test</h3>
+                <h3 className="font-medium text-gray-800 mb-1">Next Test</h3>
                 <p className="text-sm text-gray-600">
                   Eliminate dairy for 3 days to verify hypothesis. Let's run this experiment!
                 </p>
