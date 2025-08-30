@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { InsertSymptomEntry } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
@@ -24,6 +24,12 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
+  // Fetch recent symptoms for personalized quick options
+  const { data: recentSymptoms = [] } = useQuery<string[]>({
+    queryKey: ["/api/symptoms/recent"],
+    enabled: isOpen // Only fetch when dialog is open
+  });
+
   const addSymptomMutation = useMutation({
     mutationFn: async (symptomEntry: InsertSymptomEntry) => {
       const response = await apiRequest("POST", "/api/symptoms", symptomEntry);
@@ -32,6 +38,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
     onSuccess: () => {
       const today = new Date().toISOString().split('T')[0];
       queryClient.invalidateQueries({ queryKey: ["/api/symptoms"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/symptoms/recent"] });
       queryClient.invalidateQueries({ queryKey: ["/api/timeline", today] });
       setIsOpen(false);
       resetForm();
@@ -111,20 +118,43 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
             
             {/* Quick suggestions */}
             {symptomName.length < 2 && (
-              <div className="mt-2">
-                <p className="text-xs text-gray-500 mb-2">Common symptoms:</p>
-                <div className="flex flex-wrap gap-1">
-                  {commonSymptoms.slice(0, 6).map((symptom, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      className="text-xs px-2 py-1 bg-gray-100 hover:bg-lab-blue/10 rounded-full transition-colors"
-                      onClick={() => setSymptomName(symptom)}
-                      data-testid={`button-quick-symptom-${index}`}
-                    >
-                      {symptom}
-                    </button>
-                  ))}
+              <div className="mt-2 space-y-3">
+                {/* Recent symptoms (personalized) */}
+                {recentSymptoms.length > 0 && (
+                  <div>
+                    <p className="text-xs text-lab-purple font-mono mb-2">🔬 RECENT_REACTIONS</p>
+                    <div className="flex flex-wrap gap-1">
+                      {recentSymptoms.slice(0, 3).map((symptom, index) => (
+                        <button
+                          key={`recent-${index}`}
+                          type="button"
+                          className="text-xs px-2 py-1 bg-lab-purple/10 hover:bg-lab-purple/20 text-lab-purple border border-lab-purple/20 rounded-full transition-colors"
+                          onClick={() => setSymptomName(symptom)}
+                          data-testid={`button-recent-symptom-${index}`}
+                        >
+                          {symptom}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Common symptoms */}
+                <div>
+                  <p className="text-xs text-gray-500 font-mono mb-2">📊 COMMON_REACTIONS</p>
+                  <div className="flex flex-wrap gap-1">
+                    {commonSymptoms.slice(0, 6).map((symptom, index) => (
+                      <button
+                        key={`common-${index}`}
+                        type="button"
+                        className="text-xs px-2 py-1 bg-gray-100 hover:bg-lab-blue/10 rounded-full transition-colors"
+                        onClick={() => setSymptomName(symptom)}
+                        data-testid={`button-common-symptom-${index}`}
+                      >
+                        {symptom}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}

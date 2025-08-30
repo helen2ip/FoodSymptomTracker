@@ -67,6 +67,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/symptoms/recent", async (req, res) => {
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 5;
+      const recentSymptoms = await storage.getRecentSymptoms(limit);
+      res.json(recentSymptoms);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch recent symptoms" });
+    }
+  });
+
   app.post("/api/symptoms", async (req, res) => {
     try {
       const validatedData = insertSymptomEntrySchema.parse(req.body);

@@ -17,6 +17,7 @@ export interface IStorage {
   // Symptom entries
   getSymptomEntries(): Promise<SymptomEntry[]>;
   getSymptomEntriesByDate(date: string): Promise<SymptomEntry[]>;
+  getRecentSymptoms(limit?: number): Promise<string[]>;
   createSymptomEntry(entry: InsertSymptomEntry): Promise<SymptomEntry>;
   
   // Correlations
@@ -141,6 +142,12 @@ export class MemStorage implements IStorage {
       const entryDate = new Date(entry.timestamp);
       return entryDate.toDateString() === targetDate.toDateString();
     });
+  }
+
+  async getRecentSymptoms(limit = 5): Promise<string[]> {
+    const symptoms = await this.getSymptomEntries();
+    const uniqueSymptoms = Array.from(new Set(symptoms.map(s => s.symptomName)));
+    return uniqueSymptoms.slice(0, limit);
   }
 
   async createSymptomEntry(insertEntry: InsertSymptomEntry): Promise<SymptomEntry> {
