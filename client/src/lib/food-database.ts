@@ -3,11 +3,10 @@ export const foodCategories = {
   fruits: [
     "Apple", "Green Apple", "Red Apple", "Gala Apple", "Fuji Apple", "Granny Smith Apple",
     "Banana", "Green Banana", "Plantain", "Orange", "Navel Orange", "Blood Orange", "Mandarin",
-    "Grape", "Grapes", "Red Grapes", "Green Grapes", "Strawberry", "Strawberries",
-    "Blueberry", "Blueberries", "Raspberry", "Raspberries", "Blackberry", "Blackberries",
-    "Cranberry", "Cranberries", "Dried Cranberries", "Elderberry", "Gooseberry",
+    "Grapes", "Red Grapes", "Green Grapes", "Strawberries", "Blueberries", "Raspberries", 
+    "Blackberries", "Cranberries", "Dried Cranberries", "Elderberry", "Gooseberry",
     "Pineapple", "Fresh Pineapple", "Mango", "Kiwi", "Kiwi Fruit", "Peach", "White Peach", "Yellow Peach",
-    "Pear", "Asian Pear", "Plum", "Cherry", "Cherries", "Sweet Cherries", "Tart Cherries",
+    "Pear", "Asian Pear", "Plum", "Cherries", "Sweet Cherries", "Tart Cherries",
     "Watermelon", "Cantaloupe", "Honeydew", "Casaba Melon", "Lemon", "Lime", "Key Lime",
     "Grapefruit", "Pink Grapefruit", "Ruby Red Grapefruit", "Avocado", "Hass Avocado",
     "Coconut", "Fresh Coconut", "Coconut Meat", "Dates", "Medjool Dates", "Figs", "Fresh Figs", "Dried Figs",
@@ -15,14 +14,14 @@ export const foodCategories = {
     "Pomegranate", "Persimmon", "Star Fruit", "Lychee", "Rambutan", "Jackfruit", "Durian"
   ],
   vegetables: [
-    "Broccoli", "Broccolini", "Carrot", "Carrots", "Baby Carrots", "Purple Carrots",
+    "Broccoli", "Broccolini", "Carrots", "Baby Carrots", "Purple Carrots",
     "Spinach", "Baby Spinach", "Lettuce", "Romaine Lettuce", "Iceberg Lettuce", "Butter Lettuce",
-    "Tomato", "Tomatoes", "Cherry Tomatoes", "Roma Tomatoes", "Beefsteak Tomatoes", "Heirloom Tomatoes",
+    "Tomatoes", "Cherry Tomatoes", "Roma Tomatoes", "Beefsteak Tomatoes", "Heirloom Tomatoes",
     "Cucumber", "English Cucumber", "Persian Cucumber", "Bell Pepper", "Red Bell Pepper", "Green Bell Pepper",
     "Yellow Bell Pepper", "Orange Bell Pepper", "Jalapeño", "Serrano Pepper", "Habanero", "Poblano",
     "Onion", "Red Onion", "White Onion", "Yellow Onion", "Green Onion", "Scallions", "Shallot",
-    "Garlic", "Garlic Cloves", "Potato", "Potatoes", "Russet Potato", "Red Potato", "Yukon Gold",
-    "Sweet Potato", "Sweet Potatoes", "Purple Sweet Potato", "Yam", "Zucchini", "Yellow Squash",
+    "Garlic", "Garlic Cloves", "Potatoes", "Russet Potato", "Red Potato", "Yukon Gold",
+    "Sweet Potatoes", "Purple Sweet Potato", "Yam", "Zucchini", "Yellow Squash",
     "Eggplant", "Japanese Eggplant", "Celery", "Celery Stalks", "Cauliflower", "Purple Cauliflower",
     "Brussels Sprouts", "Asparagus", "White Asparagus", "Green Beans", "Yellow Beans", "Wax Beans",
     "Corn", "Sweet Corn", "Corn on the Cob", "Peas", "Snow Peas", "Sugar Snap Peas", "Split Peas",
@@ -68,10 +67,10 @@ export const foodCategories = {
     "Lima Beans", "Cannellini Beans", "Fava Beans", "Edamame", "Soybeans"
   ],
   nuts_seeds: [
-    "Almonds", "Walnuts", "Walnut", "Cashews", "Cashew", "Peanuts", "Peanut", "Pecans", "Pecan",
-    "Pistachios", "Pistachio", "Brazil Nuts", "Hazelnuts", "Hazelnut", "Macadamia Nuts",
-    "Pine Nuts", "Sunflower Seeds", "Pumpkin Seeds", "Chia Seeds", "Flax Seeds", "Sesame Seeds",
-    "Peanut Butter", "Almond Butter", "Cashew Butter", "Tahini"
+    "Almonds", "Walnuts", "Cashews", "Peanuts", "Pecans", "Pistachios", "Brazil Nuts", 
+    "Hazelnuts", "Macadamia Nuts", "Pine Nuts", "Sunflower Seeds", "Pumpkin Seeds", 
+    "Chia Seeds", "Flax Seeds", "Sesame Seeds", "Hemp Seeds", "Poppy Seeds",
+    "Peanut Butter", "Almond Butter", "Cashew Butter", "Walnut Butter", "Tahini", "Sunflower Seed Butter"
   ],
   beverages: [
     "Water", "Filtered Water", "Tap Water", "Sparkling Water", "Mineral Water", "Alkaline Water",
