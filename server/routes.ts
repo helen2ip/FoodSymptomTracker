@@ -102,9 +102,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Timeline endpoint
-  app.get("/api/timeline", async (req, res) => {
+  app.get("/api/timeline/:date", async (req, res) => {
     try {
-      const date = req.query.date as string;
+      const date = req.params.date;
       const entries = await storage.getTimelineEntries(date);
       res.json(entries);
     } catch (error) {
