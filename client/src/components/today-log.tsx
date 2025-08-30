@@ -16,6 +16,11 @@ export default function TodayLog() {
   
   const { data: todayEntries, isLoading } = useQuery<TimelineEntry[]>({
     queryKey: ["/api/timeline", today],
+    queryFn: async () => {
+      const response = await fetch(`/api/timeline/${today}`);
+      if (!response.ok) throw new Error('Failed to fetch timeline');
+      return response.json();
+    }
   });
 
   const formatTime = (timestamp: Date | string) => {

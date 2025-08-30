@@ -30,12 +30,13 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
       return response.json();
     },
     onSuccess: () => {
+      const today = new Date().toISOString().split('T')[0];
       queryClient.invalidateQueries({ queryKey: ["/api/symptoms"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/timeline"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/timeline", today] });
       setIsOpen(false);
       resetForm();
       toast({
-        title: "Symptom logged successfully!",
+        title: "Reaction recorded! 📊",
         description: "Added to your experiment timeline",
       });
     },

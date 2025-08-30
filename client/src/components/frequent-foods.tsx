@@ -22,11 +22,12 @@ export default function FrequentFoods() {
       return response.json();
     },
     onSuccess: () => {
+      const today = new Date().toISOString().split('T')[0];
       queryClient.invalidateQueries({ queryKey: ["/api/foods"] });
       queryClient.invalidateQueries({ queryKey: ["/api/foods", "frequent"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/timeline"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/timeline", today] });
       toast({
-        title: "Food logged successfully!",
+        title: "Specimen logged! 🧪",
         description: "Added to your experiment timeline",
       });
     },
