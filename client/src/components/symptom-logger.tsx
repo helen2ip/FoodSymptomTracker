@@ -9,7 +9,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { InsertSymptomEntry } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { AlertTriangle } from "lucide-react";
-import { searchSymptoms, commonSymptoms } from "@/lib/food-database";
+import { searchSymptoms } from "@/lib/symptom-database";
 
 interface SymptomLoggerProps {
   trigger?: React.ReactNode;
