@@ -117,44 +117,21 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
             />
             
             {/* Quick suggestions */}
-            {symptomName.length < 2 && (
-              <div className="mt-2 space-y-3">
-                {/* Recent symptoms (personalized) */}
-                {recentSymptoms.length > 0 && (
-                  <div>
-                    <p className="text-xs text-lab-purple font-mono mb-2">🔬 RECENT_REACTIONS</p>
-                    <div className="flex flex-wrap gap-1">
-                      {recentSymptoms.slice(0, 3).map((symptom, index) => (
-                        <button
-                          key={`recent-${index}`}
-                          type="button"
-                          className="text-xs px-2 py-1 bg-lab-purple/10 hover:bg-lab-purple/20 text-lab-purple border border-lab-purple/20 rounded-full transition-colors"
-                          onClick={() => setSymptomName(symptom)}
-                          data-testid={`button-recent-symptom-${index}`}
-                        >
-                          {symptom}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {/* Common symptoms */}
-                <div>
-                  <p className="text-xs text-gray-500 font-mono mb-2">📊 COMMON_REACTIONS</p>
-                  <div className="flex flex-wrap gap-1">
-                    {commonSymptoms.slice(0, 6).map((symptom, index) => (
-                      <button
-                        key={`common-${index}`}
-                        type="button"
-                        className="text-xs px-2 py-1 bg-gray-100 hover:bg-lab-blue/10 rounded-full transition-colors"
-                        onClick={() => setSymptomName(symptom)}
-                        data-testid={`button-common-symptom-${index}`}
-                      >
-                        {symptom}
-                      </button>
-                    ))}
-                  </div>
+            {symptomName.length < 2 && recentSymptoms.length > 0 && (
+              <div className="mt-2">
+                <p className="text-xs text-lab-purple font-mono mb-2">🔬 RECENT_REACTIONS</p>
+                <div className="flex flex-wrap gap-1">
+                  {recentSymptoms.slice(0, 5).map((symptom, index) => (
+                    <button
+                      key={`recent-${index}`}
+                      type="button"
+                      className="text-xs px-2 py-1 bg-lab-purple/10 hover:bg-lab-purple/20 text-lab-purple border border-lab-purple/20 rounded-full transition-colors"
+                      onClick={() => setSymptomName(symptom)}
+                      data-testid={`button-recent-symptom-${index}`}
+                    >
+                      {symptom}
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
