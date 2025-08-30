@@ -98,28 +98,35 @@ export class MemStorage implements IStorage {
   }
 
   async createFoodEntry(insertEntry: InsertFoodEntry): Promise<FoodEntry> {
-    const id = randomUUID();
-    const entry: FoodEntry = {
-      ...insertEntry,
-      id,
-      logCount: 1,
-      timestamp: insertEntry.timestamp || new Date(),
-      category: insertEntry.category || null
-    };
+    // Check if food already exists (case-insensitive)
+    const existingEntry = Array.from(this.foodEntries.values())
+      .find(entry => entry.foodName.toLowerCase() === insertEntry.foodName.toLowerCase());
     
-    this.foodEntries.set(id, entry);
-    await this.updateFoodLogCount(entry.foodName);
-    return entry;
+    if (existingEntry) {
+      // Update existing entry: increment count and update timestamp
+      existingEntry.logCount = (existingEntry.logCount || 0) + 1;
+      existingEntry.timestamp = insertEntry.timestamp || new Date();
+      return existingEntry;
+    } else {
+      // Create new entry
+      const id = randomUUID();
+      const entry: FoodEntry = {
+        ...insertEntry,
+        id,
+        logCount: 1,
+        timestamp: insertEntry.timestamp || new Date(),
+        category: insertEntry.category || null
+      };
+      
+      this.foodEntries.set(id, entry);
+      return entry;
+    }
   }
 
   async updateFoodLogCount(foodName: string): Promise<void> {
-    // Find existing entry with same name and increment count
-    const existingEntry = Array.from(this.foodEntries.values())
-      .find(entry => entry.foodName.toLowerCase() === foodName.toLowerCase());
-    
-    if (existingEntry) {
-      existingEntry.logCount = (existingEntry.logCount || 0) + 1;
-    }
+    // This method is no longer needed since createFoodEntry handles the counting
+    // But keeping it for interface compatibility
+    return;
   }
 
   async getSymptomEntries(): Promise<SymptomEntry[]> {
