@@ -66,19 +66,8 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
   const handleSymptomNameChange = (value: string) => {
     setSymptomName(value);
     if (value.length >= 2) {
-      const results = searchSymptoms(value, 10);
-      
-      // Filter out symptoms that are already visible in quick options
-      const visibleQuickSymptoms = [
-        ...recentSymptoms.slice(0, 3),
-        ...commonSymptoms.slice(0, 6)
-      ];
-      
-      const filteredResults = results.filter(symptom => 
-        !visibleQuickSymptoms.includes(symptom)
-      );
-      
-      setSuggestions(filteredResults.slice(0, 5));
+      const results = searchSymptoms(value, 5);
+      setSuggestions(results);
     } else {
       setSuggestions([]);
     }
