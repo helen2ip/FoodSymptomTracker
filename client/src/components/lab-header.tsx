@@ -1,11 +1,8 @@
-import { FlaskConical, Flame, Trophy, LogOut } from "lucide-react";
+import { FlaskConical, Flame, Trophy } from "lucide-react";
 import { useStreak } from "@/hooks/use-streak";
-import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
 
 export default function LabHeader() {
   const { stats, isLoading } = useStreak();
-  const { user, logout } = useAuth();
 
   if (isLoading) {
     return <div className="h-32 science-gradient animate-pulse" />;
@@ -22,38 +19,24 @@ export default function LabHeader() {
       </div>
       
       <div className="relative z-10">
-        {/* User Greeting & Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
               <FlaskConical size={20} />
             </div>
             <div>
-              <h1 className="text-lg font-bold">
-                👋 Hello, {user?.firstName}!
-              </h1>
-              <p className="text-sm opacity-90 font-mono">Experiment #{stats?.currentStreak || 0}</p>
+              <h1 className="text-xl font-bold">🧪 Food Lab</h1>
+              <p className="text-sm opacity-90">Experiment #{stats?.currentStreak || 0}</p>
             </div>
           </div>
-          <div className="flex items-center space-x-3">
-            <div className="text-right">
-              <div className="flex items-center space-x-1 mb-1">
-                <Flame className="text-lab-amber" size={16} />
-                <span className="font-mono text-sm" data-testid="text-streak-count">
-                  {stats?.currentStreak || 0}
-                </span>
-              </div>
-              <p className="text-xs opacity-80 font-mono">STREAK</p>
+          <div className="text-right">
+            <div className="flex items-center space-x-1 mb-1">
+              <Flame className="text-lab-amber" size={16} />
+              <span className="font-mono text-sm" data-testid="text-streak-count">
+                {stats?.currentStreak || 0}
+              </span>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={logout}
-              className="text-white/80 hover:text-white hover:bg-white/10 p-2 h-auto"
-              data-testid="button-logout"
-            >
-              <LogOut size={16} />
-            </Button>
+            <p className="text-xs opacity-80 font-mono">STREAK</p>
           </div>
         </div>
         

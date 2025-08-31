@@ -51,7 +51,7 @@ export default function TodayLog() {
         </div>
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-white rounded-2xl p-2 lab-shadow animate-pulse">
+            <div key={i} className="bg-white rounded-2xl p-4 lab-shadow animate-pulse">
               <div className="flex items-start space-x-3">
                 <div className="w-10 h-10 bg-gray-200 rounded-full" />
                 <div className="flex-1 space-y-2">
@@ -69,7 +69,7 @@ export default function TodayLog() {
   return (
     <section className="mb-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-800">📓 Today's Data</h2>
+        <h2 className="text-lg font-bold text-gray-800">📊 Today's Data</h2>
         <SymptomLogger />
       </div>
       
@@ -85,7 +85,7 @@ export default function TodayLog() {
             return (
               <div
                 key={entry.id}
-                className={`bg-white rounded-2xl p-2 lab-shadow border-l-4 ${borderColor}`}
+                className={`bg-white rounded-2xl p-4 lab-shadow border-l-4 ${borderColor}`}
                 data-testid={`entry-${index}`}
               >
                 <div className="flex items-start justify-between">

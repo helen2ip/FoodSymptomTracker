@@ -138,7 +138,8 @@ export default function FrequentFoods() {
   return (
     <section className="mb-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-800">⚡ Quick Add</h2>
+        <h2 className="text-lg font-bold text-gray-800">🧪 Quick Add Specimens</h2>
+        <span className="text-sm text-lab-purple font-medium">Your go-to foods</span>
       </div>
       
       <div className="grid grid-cols-2 gap-3">

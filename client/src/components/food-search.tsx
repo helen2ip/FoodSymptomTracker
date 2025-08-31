@@ -28,7 +28,7 @@ export default function FoodSearch() {
       setSuggestions([]);
       setShowSuggestions(false);
       toast({
-        title: "Data point logged! ✏️",
+        title: "Data point logged! 🧪",
         description: "Added to your experiment timeline",
       });
     },
@@ -74,7 +74,7 @@ export default function FoodSearch() {
         <input
           ref={inputRef}
           type="text"
-          placeholder="What did you consume?"
+          placeholder="🔍 What did you consume?"
           className="w-full pl-12 pr-16 py-4 bg-white rounded-2xl lab-shadow border-2 border-transparent focus:border-lab-purple focus:outline-none text-lg placeholder:text-gray-500"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
