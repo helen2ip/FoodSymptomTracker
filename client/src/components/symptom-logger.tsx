@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -27,7 +33,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
   // Fetch recent symptoms for personalized quick options
   const { data: recentSymptoms = [] } = useQuery<string[]>({
     queryKey: ["/api/symptoms/recent"],
-    enabled: isOpen // Only fetch when dialog is open
+    enabled: isOpen, // Only fetch when dialog is open
   });
 
   const addSymptomMutation = useMutation({
@@ -36,7 +42,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
       return response.json();
     },
     onSuccess: () => {
-      const today = new Date().toISOString().split('T')[0];
+      const today = new Date().toISOString().split("T")[0];
       queryClient.invalidateQueries({ queryKey: ["/api/symptoms"] });
       queryClient.invalidateQueries({ queryKey: ["/api/symptoms/recent"] });
       queryClient.invalidateQueries({ queryKey: ["/api/timeline", today] });
@@ -76,7 +82,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!symptomName.trim()) return;
-    
+
     addSymptomMutation.mutate({
       symptomName: symptomName.trim(),
       severity,
@@ -86,7 +92,10 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
   };
 
   const defaultTrigger = (
-    <Button variant="outline" className="text-lab-red border-lab-red/20 hover:bg-lab-red/5 font-mono">
+    <Button
+      variant="outline"
+      className="text-lab-red border-lab-red/20 hover:bg-lab-red/5 font-mono"
+    >
       ✏️ Log Reaction
     </Button>
   );
@@ -102,10 +111,12 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
             <span className="font-mono">🧪 Record Reaction</span>
           </DialogTitle>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="symptom-name" className="font-mono text-sm">Reaction Type</Label>
+            <Label htmlFor="symptom-name" className="font-mono text-sm">
+              Reaction Type
+            </Label>
             <Input
               id="symptom-name"
               type="text"
@@ -114,11 +125,13 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
               onChange={(e) => handleSymptomNameChange(e.target.value)}
               data-testid="input-symptom-name"
             />
-            
+
             {/* Quick suggestions */}
             {symptomName.length < 2 && recentSymptoms.length > 0 && (
               <div className="mt-2">
-                <p className="text-xs text-lab-purple font-mono mb-2">⚡ Recent REACTIONS</p>
+                <p className="text-xs text-lab-purple font-mono mb-2">
+                  ⚡ Recent REACTIONS
+                </p>
                 <div className="flex flex-wrap gap-1">
                   {recentSymptoms.slice(0, 5).map((symptom, index) => (
                     <button
@@ -134,7 +147,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
                 </div>
               </div>
             )}
-            
+
             {/* Search suggestions */}
             {suggestions.length > 0 && (
               <div className="mt-2 space-y-1">
@@ -145,7 +158,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
                     className="w-full text-left px-2 py-1 text-sm hover:bg-gray-50 rounded transition-colors"
                     onClick={() => {
                       setSymptomName(suggestion);
-                      setSuggestions([]); // Add this line to clear the suggestions
+                      setSuggestions([]);
                     }}
                     data-testid={`button-symptom-suggestion-${index}`}
                   >
@@ -157,7 +170,9 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
           </div>
 
           <div>
-            <Label htmlFor="severity" className="font-mono text-sm">INTENSITY_SCALE (1-5)</Label>
+            <Label htmlFor="severity" className="font-mono text-sm">
+              INTENSITY_SCALE (1-5)
+            </Label>
             <div className="flex items-center space-x-2 mt-2">
               {[1, 2, 3, 4, 5].map((level) => (
                 <button
@@ -185,7 +200,9 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
           </div>
 
           <div>
-            <Label htmlFor="notes" className="font-mono text-sm">OBSERVATION_NOTES (optional)</Label>
+            <Label htmlFor="notes" className="font-mono text-sm">
+              OBSERVATION_NOTES (optional)
+            </Label>
             <Textarea
               id="notes"
               placeholder="Record additional observations about the reaction..."
