@@ -7,23 +7,11 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Mail, Beaker } from "lucide-react";
 
 const loginSchema = z.object({
-  email: z.string().refine((value) => {
-    // Allow secret backdoor
-    if (value === "helen@secrettunnel") return true;
-    // Otherwise require valid email
-    return z.string().email().safeParse(value).success;
-  }, "Please enter a valid email address"),
+  email: z.string().email("Please enter a valid email address")
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -35,8 +23,8 @@ export default function LoginForm() {
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
-    },
+      email: ""
+    }
   });
 
   const loginMutation = useMutation({
@@ -44,24 +32,12 @@ export default function LoginForm() {
       const response = await apiRequest("POST", "/api/auth/login", data);
       return response.json();
     },
-    onSuccess: (data: any) => {
-      if (data.secretLogin) {
-        // Secret login - reload the page to trigger auth check
-        toast({
-          title: data.message,
-          description: "Welcome to the lab! 🧪",
-        });
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      } else {
-        // Normal email flow
-        setEmailSent(true);
-        toast({
-          title: "Login link sent! 📧",
-          description: "Check your email and click the link to log in",
-        });
-      }
+    onSuccess: () => {
+      setEmailSent(true);
+      toast({
+        title: "Login link sent! 📧",
+        description: "Check your email and click the link to log in",
+      });
     },
     onError: (error: any) => {
       toast({
@@ -84,15 +60,12 @@ export default function LoginForm() {
             <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
               <Mail className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              Check Your Email! 📧
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Check Your Email! 📧</h2>
             <p className="text-gray-600">
-              We've sent a login link to{" "}
-              <strong>{form.getValues("email")}</strong>
+              We've sent a login link to <strong>{form.getValues("email")}</strong>
             </p>
           </div>
-
+          
           <div className="space-y-3 text-sm text-gray-500">
             <p>• Click the link in your email to log in</p>
             <p>• The link expires in 15 minutes</p>
@@ -120,24 +93,17 @@ export default function LoginForm() {
             <Beaker className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">🧪 Food Lab</h1>
-          <p className="text-gray-600">
-            Your personal food sensitivity detective
-          </p>
+          <p className="text-gray-600">Your personal food sensitivity detective</p>
         </div>
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-6"
-          >
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-700 font-medium">
-                    Email Address
-                  </FormLabel>
+                  <FormLabel className="text-gray-700 font-medium">Email Address</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
