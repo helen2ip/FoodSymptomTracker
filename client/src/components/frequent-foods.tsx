@@ -3,7 +3,7 @@ import { FoodEntry, InsertFoodEntry } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { 
-  Apple, Carrot, Wheat, Milk, Fish, Nut, Coffee, 
+  Apple, Carrot, Wheat, Milk, Atom, Nut, Coffee, 
   Pizza, ChefHat, Utensils 
 } from "lucide-react";
 import { foodCategories } from "@/lib/food-database";
@@ -34,7 +34,7 @@ function getCategoryIcon(category: string) {
     case 'dairy':
       return Milk;
     case 'proteins':
-      return Fish;
+      return Atom;
     case 'nuts_seeds':
       return Nut;
     case 'beverages':
@@ -45,6 +45,32 @@ function getCategoryIcon(category: string) {
       return ChefHat;
     default:
       return Utensils;
+  }
+}
+
+// Category to color mapping
+function getCategoryColors(category: string) {
+  switch (category) {
+    case 'fruits':
+      return 'from-red-400 to-pink-500'; // Red/pink for fruits
+    case 'vegetables':
+      return 'from-green-400 to-emerald-500'; // Green for vegetables
+    case 'grains':
+      return 'from-amber-400 to-orange-500'; // Golden/amber for grains
+    case 'dairy':
+      return 'from-blue-400 to-cyan-500'; // Blue for dairy
+    case 'proteins':
+      return 'from-purple-500 to-violet-600'; // Purple for proteins
+    case 'nuts_seeds':
+      return 'from-yellow-500 to-amber-600'; // Yellow/brown for nuts
+    case 'beverages':
+      return 'from-teal-400 to-blue-500'; // Teal for beverages
+    case 'processed_foods':
+      return 'from-orange-500 to-red-600'; // Orange/red for processed
+    case 'condiments_spices':
+      return 'from-rose-400 to-pink-600'; // Rose for condiments
+    default:
+      return 'from-gray-400 to-slate-500'; // Gray fallback
   }
 }
 
@@ -126,7 +152,7 @@ export default function FrequentFoods() {
             data-testid={`button-frequent-food-${index}`}
           >
             <div className="flex flex-col items-center space-y-2">
-              <div className={`w-12 h-12 bg-gradient-to-br from-lab-purple to-lab-blue rounded-full flex items-center justify-center bubble-animation shadow-lg`} 
+              <div className={`w-12 h-12 bg-gradient-to-br ${getCategoryColors(getFoodCategory(food.foodName))} rounded-full flex items-center justify-center bubble-animation shadow-lg`} 
                    style={{ animationDelay: `${index * 0.5}s` }}>
                 {(() => {
                   const category = getFoodCategory(food.foodName);
