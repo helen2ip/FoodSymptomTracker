@@ -58,12 +58,8 @@ export class MemStorage implements IStorage {
 
   private initializeSampleData() {
     const sampleFoods = [
-      { foodName: "Whole Wheat Bread", category: "grains", logCount: 23 },
-      { foodName: "Green Apple", category: "fruits", logCount: 18 },
-      { foodName: "Cheddar Cheese", category: "dairy", logCount: 15 },
-      { foodName: "Coffee", category: "beverages", logCount: 12 },
-      { foodName: "Greek Yogurt", category: "dairy", logCount: 10 },
-      { foodName: "Almonds", category: "nuts", logCount: 8 }
+      { foodName: "Whole Wheat Bread", category: "grains", logCount: 99 },
+      { foodName: "Almonds", category: "nuts", logCount: 99 }
     ];
 
     sampleFoods.forEach(food => {

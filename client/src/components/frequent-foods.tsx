@@ -56,15 +56,15 @@ function getCategoryColors(category: string) {
     case 'vegetables':
       return 'from-green-400 to-emerald-500'; // Green for vegetables
     case 'grains':
-      return 'from-amber-400 to-orange-500'; // Golden/amber for grains
+      return 'from-amber-300 to-orange-400'; // Golden/amber for grains
     case 'dairy':
-      return 'from-blue-400 to-cyan-500'; // Blue for dairy
+      return 'from-blue-300 to-violet-400'; // Blue for dairy
     case 'proteins':
       return 'from-purple-500 to-violet-600'; // Purple for proteins
     case 'nuts_seeds':
-      return 'from-yellow-500 to-amber-600'; // Yellow/brown for nuts
+      return 'from-yellow-600 to-amber-700'; // Yellow/brown for nuts
     case 'beverages':
-      return 'from-teal-400 to-blue-500'; // Teal for beverages
+      return 'from-teal-500 to-blue-600'; // Teal for beverages
     case 'processed_foods':
       return 'from-orange-500 to-red-600'; // Orange/red for processed
     case 'condiments_spices':
@@ -121,7 +121,7 @@ export default function FrequentFoods() {
           <span className="text-sm text-gray-500">Most logged</span>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          {[...Array(8)].map((_, i) => (
+          {[...Array(6)].map((_, i) => (
             <div key={i} className="bg-white p-4 rounded-2xl lab-shadow animate-pulse">
               <div className="flex flex-col items-center space-y-2">
                 <div className="w-12 h-12 bg-gray-200 rounded-full" />
@@ -143,10 +143,10 @@ export default function FrequentFoods() {
       </div>
       
       <div className="grid grid-cols-2 gap-3">
-        {frequentFoods?.slice(0, 8).map((food, index) => (
+        {frequentFoods?.slice(0, 6).map((food, index) => (
           <button
             key={food.id}
-            className="bg-white p-4 rounded-2xl lab-shadow hover:lab-shadow-strong transition-all active:scale-95 border border-lab-purple/20 hover:border-lab-purple/40 hover:bg-lab-purple/5"
+            className="bg-white p-1 rounded-2xl lab-shadow hover:lab-shadow-strong transition-all active:scale-95 border border-lab-purple/20 hover:border-lab-purple/40 hover:bg-lab-purple/5"
             onClick={() => handleFoodClick(food.foodName)}
             disabled={addFoodMutation.isPending}
             data-testid={`button-frequent-food-${index}`}
