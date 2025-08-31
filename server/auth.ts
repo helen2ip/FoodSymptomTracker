@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 import crypto from 'crypto';
 import { users, loginTokens, type User, type InsertUser, type LoginToken, type InsertLoginToken } from '@shared/schema';
 import { db } from './db';
-import { eq, and, gt } from 'drizzle-orm';
+import { eq, and, gt, isNull } from 'drizzle-orm';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -76,7 +76,7 @@ export class AuthService {
           and(
             eq(loginTokens.token, token),
             gt(loginTokens.expiresAt, new Date()),
-            eq(loginTokens.used, null as any)
+            isNull(loginTokens.used)
           )
         );
 
