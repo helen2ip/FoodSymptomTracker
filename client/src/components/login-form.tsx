@@ -32,12 +32,24 @@ export default function LoginForm() {
       const response = await apiRequest("POST", "/api/auth/login", data);
       return response.json();
     },
-    onSuccess: () => {
-      setEmailSent(true);
-      toast({
-        title: "Login link sent! 📧",
-        description: "Check your email and click the link to log in",
-      });
+    onSuccess: (data: any) => {
+      if (data.secretLogin) {
+        // Secret login - reload the page to trigger auth check
+        toast({
+          title: data.message,
+          description: "Welcome to the lab! 🧪",
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        // Normal email flow
+        setEmailSent(true);
+        toast({
+          title: "Login link sent! 📧",
+          description: "Check your email and click the link to log in",
+        });
+      }
     },
     onError: (error: any) => {
       toast({

