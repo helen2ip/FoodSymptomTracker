@@ -43,7 +43,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
       setIsOpen(false);
       resetForm();
       toast({
-        title: "Reaction recorded! 📊",
+        title: "Reaction recorded! ✏️",
         description: "Added to your experiment timeline",
       });
     },
@@ -87,7 +87,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
 
   const defaultTrigger = (
     <Button variant="outline" className="text-lab-red border-lab-red/20 hover:bg-lab-red/5 font-mono">
-      📊 LOG_REACTION
+      ✏️ Log Reaction
     </Button>
   );
 
@@ -99,14 +99,13 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
       <DialogContent className="w-[90vw] max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
-            <AlertTriangle className="text-lab-red" size={20} />
-            <span className="font-mono">RECORD_REACTION.exe</span>
+            <span className="font-mono">🧪 Record Reaction</span>
           </DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="symptom-name" className="font-mono text-sm">REACTION_TYPE</Label>
+            <Label htmlFor="symptom-name" className="font-mono text-sm">Reaction Type</Label>
             <Input
               id="symptom-name"
               type="text"
@@ -119,7 +118,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
             {/* Quick suggestions */}
             {symptomName.length < 2 && recentSymptoms.length > 0 && (
               <div className="mt-2">
-                <p className="text-xs text-lab-purple font-mono mb-2">🔬 RECENT_REACTIONS</p>
+                <p className="text-xs text-lab-purple font-mono mb-2">⚡ Recent REACTIONS</p>
                 <div className="flex flex-wrap gap-1">
                   {recentSymptoms.slice(0, 5).map((symptom, index) => (
                     <button
@@ -144,7 +143,10 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
                     key={index}
                     type="button"
                     className="w-full text-left px-2 py-1 text-sm hover:bg-gray-50 rounded transition-colors"
-                    onClick={() => setSymptomName(suggestion)}
+                    onClick={() => {
+                      setSymptomName(suggestion);
+                      setSuggestions([]); // Add this line to clear the suggestions
+                    }}
                     data-testid={`button-symptom-suggestion-${index}`}
                   >
                     {suggestion}
@@ -186,7 +188,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
             <Label htmlFor="notes" className="font-mono text-sm">OBSERVATION_NOTES (optional)</Label>
             <Textarea
               id="notes"
-              placeholder="📝 Record additional observations about the reaction..."
+              placeholder="Record additional observations about the reaction..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
