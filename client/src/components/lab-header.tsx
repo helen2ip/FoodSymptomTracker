@@ -1,8 +1,11 @@
-import { FlaskConical, Flame, Trophy } from "lucide-react";
+import { FlaskConical, Flame, Trophy, LogOut, User } from "lucide-react";
 import { useStreak } from "@/hooks/use-streak";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
 
 export default function LabHeader() {
   const { stats, isLoading } = useStreak();
+  const { user, logout, isLoggingOut } = useAuth();
 
   if (isLoading) {
     return <div className="h-32 science-gradient animate-pulse" />;
@@ -29,16 +32,44 @@ export default function LabHeader() {
               <p className="text-sm opacity-90">Experiment #{stats?.currentStreak || 0}</p>
             </div>
           </div>
-          <div className="text-right">
-            <div className="flex items-center space-x-1 mb-1">
-              <Flame className="text-lab-amber" size={16} />
-              <span className="font-mono text-sm" data-testid="text-streak-count">
-                {stats?.currentStreak || 0}
-              </span>
+          <div className="flex items-center space-x-3">
+            <div className="text-right">
+              <div className="flex items-center space-x-1 mb-1">
+                <Flame className="text-lab-amber" size={16} />
+                <span className="font-mono text-sm" data-testid="text-streak-count">
+                  {stats?.currentStreak || 0}
+                </span>
+              </div>
+              <p className="text-xs opacity-80 font-mono">STREAK</p>
             </div>
-            <p className="text-xs opacity-80 font-mono">STREAK</p>
           </div>
         </div>
+
+        {/* User info and logout */}
+        {user && (
+          <div className="flex items-center justify-between mb-2 bg-white/10 rounded-lg px-3 py-2">
+            <div className="flex items-center space-x-2">
+              <User className="w-4 h-4" />
+              <span className="text-sm font-medium" data-testid="text-user-email">
+                {user.email}
+              </span>
+            </div>
+            <Button
+              onClick={logout}
+              disabled={isLoggingOut}
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/20 h-8 px-2"
+              data-testid="button-logout"
+            >
+              {isLoggingOut ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <LogOut className="w-4 h-4" />
+              )}
+            </Button>
+          </div>
+        )}
         
         {/* Progress test tubes */}
         <div className="flex justify-between items-end mb-2">

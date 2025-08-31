@@ -1,10 +1,100 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import session from "express-session";
 import { storage } from "./storage";
-import { insertFoodEntrySchema, insertSymptomEntrySchema } from "@shared/schema";
+import { authService } from "./auth";
+import { insertFoodEntrySchema, insertSymptomEntrySchema, insertUserSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Session configuration
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'food-lab-dev-secret-change-in-production',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    }
+  }));
+
+  // Auth middleware
+  const requireAuth = (req: any, res: any, next: any) => {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+    next();
+  };
+  // Auth endpoints
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { email } = insertUserSchema.parse(req.body);
+      const result = await authService.sendLoginEmail(email);
+      
+      if (result.success) {
+        res.json({ message: result.message });
+      } else {
+        res.status(400).json({ message: result.message });
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: "Invalid email address", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Failed to send login email" });
+      }
+    }
+  });
+
+  app.get("/auth/verify", async (req, res) => {
+    try {
+      const token = req.query.token as string;
+      if (!token) {
+        return res.status(400).send("Invalid login link");
+      }
+
+      const result = await authService.verifyToken(token);
+      
+      if (result.success && result.user) {
+        // Set session
+        (req.session as any).userId = result.user.id;
+        // Redirect to app
+        res.redirect('/');
+      } else {
+        res.status(400).send(`Login failed: ${result.message}`);
+      }
+    } catch (error) {
+      res.status(500).send("Login verification failed");
+    }
+  });
+
+  app.get("/api/auth/user", async (req, res) => {
+    try {
+      const userId = (req.session as any).userId;
+      if (!userId) {
+        return res.status(401).json({ message: 'Not authenticated' });
+      }
+
+      const user = await authService.getUserById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
+  app.post("/api/auth/logout", (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        res.status(500).json({ message: "Failed to logout" });
+      } else {
+        res.json({ message: "Logged out successfully" });
+      }
+    });
+  });
   // Food entries endpoints
   app.get("/api/foods", async (req, res) => {
     try {

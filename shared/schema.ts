@@ -28,8 +28,25 @@ export const correlations = pgTable("correlations", {
   lastUpdated: timestamp("last_updated").notNull().defaultNow()
 });
 
+export const users = pgTable("users", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: varchar("email").notNull().unique(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  lastLoginAt: timestamp("last_login_at")
+});
+
+export const loginTokens = pgTable("login_tokens", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  token: varchar("token").notNull().unique(),
+  email: varchar("email").notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  used: timestamp("used"),
+  createdAt: timestamp("created_at").notNull().defaultNow()
+});
+
 export const userStats = pgTable("user_stats", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id),
   currentStreak: integer("current_streak").default(0),
   longestStreak: integer("longest_streak").default(0),
   totalFoodsLogged: integer("total_foods_logged").default(0),
@@ -62,9 +79,27 @@ export const insertCorrelationSchema = createInsertSchema(correlations).omit({
   lastUpdated: true
 });
 
+export const insertUserSchema = createInsertSchema(users).omit({
+  id: true,
+  createdAt: true,
+  lastLoginAt: true
+});
+
+export const insertLoginTokenSchema = createInsertSchema(loginTokens).omit({
+  id: true,
+  createdAt: true,
+  used: true
+});
+
 export const insertUserStatsSchema = createInsertSchema(userStats).omit({
   id: true
 });
+
+export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
+
+export type LoginToken = typeof loginTokens.$inferSelect;
+export type InsertLoginToken = z.infer<typeof insertLoginTokenSchema>;
 
 export type FoodEntry = typeof foodEntries.$inferSelect;
 export type InsertFoodEntry = z.infer<typeof insertFoodEntrySchema>;
