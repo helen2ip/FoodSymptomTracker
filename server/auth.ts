@@ -39,10 +39,11 @@ export class AuthService {
         expiresAt,
       });
 
-      // Create magic link using request host
+      // Create magic link using request host with proper HTTPS detection for production
       const protocol =
-        req?.protocol ||
-        (process.env.NODE_ENV === "production" ? "https" : "http");
+        req?.get("X-Forwarded-Proto") ||
+        req?.get("X-Forwarded-Scheme") ||
+        (process.env.NODE_ENV === "production" ? "https" : req?.protocol || "http");
       const host = req?.get("host") || "localhost:5000";
       const loginUrl = `${protocol}://${host}/auth/verify?token=${token}`;
       console.log("Login URL:", loginUrl);

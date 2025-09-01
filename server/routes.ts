@@ -21,7 +21,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const sessionStore = new PgSession({
     pool: pool, // Use the same database pool
     tableName: 'sessions', // Table name for sessions
-    createTableIfMissing: true, // Automatically create table if needed
+    createTableIfMissing: false, // Table already exists, don't try to create
+    schemaName: 'public', // Explicitly specify schema
+  });
+  
+  // Add error handling for session store
+  sessionStore.on('error', (err) => {
+    console.error('Session store error:', err);
   });
   
   app.use(
@@ -73,30 +79,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/auth/verify", async (req, res) => {
     try {
+      console.log("Verify endpoint called with token:", req.query.token ? "present" : "missing");
+      
       const token = req.query.token as string;
       if (!token) {
+        console.error("No token provided in verify request");
         return res.status(400).send("Invalid login link");
       }
 
+      console.log("Calling authService.verifyToken...");
       const result = await authService.verifyToken(token);
+      console.log("Token verification result:", { success: result.success, message: result.message, hasUser: !!result.user });
 
       if (result.success && result.user) {
+        console.log("Setting session userId:", result.user.id);
         // Set session
         (req.session as any).userId = result.user.id;
         
+        console.log("Saving session...");
         // Explicitly save session before redirect to prevent race condition
         req.session.save((err) => {
           if (err) {
             console.error("Session save error:", err);
+            console.error("Session save error details:", err.message, err.stack);
             return res.status(500).send("Session save failed");
           }
+          console.log("Session saved successfully, redirecting to /");
           // Redirect to app after session is saved
           res.redirect("/");
         });
       } else {
+        console.error("Token verification failed:", result.message);
         res.status(400).send(`Login failed: ${result.message}`);
       }
     } catch (error) {
+      console.error("Login verification error:", error);
+      console.error("Error details:", (error as Error).message, (error as Error).stack);
       res.status(500).send("Login verification failed");
     }
   });
