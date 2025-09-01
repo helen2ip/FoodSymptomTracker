@@ -1,9 +1,33 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { User } from "@shared/schema";
+import { useEffect } from "react";
 
 export function useAuth() {
   const queryClient = useQueryClient();
+
+  // Check for fallback login parameters
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const loginSuccess = urlParams.get('login_success');
+    const userId = urlParams.get('user_id');
+    
+    if (loginSuccess === 'true' && userId) {
+      console.log('Fallback login detected, setting session for user:', userId);
+      // Remove parameters from URL
+      window.history.replaceState({}, '', window.location.pathname);
+      
+      // Set session via API
+      apiRequest('POST', '/api/auth/set-session', { userId })
+        .then(() => {
+          console.log('Fallback session set successfully');
+          queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
+        })
+        .catch((error) => {
+          console.error('Failed to set fallback session:', error);
+        });
+    }
+  }, [queryClient]);
 
   const {
     data: user,

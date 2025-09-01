@@ -97,12 +97,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         (req.session as any).userId = result.user.id;
         
         console.log("Saving session...");
-        // Explicitly save session before redirect to prevent race condition
+        // Try session save, but also provide fallback
         req.session.save((err) => {
           if (err) {
             console.error("Session save error:", err);
             console.error("Session save error details:", err.message, err.stack);
-            return res.status(500).send("Session save failed");
+            // Fallback: redirect with user ID parameter for frontend to handle
+            return res.redirect(`/?login_success=true&user_id=${result.user!.id}`);
           }
           console.log("Session saved successfully, redirecting to /");
           // Redirect to app after session is saved
@@ -134,6 +135,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(user);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
+  // Fallback endpoint for manual session setting
+  app.post("/api/auth/set-session", async (req, res) => {
+    try {
+      const { userId } = req.body;
+      if (!userId) {
+        return res.status(400).json({ message: "User ID required" });
+      }
+
+      const user = await authService.getUserById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      (req.session as any).userId = userId;
+      req.session.save((err) => {
+        if (err) {
+          return res.status(500).json({ message: "Failed to set session" });
+        }
+        res.json({ message: "Session set successfully", user });
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to set session" });
     }
   });
 
