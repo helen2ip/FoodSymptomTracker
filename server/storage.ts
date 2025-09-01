@@ -2,9 +2,12 @@ import {
   type FoodEntry, type InsertFoodEntry,
   type SymptomEntry, type InsertSymptomEntry,
   type Correlation, type InsertCorrelation,
-  type UserStats, type InsertUserStats
+  type UserStats, type InsertUserStats,
+  foodEntries, symptomEntries, correlations, userStats
 } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { db } from "./db";
+import { eq, desc, sql, and, ilike } from "drizzle-orm";
 
 export interface IStorage {
   // Food entries
@@ -206,4 +209,187 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Database Storage Implementation
+export class DatabaseStorage implements IStorage {
+  async getFoodEntries(): Promise<FoodEntry[]> {
+    return await db.select().from(foodEntries).orderBy(desc(foodEntries.timestamp));
+  }
+
+  async getFoodEntriesByDate(date: string): Promise<FoodEntry[]> {
+    const targetDate = new Date(date);
+    const nextDay = new Date(targetDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    
+    return await db.select().from(foodEntries)
+      .where(
+        and(
+          sql`${foodEntries.timestamp} >= ${targetDate}`,
+          sql`${foodEntries.timestamp} < ${nextDay}`
+        )
+      )
+      .orderBy(desc(foodEntries.timestamp));
+  }
+
+  async getFrequentFoods(limit = 8): Promise<FoodEntry[]> {
+    return await db.select().from(foodEntries)
+      .orderBy(desc(foodEntries.logCount))
+      .limit(limit);
+  }
+
+  async createFoodEntry(insertEntry: InsertFoodEntry): Promise<FoodEntry> {
+    // Check if food already exists (case-insensitive)
+    const existingEntries = await db.select().from(foodEntries)
+      .where(ilike(foodEntries.foodName, insertEntry.foodName));
+    
+    if (existingEntries.length > 0) {
+      // Update existing entry: increment count and update timestamp
+      const existing = existingEntries[0];
+      const [updated] = await db.update(foodEntries)
+        .set({ 
+          logCount: (existing.logCount || 0) + 1,
+          timestamp: insertEntry.timestamp || new Date()
+        })
+        .where(eq(foodEntries.id, existing.id))
+        .returning();
+      return updated;
+    } else {
+      // Create new entry
+      const [entry] = await db.insert(foodEntries)
+        .values({
+          ...insertEntry,
+          logCount: 1,
+          timestamp: insertEntry.timestamp || new Date()
+        })
+        .returning();
+      return entry;
+    }
+  }
+
+  async updateFoodLogCount(foodName: string): Promise<void> {
+    // This method is no longer needed since createFoodEntry handles the counting
+    return;
+  }
+
+  async getSymptomEntries(): Promise<SymptomEntry[]> {
+    return await db.select().from(symptomEntries).orderBy(desc(symptomEntries.timestamp));
+  }
+
+  async getSymptomEntriesByDate(date: string): Promise<SymptomEntry[]> {
+    const targetDate = new Date(date);
+    const nextDay = new Date(targetDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    
+    return await db.select().from(symptomEntries)
+      .where(
+        and(
+          sql`${symptomEntries.timestamp} >= ${targetDate}`,
+          sql`${symptomEntries.timestamp} < ${nextDay}`
+        )
+      )
+      .orderBy(desc(symptomEntries.timestamp));
+  }
+
+  async getRecentSymptoms(limit = 5): Promise<string[]> {
+    const symptoms = await db.select({
+      symptomName: symptomEntries.symptomName
+    }).from(symptomEntries)
+      .orderBy(desc(symptomEntries.timestamp))
+      .limit(50); // Get more to find unique ones
+      
+    const uniqueSymptoms = Array.from(new Set(symptoms.map(s => s.symptomName)));
+    return uniqueSymptoms.slice(0, limit);
+  }
+
+  async createSymptomEntry(insertEntry: InsertSymptomEntry): Promise<SymptomEntry> {
+    const [entry] = await db.insert(symptomEntries)
+      .values({
+        ...insertEntry,
+        timestamp: insertEntry.timestamp || new Date()
+      })
+      .returning();
+    return entry;
+  }
+
+  async getCorrelations(): Promise<Correlation[]> {
+    return await db.select().from(correlations).orderBy(desc(correlations.confidence));
+  }
+
+  async updateCorrelation(correlationData: InsertCorrelation): Promise<Correlation> {
+    // Try to find existing correlation
+    const existingCorrelations = await db.select().from(correlations)
+      .where(
+        and(
+          eq(correlations.foodName, correlationData.foodName),
+          eq(correlations.symptomName, correlationData.symptomName)
+        )
+      );
+
+    if (existingCorrelations.length > 0) {
+      // Update existing correlation
+      const existing = existingCorrelations[0];
+      const [updated] = await db.update(correlations)
+        .set({
+          confidence: correlationData.confidence,
+          occurrences: (existing.occurrences || 0) + 1,
+          lastUpdated: new Date()
+        })
+        .where(eq(correlations.id, existing.id))
+        .returning();
+      return updated;
+    } else {
+      // Create new correlation
+      const [correlation] = await db.insert(correlations)
+        .values({
+          ...correlationData,
+          occurrences: 1,
+          lastUpdated: new Date()
+        })
+        .returning();
+      return correlation;
+    }
+  }
+
+  async getUserStats(): Promise<UserStats> {
+    const stats = await db.select().from(userStats).limit(1);
+    
+    if (stats.length === 0) {
+      // Create default stats
+      const [newStats] = await db.insert(userStats)
+        .values({
+          currentStreak: 7,
+          longestStreak: 12,
+          totalFoodsLogged: 68,
+          totalSymptomsLogged: 15,
+          lastLogDate: new Date(),
+          achievements: ["Week Explorer", "Food Detective", "Streak Master"]
+        })
+        .returning();
+      return newStats;
+    }
+    
+    return stats[0];
+  }
+
+  async updateUserStats(updates: Partial<UserStats>): Promise<UserStats> {
+    const currentStats = await this.getUserStats();
+    
+    const [updatedStats] = await db.update(userStats)
+      .set(updates)
+      .where(eq(userStats.id, currentStats.id))
+      .returning();
+      
+    return updatedStats;
+  }
+
+  async getTimelineEntries(date?: string): Promise<Array<FoodEntry | SymptomEntry>> {
+    const foods = date ? await this.getFoodEntriesByDate(date) : await this.getFoodEntries();
+    const symptoms = date ? await this.getSymptomEntriesByDate(date) : await this.getSymptomEntries();
+    
+    const combined = [...foods, ...symptoms];
+    return combined.sort((a, b) => 
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
+  }
+}
+
+export const storage = new DatabaseStorage();

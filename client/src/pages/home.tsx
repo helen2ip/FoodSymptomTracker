@@ -26,7 +26,7 @@ export default function Home() {
         {/* Lab Results Preview */}
         <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-800">🔬 Recent Results</h2>
+            <h2 className="text-lg font-bold text-gray-800">🚧 Recent Results</h2>
             <div className="flex items-center space-x-1 text-lab-amber">
               <span className="text-sm font-mono bg-lab-amber/10 px-2 py-1 rounded-full">2 NEW</span>
             </div>
@@ -37,7 +37,7 @@ export default function Home() {
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-lab-amber rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm">💡</span>
+                  <span className="text-white text-sm">🚧</span>
                 </div>
                 <span className="font-bold text-gray-800">Experiment Result</span>
               </div>
@@ -47,8 +47,8 @@ export default function Home() {
             </div>
             
             <p className="text-gray-700 mb-4">
-              <strong>HYPOTHESIS CONFIRMED!</strong> Skin reactions detected 2-3 hrs after dairy consumption. 
-              Pattern observed in 4/5 test runs. 🧪✅
+              <strong>Hypothesis Confirmed!</strong> Skin reactions detected 2-3 hours after dairy consumption. 
+              Pattern observed in 4/5 test runs.
             </p>
             
             <div className="flex items-center justify-between">
@@ -77,7 +77,7 @@ export default function Home() {
           <div className="mt-3 bg-white rounded-2xl p-4 lab-shadow border border-lab-blue/10">
             <div className="flex items-start space-x-3">
               <div className="w-8 h-8 bg-lab-blue/10 rounded-full flex items-center justify-center">
-                <span className="text-lab-blue text-sm">🧪</span>
+                <span className="text-lab-blue text-sm">🚧</span>
               </div>
               <div>
                 <h3 className="font-medium text-gray-800 mb-1">Next Test</h3>
@@ -88,7 +88,7 @@ export default function Home() {
                   className="mt-2 text-lab-blue text-sm font-mono font-bold bg-lab-blue/10 px-3 py-1 rounded-full"
                   data-testid="button-start-experiment"
                 >
-                  RUN_TEST.exe →
+                  Start test →
                 </button>
               </div>
             </div>
