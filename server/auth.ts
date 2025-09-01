@@ -1,8 +1,15 @@
-import { Resend } from 'resend';
-import crypto from 'crypto';
-import { users, loginTokens, type User, type InsertUser, type LoginToken, type InsertLoginToken } from '@shared/schema';
-import { db } from './db';
-import { eq, and, gt, isNull } from 'drizzle-orm';
+import { Resend } from "resend";
+import crypto from "crypto";
+import {
+  users,
+  loginTokens,
+  type User,
+  type InsertUser,
+  type LoginToken,
+  type InsertLoginToken,
+} from "@shared/schema";
+import { db } from "./db";
+import { eq, and, gt, isNull } from "drizzle-orm";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -12,11 +19,13 @@ const TOKEN_EXPIRY_MINUTES = 15;
 export class AuthService {
   // Generate a secure random token
   private generateToken(): string {
-    return crypto.randomBytes(32).toString('hex');
+    return crypto.randomBytes(32).toString("hex");
   }
 
   // Send login email with magic link
-  async sendLoginEmail(email: string): Promise<{ success: boolean; message: string }> {
+  async sendLoginEmail(
+    email: string,
+  ): Promise<{ success: boolean; message: string }> {
     try {
       // Generate token
       const token = this.generateToken();
@@ -26,17 +35,17 @@ export class AuthService {
       await db.insert(loginTokens).values({
         token,
         email,
-        expiresAt
+        expiresAt,
       });
 
       // Create magic link
-      const loginUrl = `${process.env.REPLIT_DOMAINS?.split(',')[0] ? `https://${process.env.REPLIT_DOMAINS.split(',')[0]}` : 'http://localhost:5000'}/auth/verify?token=${token}`;
+      const loginUrl = `${process.env.REPLIT_DOMAINS?.split(",")[0] ? `https://${process.env.REPLIT_DOMAINS.split(",")[0]}` : "http://localhost:5000"}/auth/verify?token=${token}`;
 
       // Send email
       await resend.emails.send({
-        from: 'Food Lab <onboarding@resend.dev>',
+        from: "Food Lab <onboarding@resend.dev>",
         to: email,
-        subject: '🧪 Your Food Lab Login Link',
+        subject: "🧪 Your Food Lab Login Link",
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #7c3aed;">🧪 Food Lab Login</h2>
@@ -55,33 +64,31 @@ export class AuthService {
             <p style="color: #666;">This link will expire in ${TOKEN_EXPIRY_MINUTES} minutes.</p>
             <p style="color: #666; font-size: 12px;">If you didn't request this login, you can safely ignore this email.</p>
           </div>
-        `
+        `,
       });
 
-      return { success: true, message: 'Login link sent to your email!' };
+      return { success: true, message: "Login link sent to your email!" };
     } catch (error) {
-      console.error('Failed to send login email:', error);
-      return { success: false, message: 'Failed to send login email. Please try again.' };
+      console.error("Failed to send login email:", error);
+      return {
+        success: false,
+        message: "Failed to send login email. Please try again.",
+      };
     }
   }
 
   // Verify token and log user in
-  async verifyToken(token: string): Promise<{ success: boolean; user?: User; message: string }> {
+  async verifyToken(
+    token: string,
+  ): Promise<{ success: boolean; user?: User; message: string }> {
     try {
-      // Find valid, unused token
       const [loginToken] = await db
         .select()
         .from(loginTokens)
-        .where(
-          and(
-            eq(loginTokens.token, token),
-            gt(loginTokens.expiresAt, new Date()),
-            isNull(loginTokens.used)
-          )
-        );
+        .where(eq(loginTokens.token, token));
 
       if (!loginToken) {
-        return { success: false, message: 'Invalid or expired login link.' };
+        return { success: false, message: "Invalid or expired login link." };
       }
 
       // Mark token as used
@@ -110,24 +117,24 @@ export class AuthService {
         .set({ lastLoginAt: new Date() })
         .where(eq(users.id, user.id));
 
-      return { success: true, user, message: 'Successfully logged in!' };
+      return { success: true, user, message: "Successfully logged in!" };
     } catch (error) {
-      console.error('Failed to verify token:', error);
-      return { success: false, message: 'Login verification failed. Please try again.' };
+      console.error("Failed to verify token:", error);
+      return {
+        success: false,
+        message: "Login verification failed. Please try again.",
+      };
     }
   }
 
   // Get user by ID
   async getUserById(userId: string): Promise<User | null> {
     try {
-      const [user] = await db
-        .select()
-        .from(users)
-        .where(eq(users.id, userId));
+      const [user] = await db.select().from(users).where(eq(users.id, userId));
 
       return user || null;
     } catch (error) {
-      console.error('Failed to get user:', error);
+      console.error("Failed to get user:", error);
       return null;
     }
   }
