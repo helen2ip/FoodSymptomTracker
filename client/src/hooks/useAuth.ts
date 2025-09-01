@@ -5,11 +5,25 @@ import { User } from "@shared/schema";
 export function useAuth() {
   const queryClient = useQueryClient();
 
-  const { data: user, isLoading, error } = useQuery<User>({
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useQuery<User>({
     queryKey: ["/api/auth/user"],
     retry: false,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
+  console.log(
+    "usaAuth, user:",
+    user,
+    "isLoading:",
+    isLoading,
+    "error:",
+    error,
+    "isAuthenticated:",
+    !!user && !error,
+  );
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
@@ -18,7 +32,7 @@ export function useAuth() {
     },
     onSuccess: () => {
       queryClient.clear();
-      window.location.href = '/';
+      window.location.href = "/";
     },
   });
 
@@ -27,6 +41,6 @@ export function useAuth() {
     isLoading,
     isAuthenticated: !!user && !error,
     logout: () => logoutMutation.mutate(),
-    isLoggingOut: logoutMutation.isPending
+    isLoggingOut: logoutMutation.isPending,
   };
 }

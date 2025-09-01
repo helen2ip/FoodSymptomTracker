@@ -3,30 +3,38 @@ import { createServer, type Server } from "http";
 import session from "express-session";
 import { storage } from "./storage";
 import { authService } from "./auth";
-import { insertFoodEntrySchema, insertSymptomEntrySchema, insertUserSchema } from "@shared/schema";
+import {
+  insertFoodEntrySchema,
+  insertSymptomEntrySchema,
+  insertUserSchema,
+} from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Session configuration - persistent login until explicit logout
-  app.use(session({
-    secret: process.env.SESSION_SECRET || 'food-lab-dev-secret-change-in-production',
-    resave: false,
-    saveUninitialized: false,
-    rolling: true,
-    cookie: {
-      // Must be true for SameSite=None
-      secure: true, 
-      httpOnly: true,
-      // Allows cookies to be sent in cross-site requests
-      sameSite: 'none', 
-      maxAge: 365 * 24 * 60 * 60 * 1000
-    }
-  }));
+  app.use(
+    session({
+      secret:
+        process.env.SESSION_SECRET ||
+        "food-lab-dev-secret-change-in-production",
+      resave: false,
+      saveUninitialized: false,
+      rolling: true,
+      cookie: {
+        // Must be true for SameSite=None
+        secure: true,
+        httpOnly: true,
+        // Allows cookies to be sent in cross-site requests
+        sameSite: "none",
+        maxAge: 365 * 24 * 60 * 60 * 1000,
+      },
+    }),
+  );
 
   // Auth middleware
   const requireAuth = (req: any, res: any, next: any) => {
     if (!req.session.userId) {
-      return res.status(401).json({ message: 'Authentication required' });
+      return res.status(401).json({ message: "Authentication required" });
     }
     next();
   };
@@ -35,7 +43,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email } = insertUserSchema.parse(req.body);
       const result = await authService.sendLoginEmail(email, req);
-      
+
       if (result.success) {
         res.json({ message: result.message });
       } else {
@@ -43,7 +51,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
-        res.status(400).json({ message: "Invalid email address", errors: error.errors });
+        res
+          .status(400)
+          .json({ message: "Invalid email address", errors: error.errors });
       } else {
         res.status(500).json({ message: "Failed to send login email" });
       }
@@ -58,12 +68,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const result = await authService.verifyToken(token);
-      
+      console.log("/auth/verify result:", result);
+
       if (result.success && result.user) {
         // Set session
         (req.session as any).userId = result.user.id;
         // Redirect to app
-        res.redirect('/');
+        console.log("Redirecting to /");
+        res.redirect("/");
       } else {
         res.status(400).send(`Login failed: ${result.message}`);
       }
@@ -76,12 +88,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = (req.session as any).userId;
       if (!userId) {
-        return res.status(401).json({ message: 'Not authenticated' });
+        return res.status(401).json({ message: "Not authenticated" });
       }
 
       const user = await authService.getUserById(userId);
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: "User not found" });
       }
 
       res.json(user);
@@ -127,7 +139,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const foods = await storage.getFoodEntriesByDate(req.params.date, userId);
       res.json(foods);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch food entries for date" });
+      res
+        .status(500)
+        .json({ message: "Failed to fetch food entries for date" });
     }
   });
 
@@ -143,7 +157,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof z.ZodError) {
         console.error("Validation error:", error.errors);
-        res.status(400).json({ message: "Invalid food entry data", errors: error.errors });
+        res
+          .status(400)
+          .json({ message: "Invalid food entry data", errors: error.errors });
       } else {
         console.error("Food creation error:", error);
         res.status(500).json({ message: "Failed to create food entry" });
@@ -165,10 +181,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/symptoms/date/:date", requireAuth, async (req, res) => {
     try {
       const userId = (req.session as any).userId;
-      const symptoms = await storage.getSymptomEntriesByDate(req.params.date, userId);
+      const symptoms = await storage.getSymptomEntriesByDate(
+        req.params.date,
+        userId,
+      );
       res.json(symptoms);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch symptom entries for date" });
+      res
+        .status(500)
+        .json({ message: "Failed to fetch symptom entries for date" });
     }
   });
 
@@ -191,7 +212,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(symptom);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        res.status(400).json({ message: "Invalid symptom entry data", errors: error.errors });
+        res
+          .status(400)
+          .json({
+            message: "Invalid symptom entry data",
+            errors: error.errors,
+          });
       } else {
         res.status(500).json({ message: "Failed to create symptom entry" });
       }
@@ -240,13 +266,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!query) {
         return res.json([]);
       }
-      
+
       // Simple search - in production this would be a proper search database
       const allFoods = await storage.getFoodEntries(userId);
-      const searchResults = allFoods.filter(food => 
-        food.foodName.toLowerCase().includes(query.toLowerCase())
+      const searchResults = allFoods.filter((food) =>
+        food.foodName.toLowerCase().includes(query.toLowerCase()),
       );
-      
+
       res.json(searchResults.slice(0, 10)); // Limit to 10 results
     } catch (error) {
       res.status(500).json({ message: "Failed to search foods" });
