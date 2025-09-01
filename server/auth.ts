@@ -45,6 +45,7 @@ export class AuthService {
         (process.env.NODE_ENV === "production" ? "https" : "http");
       const host = req?.get("host") || "localhost:5000";
       const loginUrl = `${protocol}://${host}/auth/verify?token=${token}`;
+      console.log("Login URL:", loginUrl);
 
       // Send email
       await resend.emails.send({

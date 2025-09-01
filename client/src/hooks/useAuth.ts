@@ -5,6 +5,8 @@ import { User } from "@shared/schema";
 export function useAuth() {
   const queryClient = useQueryClient();
 
+  console.log("useAuth...");
+
   const {
     data: user,
     isLoading,
