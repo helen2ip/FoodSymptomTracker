@@ -135,6 +135,11 @@ export default function FrequentFoods() {
     );
   }
 
+  // Don't show the section if there are no frequent foods
+  if (!frequentFoods || frequentFoods.length === 0) {
+    return null;
+  }
+
   return (
     <section className="mb-8">
       <div className="flex items-center justify-between mb-4">
