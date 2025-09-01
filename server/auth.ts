@@ -13,8 +13,8 @@ import { eq, and, gt, isNull } from "drizzle-orm";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Token expiration: 15 minutes
-const TOKEN_EXPIRY_MINUTES = 15;
+// Token expiration: 30 days
+const TOKEN_EXPIRY_MINUTES = 30 * 24 * 60;
 
 export class AuthService {
   // Generate a secure random token
@@ -83,19 +83,19 @@ export class AuthService {
   ): Promise<{ success: boolean; user?: User; message: string }> {
     try {
       const [loginToken] = await db
-        .select()
-        .from(loginTokens)
-        .where(eq(loginTokens.token, token));
+      .select()
+      .from(loginTokens)
+      .where(
+        and(
+          eq(loginTokens.token, token),
+          gt(loginTokens.expiresAt, new Date())
+        )
+      );
 
       if (!loginToken) {
         return { success: false, message: "Invalid or expired login link." };
       }
 
-      // Mark token as used
-      await db
-        .update(loginTokens)
-        .set({ used: new Date() })
-        .where(eq(loginTokens.token, token));
 
       // Find or create user
       let [user] = await db
