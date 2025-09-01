@@ -5,8 +5,6 @@ import { User } from "@shared/schema";
 export function useAuth() {
   const queryClient = useQueryClient();
 
-  console.log("useAuth...");
-
   const {
     data: user,
     isLoading,
@@ -16,16 +14,6 @@ export function useAuth() {
     retry: false,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
-  console.log(
-    "useAuth, user:",
-    user,
-    "isLoading:",
-    isLoading,
-    "error:",
-    error,
-    "isAuthenticated:",
-    !!user && !error,
-  );
 
   const logoutMutation = useMutation({
     mutationFn: async () => {

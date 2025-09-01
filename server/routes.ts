@@ -1,6 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
+import { pool } from "./db";
 import { storage } from "./storage";
 import { authService } from "./auth";
 import {
@@ -12,8 +14,19 @@ import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Session configuration - persistent login until explicit logout
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  // Configure session store
+  const PgSession = connectPgSimple(session);
+  const sessionStore = new PgSession({
+    pool: pool, // Use the same database pool
+    tableName: 'sessions', // Table name for sessions
+    createTableIfMissing: true, // Automatically create table if needed
+  });
+  
   app.use(
     session({
+      store: sessionStore,
       secret:
         process.env.SESSION_SECRET ||
         "food-lab-dev-secret-change-in-production",
@@ -21,12 +34,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       saveUninitialized: false,
       rolling: true,
       cookie: {
-        // Must be true for SameSite=None
-        secure: true,
+        secure: isProduction, // Only secure in production
         httpOnly: true,
-        // Allows cookies to be sent in cross-site requests
-        sameSite: "none",
-        maxAge: 365 * 24 * 60 * 60 * 1000,
+        sameSite: isProduction ? "lax" : "lax", // Use lax for same-site requests
+        maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
       },
     }),
   );
@@ -68,14 +79,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const result = await authService.verifyToken(token);
-      console.log("/auth/verify result:", result);
 
       if (result.success && result.user) {
         // Set session
         (req.session as any).userId = result.user.id;
-        // Redirect to app
-        console.log("Redirecting to /");
-        res.redirect("/");
+        
+        // Explicitly save session before redirect to prevent race condition
+        req.session.save((err) => {
+          if (err) {
+            console.error("Session save error:", err);
+            return res.status(500).send("Session save failed");
+          }
+          // Redirect to app after session is saved
+          res.redirect("/");
+        });
       } else {
         res.status(400).send(`Login failed: ${result.message}`);
       }
@@ -148,20 +165,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/foods", requireAuth, async (req, res) => {
     try {
       const userId = (req.session as any).userId;
-      console.log("Food entry request body:", req.body);
-      console.log("User ID:", userId);
       const validatedData = insertFoodEntrySchema.parse(req.body);
-      console.log("Validated data:", validatedData);
       const food = await storage.createFoodEntry(validatedData, userId);
       res.status(201).json(food);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        console.error("Validation error:", error.errors);
         res
           .status(400)
           .json({ message: "Invalid food entry data", errors: error.errors });
       } else {
-        console.error("Food creation error:", error);
         res.status(500).json({ message: "Failed to create food entry" });
       }
     }
