@@ -12,11 +12,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     secret: process.env.SESSION_SECRET || 'food-lab-dev-secret-change-in-production',
     resave: false,
     saveUninitialized: false,
-    rolling: true, // Reset expiry on each request to keep user logged in
+    rolling: true,
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      // Must be true for SameSite=None
+      secure: true, 
       httpOnly: true,
-      maxAge: 365 * 24 * 60 * 60 * 1000 // 1 year - effectively permanent until logout
+      // Allows cookies to be sent in cross-site requests
+      sameSite: 'none', 
+      maxAge: 365 * 24 * 60 * 60 * 1000
     }
   }));
 
