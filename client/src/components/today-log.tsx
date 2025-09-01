@@ -15,12 +15,10 @@ export default function TodayLog() {
   const today = new Date().toISOString().split('T')[0];
   
   const { data: todayEntries, isLoading } = useQuery<TimelineEntry[]>({
-    queryKey: ["/api/timeline", today],
-    queryFn: async () => {
-      const response = await fetch(`/api/timeline/${today}`);
-      if (!response.ok) throw new Error('Failed to fetch timeline');
-      return response.json();
-    }
+    queryKey: [`/api/timeline/${today}`],
+    enabled: !!localStorage.getItem('auth_token'), // Only run when authenticated
+    retry: false,
+    staleTime: 1000 * 30, // 30 seconds
   });
 
   const formatTime = (timestamp: Date | string) => {
