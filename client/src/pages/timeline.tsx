@@ -16,21 +16,12 @@ export default function Timeline() {
   // Default to today's date
   const today = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState<string>(today);
-  const [hasAuth, setHasAuth] = useState(false);
-
-  // Check for auth token
-  useEffect(() => {
-    const checkAuth = () => setHasAuth(!!localStorage.getItem('auth_token'));
-    checkAuth();
-    
-    // Listen for storage changes (when auth token is set)
-    window.addEventListener('storage', checkAuth);
-    return () => window.removeEventListener('storage', checkAuth);
-  }, []);
   
   const { data: timelineEntries, isLoading } = useQuery<TimelineEntry[]>({
-    queryKey: ["/api/timeline", selectedDate],
-    enabled: !!selectedDate && hasAuth, // Only run when we have a date and auth token
+    queryKey: [`/api/timeline/${selectedDate}`],
+    enabled: !!selectedDate && !!localStorage.getItem('auth_token'), // Only run when we have a date and auth token
+    retry: false,
+    staleTime: 1000 * 60, // 1 minute
   });
 
   const formatDateTime = (timestamp: Date | string) => {
