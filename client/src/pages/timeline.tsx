@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FoodEntry, SymptomEntry } from "@shared/schema";
 import { Utensils, AlertTriangle, Clock, Calendar, Filter } from "lucide-react";
@@ -13,10 +13,24 @@ function isSymptomEntry(entry: FoodEntry | SymptomEntry): entry is SymptomEntry 
 }
 
 export default function Timeline() {
-  const [selectedDate, setSelectedDate] = useState<string>("");
+  // Default to today's date
+  const today = new Date().toISOString().split('T')[0];
+  const [selectedDate, setSelectedDate] = useState<string>(today);
+  const [hasAuth, setHasAuth] = useState(false);
+
+  // Check for auth token
+  useEffect(() => {
+    const checkAuth = () => setHasAuth(!!localStorage.getItem('auth_token'));
+    checkAuth();
+    
+    // Listen for storage changes (when auth token is set)
+    window.addEventListener('storage', checkAuth);
+    return () => window.removeEventListener('storage', checkAuth);
+  }, []);
   
   const { data: timelineEntries, isLoading } = useQuery<TimelineEntry[]>({
     queryKey: ["/api/timeline", selectedDate],
+    enabled: !!selectedDate && hasAuth, // Only run when we have a date and auth token
   });
 
   const formatDateTime = (timestamp: Date | string) => {
@@ -65,7 +79,7 @@ export default function Timeline() {
   };
 
   const clearFilter = () => {
-    setSelectedDate("");
+    setSelectedDate("all");
   };
 
   if (isLoading) {
@@ -111,13 +125,13 @@ export default function Timeline() {
         <div className="flex items-center space-x-2">
           <Button
             size="sm"
-            variant={selectedDate ? "secondary" : "default"}
-            onClick={selectedDate ? clearFilter : todayFilter}
+            variant={selectedDate === "all" ? "secondary" : "default"}
+            onClick={selectedDate === "all" ? todayFilter : clearFilter}
             className="bg-white/20 hover:bg-white/30 text-white border-white/20"
             data-testid="button-filter-today"
           >
             <Filter size={14} className="mr-1" />
-            {selectedDate ? "Show All" : "Today Only"}
+            {selectedDate === "all" ? "Today Only" : "Show All"}
           </Button>
           
           {timelineEntries && (
@@ -219,12 +233,12 @@ export default function Timeline() {
             </div>
             <h3 className="text-xl font-bold text-gray-800 mb-2">No Timeline Entries</h3>
             <p className="text-gray-500 mb-6">
-              {selectedDate 
-                ? "No entries found for the selected date" 
-                : "Start logging foods and symptoms to see your timeline"
+              {selectedDate === "all"
+                ? "Start logging foods and symptoms to see your timeline"
+                : "No entries found for the selected date" 
               }
             </p>
-            {selectedDate && (
+            {selectedDate !== "all" && (
               <Button onClick={clearFilter} variant="outline">
                 View All Entries
               </Button>

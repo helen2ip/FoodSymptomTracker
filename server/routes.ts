@@ -327,7 +327,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/timeline/:date", requireAuth, async (req, res) => {
     try {
       const userId = (req as any).userId;
-      const date = req.params.date;
+      const dateParam = req.params.date;
+      // If date is "all", pass undefined to get all entries
+      const date = dateParam === "all" ? undefined : dateParam;
       const entries = await storage.getTimelineEntries(date, userId);
       res.json(entries);
     } catch (error) {
