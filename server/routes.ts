@@ -31,7 +31,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/login", async (req, res) => {
     try {
       const { email } = insertUserSchema.parse(req.body);
-      const result = await authService.sendLoginEmail(email);
+      const result = await authService.sendLoginEmail(email, req);
       
       if (result.success) {
         res.json({ message: result.message });

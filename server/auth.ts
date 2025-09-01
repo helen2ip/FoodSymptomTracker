@@ -25,6 +25,7 @@ export class AuthService {
   // Send login email with magic link
   async sendLoginEmail(
     email: string,
+    req?: any
   ): Promise<{ success: boolean; message: string }> {
     try {
       // Generate token
@@ -38,8 +39,10 @@ export class AuthService {
         expiresAt,
       });
 
-      // Create magic link
-      const loginUrl = `${process.env.REPLIT_DOMAINS?.split(",")[0] ? `https://${process.env.REPLIT_DOMAINS.split(",")[0]}` : "http://localhost:5000"}/auth/verify?token=${token}`;
+      // Create magic link using request host
+      const protocol = req?.protocol || (process.env.NODE_ENV === 'production' ? 'https' : 'http');
+      const host = req?.get('host') || 'localhost:5000';
+      const loginUrl = `${protocol}://${host}/auth/verify?token=${token}`;
 
       // Send email
       await resend.emails.send({
