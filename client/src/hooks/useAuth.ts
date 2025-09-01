@@ -11,7 +11,8 @@ export function useAuth() {
     error,
   } = useQuery<User>({
     queryKey: ["/api/auth/user"],
-    retry: false,
+    retry: 1, // Allow one retry for session establishment
+    retryDelay: 500, // Wait 500ms before retry
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
