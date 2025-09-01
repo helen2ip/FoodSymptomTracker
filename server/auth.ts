@@ -25,7 +25,7 @@ export class AuthService {
   // Send login email with magic link
   async sendLoginEmail(
     email: string,
-    req?: any
+    req?: any,
   ): Promise<{ success: boolean; message: string }> {
     try {
       // Generate token
@@ -40,8 +40,10 @@ export class AuthService {
       });
 
       // Create magic link using request host
-      const protocol = req?.protocol || (process.env.NODE_ENV === 'production' ? 'https' : 'http');
-      const host = req?.get('host') || 'localhost:5000';
+      const protocol =
+        req?.protocol ||
+        (process.env.NODE_ENV === "production" ? "https" : "http");
+      const host = req?.get("host") || "localhost:5000";
       const loginUrl = `${protocol}://${host}/auth/verify?token=${token}`;
 
       // Send email
@@ -86,19 +88,18 @@ export class AuthService {
   ): Promise<{ success: boolean; user?: User; message: string }> {
     try {
       const [loginToken] = await db
-      .select()
-      .from(loginTokens)
-      .where(
-        and(
-          eq(loginTokens.token, token),
-          gt(loginTokens.expiresAt, new Date())
-        )
-      );
+        .select()
+        .from(loginTokens)
+        .where(
+          and(
+            eq(loginTokens.token, token),
+            gt(loginTokens.expiresAt, new Date()),
+          ),
+        );
 
       if (!loginToken) {
         return { success: false, message: "Invalid or expired login link." };
       }
-
 
       // Find or create user
       let [user] = await db
