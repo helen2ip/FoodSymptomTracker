@@ -60,6 +60,7 @@ export const userStats = pgTable("user_stats", {
 
 export const insertFoodEntrySchema = createInsertSchema(foodEntries).omit({
   id: true,
+  userId: true,
   logCount: true
 }).extend({
   timestamp: z.union([z.date(), z.string()]).transform(val => 
@@ -69,7 +70,8 @@ export const insertFoodEntrySchema = createInsertSchema(foodEntries).omit({
 });
 
 export const insertSymptomEntrySchema = createInsertSchema(symptomEntries).omit({
-  id: true
+  id: true,
+  userId: true
 }).extend({
   timestamp: z.union([z.date(), z.string()]).transform(val => 
     typeof val === 'string' ? new Date(val) : val
@@ -79,6 +81,7 @@ export const insertSymptomEntrySchema = createInsertSchema(symptomEntries).omit(
 
 export const insertCorrelationSchema = createInsertSchema(correlations).omit({
   id: true,
+  userId: true,
   lastUpdated: true
 });
 
@@ -95,7 +98,8 @@ export const insertLoginTokenSchema = createInsertSchema(loginTokens).omit({
 });
 
 export const insertUserStatsSchema = createInsertSchema(userStats).omit({
-  id: true
+  id: true,
+  userId: true
 });
 
 export type User = typeof users.$inferSelect;
