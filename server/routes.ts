@@ -48,11 +48,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }),
   );
 
-  // Auth middleware
+  // Auth middleware - check for auth token
   const requireAuth = (req: any, res: any, next: any) => {
-    if (!req.session.userId) {
+    const authToken = req.headers.authorization?.replace('Bearer ', '');
+    const userId = req.headers['x-user-id'];
+    
+    if (!authToken || !userId) {
       return res.status(401).json({ message: "Authentication required" });
     }
+    
+    // Simple token validation (starts with user ID)
+    if (!authToken.startsWith(userId + '-')) {
+      return res.status(401).json({ message: "Invalid auth token" });
+    }
+    
+    req.userId = userId;
     next();
   };
   // Auth endpoints
@@ -96,18 +106,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Set session
         (req.session as any).userId = result.user.id;
         
-        // Return success page with automatic redirect using URL parameters
+        // Create auth token and redirect with it
+        const authToken = `${result.user.id}-${Date.now()}-${Math.random().toString(36)}`;
+        
         return res.send(`
           <html><body>
             <h1>✅ Login Successful!</h1>
             <p>Welcome back! Redirecting to Food Lab...</p>
             <script>
-              // Redirect directly with parameters for frontend to handle
+              // Store auth token and redirect
+              localStorage.setItem('auth_token', '${authToken}');
+              localStorage.setItem('user_id', '${result.user.id}');
               setTimeout(() => {
-                window.location.href = '/?login_success=true&user_id=${result.user.id}';
-              }, 1000);
+                window.location.href = '/';
+              }, 500);
             </script>
-            <a href="/?login_success=true&user_id=${result.user.id}">Click here if not redirected automatically</a>
+            <a href="/" onclick="localStorage.setItem('auth_token', '${authToken}'); localStorage.setItem('user_id', '${result.user.id}');">Click here if not redirected automatically</a>
           </body></html>
         `);
       } else {
@@ -131,13 +145,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/auth/user", async (req, res) => {
+  app.get("/api/auth/user", requireAuth, async (req, res) => {
     try {
-      const userId = (req.session as any).userId;
-      if (!userId) {
-        return res.status(401).json({ message: "Not authenticated" });
-      }
-
+      const userId = (req as any).userId;
       const user = await authService.getUserById(userId);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -186,7 +196,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Food entries endpoints
   app.get("/api/foods", requireAuth, async (req, res) => {
     try {
-      const userId = (req.session as any).userId;
+      const userId = (req as any).userId;
       const foods = await storage.getFoodEntries(userId);
       res.json(foods);
     } catch (error) {
@@ -196,7 +206,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/foods/frequent", requireAuth, async (req, res) => {
     try {
-      const userId = (req.session as any).userId;
+      const userId = (req as any).userId;
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 8;
       const foods = await storage.getFrequentFoods(limit, userId);
       res.json(foods);
@@ -207,7 +217,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/foods/date/:date", requireAuth, async (req, res) => {
     try {
-      const userId = (req.session as any).userId;
+      const userId = (req as any).userId;
       const foods = await storage.getFoodEntriesByDate(req.params.date, userId);
       res.json(foods);
     } catch (error) {
@@ -219,7 +229,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/foods", requireAuth, async (req, res) => {
     try {
-      const userId = (req.session as any).userId;
+      const userId = (req as any).userId;
       const validatedData = insertFoodEntrySchema.parse(req.body);
       const food = await storage.createFoodEntry(validatedData, userId);
       res.status(201).json(food);
@@ -237,7 +247,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Symptom entries endpoints
   app.get("/api/symptoms", requireAuth, async (req, res) => {
     try {
-      const userId = (req.session as any).userId;
+      const userId = (req as any).userId;
       const symptoms = await storage.getSymptomEntries(userId);
       res.json(symptoms);
     } catch (error) {
@@ -247,7 +257,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/symptoms/date/:date", requireAuth, async (req, res) => {
     try {
-      const userId = (req.session as any).userId;
+      const userId = (req as any).userId;
       const symptoms = await storage.getSymptomEntriesByDate(
         req.params.date,
         userId,
@@ -262,7 +272,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/symptoms/recent", requireAuth, async (req, res) => {
     try {
-      const userId = (req.session as any).userId;
+      const userId = (req as any).userId;
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 5;
       const recentSymptoms = await storage.getRecentSymptoms(limit, userId);
       res.json(recentSymptoms);
@@ -273,7 +283,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/symptoms", requireAuth, async (req, res) => {
     try {
-      const userId = (req.session as any).userId;
+      const userId = (req as any).userId;
       const validatedData = insertSymptomEntrySchema.parse(req.body);
       const symptom = await storage.createSymptomEntry(validatedData, userId);
       res.status(201).json(symptom);
@@ -294,7 +304,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Correlations endpoint
   app.get("/api/correlations", requireAuth, async (req, res) => {
     try {
-      const userId = (req.session as any).userId;
+      const userId = (req as any).userId;
       const correlations = await storage.getCorrelations(userId);
       res.json(correlations);
     } catch (error) {
@@ -305,7 +315,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // User stats endpoint
   app.get("/api/stats", requireAuth, async (req, res) => {
     try {
-      const userId = (req.session as any).userId;
+      const userId = (req as any).userId;
       const stats = await storage.getUserStats(userId);
       res.json(stats);
     } catch (error) {
@@ -316,7 +326,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Timeline endpoint
   app.get("/api/timeline/:date", requireAuth, async (req, res) => {
     try {
-      const userId = (req.session as any).userId;
+      const userId = (req as any).userId;
       const date = req.params.date;
       const entries = await storage.getTimelineEntries(date, userId);
       res.json(entries);
@@ -328,7 +338,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Food search endpoint
   app.get("/api/foods/search", requireAuth, async (req, res) => {
     try {
-      const userId = (req.session as any).userId;
+      const userId = (req as any).userId;
       const query = req.query.q as string;
       if (!query) {
         return res.json([]);
