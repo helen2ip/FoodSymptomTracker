@@ -79,44 +79,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/auth/verify", async (req, res) => {
     try {
-      console.log("Verify endpoint called with token:", req.query.token ? "present" : "missing");
-      
       const token = req.query.token as string;
       if (!token) {
-        console.error("No token provided in verify request");
-        return res.status(400).send("Invalid login link");
+        return res.send(`
+          <html><body>
+            <h1>❌ Login Failed</h1>
+            <p>No token provided in login link</p>
+            <a href="/">Back to Food Lab</a>
+          </body></html>
+        `);
       }
 
-      console.log("Calling authService.verifyToken...");
       const result = await authService.verifyToken(token);
-      console.log("Token verification result:", { success: result.success, message: result.message, hasUser: !!result.user });
 
       if (result.success && result.user) {
-        console.log("Setting session userId:", result.user.id);
         // Set session
         (req.session as any).userId = result.user.id;
         
-        console.log("Saving session...");
-        // Try session save, but also provide fallback
-        req.session.save((err) => {
-          if (err) {
-            console.error("Session save error:", err);
-            console.error("Session save error details:", err.message, err.stack);
-            // Fallback: redirect with user ID parameter for frontend to handle
-            return res.redirect(`/?login_success=true&user_id=${result.user!.id}`);
-          }
-          console.log("Session saved successfully, redirecting to /");
-          // Redirect to app after session is saved
-          res.redirect("/");
-        });
+        // Return success page with automatic redirect
+        return res.send(`
+          <html><body>
+            <h1>✅ Login Successful!</h1>
+            <p>Welcome back! Redirecting to Food Lab...</p>
+            <script>
+              // Set session via API call, then redirect
+              fetch('/api/auth/set-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: '${result.user.id}' })
+              }).then(() => {
+                window.location.href = '/';
+              }).catch(() => {
+                // Fallback redirect with parameters
+                window.location.href = '/?login_success=true&user_id=${result.user.id}';
+              });
+            </script>
+            <a href="/?login_success=true&user_id=${result.user.id}">Click here if not redirected automatically</a>
+          </body></html>
+        `);
       } else {
-        console.error("Token verification failed:", result.message);
-        res.status(400).send(`Login failed: ${result.message}`);
+        return res.send(`
+          <html><body>
+            <h1>❌ Login Failed</h1>
+            <p>Error: ${result.message}</p>
+            <a href="/">Back to Food Lab</a>
+          </body></html>
+        `);
       }
     } catch (error) {
-      console.error("Login verification error:", error);
-      console.error("Error details:", (error as Error).message, (error as Error).stack);
-      res.status(500).send("Login verification failed");
+      return res.send(`
+        <html><body>
+          <h1>❌ Login Error</h1>
+          <p>An error occurred during login verification</p>
+          <p>Error: ${(error as Error).message}</p>
+          <a href="/">Back to Food Lab</a>
+        </body></html>
+      `);
     }
   });
 
