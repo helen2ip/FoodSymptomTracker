@@ -131,13 +131,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/foods", requireAuth, async (req, res) => {
     try {
       const userId = (req.session as any).userId;
+      console.log("Food entry request body:", req.body);
+      console.log("User ID:", userId);
       const validatedData = insertFoodEntrySchema.parse(req.body);
+      console.log("Validated data:", validatedData);
       const food = await storage.createFoodEntry(validatedData, userId);
       res.status(201).json(food);
     } catch (error) {
       if (error instanceof z.ZodError) {
+        console.error("Validation error:", error.errors);
         res.status(400).json({ message: "Invalid food entry data", errors: error.errors });
       } else {
+        console.error("Food creation error:", error);
         res.status(500).json({ message: "Failed to create food entry" });
       }
     }
