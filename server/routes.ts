@@ -96,23 +96,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Set session
         (req.session as any).userId = result.user.id;
         
-        // Return success page with automatic redirect
+        // Return success page with automatic redirect using URL parameters
         return res.send(`
           <html><body>
             <h1>✅ Login Successful!</h1>
             <p>Welcome back! Redirecting to Food Lab...</p>
             <script>
-              // Set session via API call, then redirect
-              fetch('/api/auth/set-session', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: '${result.user.id}' })
-              }).then(() => {
-                window.location.href = '/';
-              }).catch(() => {
-                // Fallback redirect with parameters
+              // Redirect directly with parameters for frontend to handle
+              setTimeout(() => {
                 window.location.href = '/?login_success=true&user_id=${result.user.id}';
-              });
+              }, 1000);
             </script>
             <a href="/?login_success=true&user_id=${result.user.id}">Click here if not redirected automatically</a>
           </body></html>
