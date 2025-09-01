@@ -34,7 +34,7 @@ export class AuthService {
 
       // Send email
       await resend.emails.send({
-        from: 'Food Lab <noreply@resend.dev>',
+        from: 'Food Lab <onboarding@resend.dev>',
         to: email,
         subject: '🧪 Your Food Lab Login Link',
         html: `
