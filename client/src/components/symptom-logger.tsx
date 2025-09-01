@@ -39,7 +39,8 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
       const today = new Date().toISOString().split('T')[0];
       queryClient.invalidateQueries({ queryKey: ["/api/symptoms"] });
       queryClient.invalidateQueries({ queryKey: ["/api/symptoms/recent"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/timeline", today] });
+      queryClient.invalidateQueries({ queryKey: [`/api/timeline/${today}`] });
+      queryClient.invalidateQueries({ predicate: (query) => !!query.queryKey[0]?.toString().startsWith('/api/timeline') });
       setIsOpen(false);
       resetForm();
       toast({
