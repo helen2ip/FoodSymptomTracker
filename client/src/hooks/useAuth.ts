@@ -15,7 +15,7 @@ export function useAuth() {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
   console.log(
-    "usaAuth, user:",
+    "useAuth, user:",
     user,
     "isLoading:",
     isLoading,
