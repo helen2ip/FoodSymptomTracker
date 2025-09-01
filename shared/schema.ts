@@ -5,6 +5,7 @@ import { z } from "zod";
 
 export const foodEntries = pgTable("food_entries", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
   foodName: text("food_name").notNull(),
   timestamp: timestamp("timestamp").notNull().defaultNow(),
   category: text("category"),
@@ -13,6 +14,7 @@ export const foodEntries = pgTable("food_entries", {
 
 export const symptomEntries = pgTable("symptom_entries", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
   symptomName: text("symptom_name").notNull(),
   severity: integer("severity").notNull(), // 1-5 scale
   timestamp: timestamp("timestamp").notNull().defaultNow(),
@@ -21,6 +23,7 @@ export const symptomEntries = pgTable("symptom_entries", {
 
 export const correlations = pgTable("correlations", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
   foodName: text("food_name").notNull(),
   symptomName: text("symptom_name").notNull(),
   confidence: real("confidence").notNull(), // 0-1 scale
@@ -46,7 +49,7 @@ export const loginTokens = pgTable("login_tokens", {
 
 export const userStats = pgTable("user_stats", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").references(() => users.id),
+  userId: varchar("user_id").notNull().references(() => users.id),
   currentStreak: integer("current_streak").default(0),
   longestStreak: integer("longest_streak").default(0),
   totalFoodsLogged: integer("total_foods_logged").default(0),

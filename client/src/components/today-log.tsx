@@ -137,7 +137,7 @@ export default function TodayLog() {
             <Utensils className="text-gray-400" size={24} />
           </div>
           <p className="text-gray-500 mb-4">No data points recorded yet!</p>
-          <p className="text-sm text-gray-400">Start collecting data to begin your food experiment! 🧪</p>
+          <p className="text-sm text-gray-400">Start collecting data to begin your food experiment!</p>
         </div>
       )}
     </section>

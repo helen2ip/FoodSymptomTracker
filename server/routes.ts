@@ -97,38 +97,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
   // Food entries endpoints
-  app.get("/api/foods", async (req, res) => {
+  app.get("/api/foods", requireAuth, async (req, res) => {
     try {
-      const foods = await storage.getFoodEntries();
+      const userId = (req.session as any).userId;
+      const foods = await storage.getFoodEntries(userId);
       res.json(foods);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch food entries" });
     }
   });
 
-  app.get("/api/foods/frequent", async (req, res) => {
+  app.get("/api/foods/frequent", requireAuth, async (req, res) => {
     try {
+      const userId = (req.session as any).userId;
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 8;
-      const foods = await storage.getFrequentFoods(limit);
+      const foods = await storage.getFrequentFoods(limit, userId);
       res.json(foods);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch frequent foods" });
     }
   });
 
-  app.get("/api/foods/date/:date", async (req, res) => {
+  app.get("/api/foods/date/:date", requireAuth, async (req, res) => {
     try {
-      const foods = await storage.getFoodEntriesByDate(req.params.date);
+      const userId = (req.session as any).userId;
+      const foods = await storage.getFoodEntriesByDate(req.params.date, userId);
       res.json(foods);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch food entries for date" });
     }
   });
 
-  app.post("/api/foods", async (req, res) => {
+  app.post("/api/foods", requireAuth, async (req, res) => {
     try {
+      const userId = (req.session as any).userId;
       const validatedData = insertFoodEntrySchema.parse(req.body);
-      const food = await storage.createFoodEntry(validatedData);
+      const food = await storage.createFoodEntry(validatedData, userId);
       res.status(201).json(food);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -140,38 +144,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Symptom entries endpoints
-  app.get("/api/symptoms", async (req, res) => {
+  app.get("/api/symptoms", requireAuth, async (req, res) => {
     try {
-      const symptoms = await storage.getSymptomEntries();
+      const userId = (req.session as any).userId;
+      const symptoms = await storage.getSymptomEntries(userId);
       res.json(symptoms);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch symptom entries" });
     }
   });
 
-  app.get("/api/symptoms/date/:date", async (req, res) => {
+  app.get("/api/symptoms/date/:date", requireAuth, async (req, res) => {
     try {
-      const symptoms = await storage.getSymptomEntriesByDate(req.params.date);
+      const userId = (req.session as any).userId;
+      const symptoms = await storage.getSymptomEntriesByDate(req.params.date, userId);
       res.json(symptoms);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch symptom entries for date" });
     }
   });
 
-  app.get("/api/symptoms/recent", async (req, res) => {
+  app.get("/api/symptoms/recent", requireAuth, async (req, res) => {
     try {
+      const userId = (req.session as any).userId;
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 5;
-      const recentSymptoms = await storage.getRecentSymptoms(limit);
+      const recentSymptoms = await storage.getRecentSymptoms(limit, userId);
       res.json(recentSymptoms);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch recent symptoms" });
     }
   });
 
-  app.post("/api/symptoms", async (req, res) => {
+  app.post("/api/symptoms", requireAuth, async (req, res) => {
     try {
+      const userId = (req.session as any).userId;
       const validatedData = insertSymptomEntrySchema.parse(req.body);
-      const symptom = await storage.createSymptomEntry(validatedData);
+      const symptom = await storage.createSymptomEntry(validatedData, userId);
       res.status(201).json(symptom);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -183,9 +191,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Correlations endpoint
-  app.get("/api/correlations", async (req, res) => {
+  app.get("/api/correlations", requireAuth, async (req, res) => {
     try {
-      const correlations = await storage.getCorrelations();
+      const userId = (req.session as any).userId;
+      const correlations = await storage.getCorrelations(userId);
       res.json(correlations);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch correlations" });
@@ -193,9 +202,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User stats endpoint
-  app.get("/api/stats", async (req, res) => {
+  app.get("/api/stats", requireAuth, async (req, res) => {
     try {
-      const stats = await storage.getUserStats();
+      const userId = (req.session as any).userId;
+      const stats = await storage.getUserStats(userId);
       res.json(stats);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch user stats" });
@@ -203,10 +213,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Timeline endpoint
-  app.get("/api/timeline/:date", async (req, res) => {
+  app.get("/api/timeline/:date", requireAuth, async (req, res) => {
     try {
+      const userId = (req.session as any).userId;
       const date = req.params.date;
-      const entries = await storage.getTimelineEntries(date);
+      const entries = await storage.getTimelineEntries(date, userId);
       res.json(entries);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch timeline entries" });
@@ -214,15 +225,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Food search endpoint
-  app.get("/api/foods/search", async (req, res) => {
+  app.get("/api/foods/search", requireAuth, async (req, res) => {
     try {
+      const userId = (req.session as any).userId;
       const query = req.query.q as string;
       if (!query) {
         return res.json([]);
       }
       
       // Simple search - in production this would be a proper search database
-      const allFoods = await storage.getFoodEntries();
+      const allFoods = await storage.getFoodEntries(userId);
       const searchResults = allFoods.filter(food => 
         food.foodName.toLowerCase().includes(query.toLowerCase())
       );
