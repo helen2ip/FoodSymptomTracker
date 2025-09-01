@@ -7,15 +7,16 @@ import { insertFoodEntrySchema, insertSymptomEntrySchema, insertUserSchema } fro
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Session configuration
+  // Session configuration - persistent login until explicit logout
   app.use(session({
     secret: process.env.SESSION_SECRET || 'food-lab-dev-secret-change-in-production',
     resave: false,
     saveUninitialized: false,
+    rolling: true, // Reset expiry on each request to keep user logged in
     cookie: {
       secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      maxAge: 365 * 24 * 60 * 60 * 1000 // 1 year - effectively permanent until logout
     }
   }));
 
