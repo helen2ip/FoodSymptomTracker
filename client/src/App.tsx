@@ -16,10 +16,7 @@ import BottomNav from "@/components/bottom-nav";
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
 
-  // Temporarily bypass auth to show logged-in interface
-  const showLoggedInInterface = true;
-
-  if (isLoading && !showLoggedInInterface) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-lab-purple to-lab-blue flex items-center justify-center">
         <div className="text-white text-center">
@@ -30,7 +27,7 @@ function Router() {
     );
   }
 
-  if (!isAuthenticated && !showLoggedInInterface) {
+  if (!isAuthenticated) {
     return <LoginForm />;
   }
 
