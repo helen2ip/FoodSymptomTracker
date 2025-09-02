@@ -9,6 +9,14 @@ import { randomUUID } from "crypto";
 import { db } from "./db";
 import { eq, desc, sql, and, ilike } from "drizzle-orm";
 
+// Helper function to normalize symptom names consistently
+function normalizeSymptomName(name: string): string {
+  return name.toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 export interface IStorage {
   // Food entries
   getFoodEntries(userId?: string): Promise<FoodEntry[]>;
@@ -115,6 +123,7 @@ export class MemStorage implements IStorage {
       const entry: FoodEntry = {
         ...insertEntry,
         id,
+        userId: 'mem-user-1',
         logCount: 1,
         timestamp: insertEntry.timestamp || new Date(),
         category: insertEntry.category || null
@@ -156,6 +165,8 @@ export class MemStorage implements IStorage {
     const entry: SymptomEntry = {
       ...insertEntry,
       id,
+      userId: 'mem-user-1',
+      symptomName: normalizeSymptomName(insertEntry.symptomName),
       timestamp: insertEntry.timestamp || new Date(),
       notes: insertEntry.notes || null
     };
@@ -182,6 +193,7 @@ export class MemStorage implements IStorage {
       correlation = {
         ...correlationData,
         id,
+        userId: 'mem-user-1',
         occurrences: 1,
         lastUpdated: new Date()
       };
@@ -328,7 +340,9 @@ export class DatabaseStorage implements IStorage {
       await query.where(eq(symptomEntries.userId, userId)) :
       await query;
       
-    const uniqueSymptoms = Array.from(new Set(symptoms.map(s => s.symptomName)));
+    // Case-insensitive uniqueness by normalizing before creating set
+    const normalizedSymptoms = symptoms.map(s => normalizeSymptomName(s.symptomName));
+    const uniqueSymptoms = Array.from(new Set(normalizedSymptoms));
     return uniqueSymptoms.slice(0, limit);
   }
 
@@ -336,6 +350,7 @@ export class DatabaseStorage implements IStorage {
     const [entry] = await db.insert(symptomEntries)
       .values({
         ...insertEntry,
+        symptomName: normalizeSymptomName(insertEntry.symptomName),
         userId,
         timestamp: insertEntry.timestamp || new Date()
       })

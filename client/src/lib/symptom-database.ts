@@ -5,7 +5,7 @@ export const commonSymptoms = [
   "Diarrhea", "Constipation", "Cramps", "Stomach Cramps", "Indigestion",
   
   // Skin reactions (common allergy symptoms)
-  "Skin Rash", "Skin Itching", "Hives", "Eczema", "Swelling", "Red Skin",
+  "Skin Rash", "Skin Itching", "Hives", "Eczema", "Swelling", "Red Skin", "Dry Skin", 
   
   // Respiratory symptoms
   "Runny Nose", "Sneezing", "Congestion", "Watery Eyes", "Itchy Eyes", "Cough",
@@ -17,7 +17,7 @@ export const commonSymptoms = [
   
   // Other common symptoms
   "Joint Pain", "Muscle Aches", "Back Pain", "Inflammation", "Low Energy",
-  "Feeling Unwell", "Food Cravings", "Weight Changes"
+  "Feeling Unwell", "Food Cravings", "Weight Changes", "Yeast Infection"
 ];
 
 export function searchSymptoms(query: string, limit = 10): string[] {
