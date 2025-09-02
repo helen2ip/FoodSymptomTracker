@@ -11,6 +11,8 @@ export default function LabHeader() {
     return <div className="h-32 science-gradient animate-pulse" />;
   }
 
+  const formattedDate = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }).replace('.', '').toUpperCase();
+  
   return (
     <header className="science-gradient safe-area-top px-6 py-4 text-white relative overflow-hidden">
       {/* Scientific background pattern */}
@@ -28,8 +30,8 @@ export default function LabHeader() {
               <FlaskConical size={20} />
             </div>
             <div>
-              <h1 className="text-xl font-bold">🧪 Food Lab</h1>
-              <p className="text-sm opacity-90">Experiment #{stats?.currentStreak || 0}</p>
+              <h1 className="text-xl font-bold">Food Lab 🚀</h1>
+              <p className="text-sm opacity-90">{formattedDate}</p>
             </div>
           </div>
           <div className="flex items-center space-x-3">
