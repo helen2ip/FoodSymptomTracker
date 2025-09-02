@@ -119,7 +119,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
             {/* Quick suggestions */}
             {symptomName.length < 2 && recentSymptoms.length > 0 && (
               <div className="mt-2">
-                <p className="text-xs text-lab-purple font-mono mb-2">⚡ Recent REACTIONS</p>
+                <p className="text-xs text-lab-purple font-mono mb-2">⚡ Recent Reactions</p>
                 <div className="flex flex-wrap gap-1">
                   {recentSymptoms.slice(0, 5).map((symptom, index) => (
                     <button
