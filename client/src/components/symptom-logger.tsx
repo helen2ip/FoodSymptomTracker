@@ -106,7 +106,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="symptom-name" className="font-mono text-sm">Reaction Type</Label>
+            <Label htmlFor="symptom-name" className="font-mono text-sm">REACTION TYPE</Label>
             <Input
               id="symptom-name"
               type="text"
@@ -158,30 +158,32 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
           </div>
 
           <div>
-            <Label htmlFor="severity" className="font-mono text-sm">INTENSITY_SCALE (1-5)</Label>
-            <div className="flex items-center space-x-2 mt-2">
-              {[1, 2, 3, 4, 5].map((level) => (
-                <button
-                  key={level}
-                  type="button"
-                  className={`w-8 h-8 rounded-full border-2 transition-all ${
-                    severity >= level
-                      ? "bg-lab-red border-lab-red text-white"
-                      : "border-gray-300 hover:border-lab-red"
-                  }`}
-                  onClick={() => setSeverity(level)}
-                  data-testid={`button-severity-${level}`}
-                >
-                  {level}
-                </button>
-              ))}
-              <span className="text-sm text-gray-500 ml-2">
+            <Label htmlFor="severity" className="font-mono text-sm">INTENSITY_SCALE</Label>
+            <div>
+              <div className="flex items-center space-x-2 mt-2">
+                {[1, 2, 3, 4, 5].map((level) => (
+                  <button
+                    key={level}
+                    type="button"
+                    className={`w-8 h-8 rounded-full border-2 transition-all ${
+                      severity >= level
+                        ? "bg-lab-red border-lab-red text-white"
+                        : "border-gray-300 hover:border-lab-red"
+                    }`}
+                    onClick={() => setSeverity(level)}
+                    data-testid={`button-severity-${level}`}
+                  >
+                    {level}
+                  </button>
+                ))}
+              </div>
+              <div className="text-sm text-gray-500 mt-2">
                 {severity === 1 && "Mild"}
                 {severity === 2 && "Light"}
                 {severity === 3 && "Moderate"}
                 {severity === 4 && "Strong"}
                 {severity === 5 && "Severe"}
-              </span>
+              </div>
             </div>
           </div>
 
@@ -213,7 +215,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
               className="flex-1 science-gradient text-white font-mono"
               data-testid="button-submit-symptom"
             >
-              {addSymptomMutation.isPending ? "PROCESSING..." : "RECORD_DATA"}
+              {addSymptomMutation.isPending ? "PROCESSING..." : "Record Data"}
             </Button>
           </div>
         </form>
