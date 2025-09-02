@@ -11,7 +11,7 @@ export const foodCategories = {
     "Grapefruit", "Pink Grapefruit", "Ruby Red Grapefruit", "Avocado", "Hass Avocado",
     "Coconut", "Fresh Coconut", "Coconut Meat", "Dates", "Medjool Dates", "Figs", "Dried Figs",
     "Apricot", "Dried Apricot", "Nectarine", "Papaya", "Passion Fruit", "Dragon Fruit",
-    "Pomegranate", "Persimmon", "Star Fruit", "Lychee", "Rambutan", "Jackfruit", "Durian"
+    "Pomegranate", "Persimmon", "Star Fruit", "Lychee", "Rambutan", "Jackfruit", "Durian", "Cactus Fruit"
   ],
   vegetables: [
     "Broccoli", "Broccolini", "Carrots", "Baby Carrots", "Purple Carrots",
@@ -99,7 +99,7 @@ export const foodCategories = {
     "Pie", "Apple Pie", "Pumpkin Pie", "Cherry Pie", "Donuts", "Glazed Donut", "Chocolate Donut",
     "Muffin", "Blueberry Muffin", "Bran Muffin", "Crackers", "Saltines", "Graham Crackers",
     "Pretzels", "Soft Pretzels", "Popcorn", "Caramel Popcorn", "Granola Bar", "Protein Bar",
-    "Energy Bar", "Cereal Bar", "Sandwich", "PB&J", "Grilled Cheese", "BLT", "Club Sandwich"
+    "Energy Bar", "Cereal Bar", "Sandwich", "PB&J", "Grilled Cheese", "BLT", "Club Sandwich", "Flan", "Cheesecake"
   ],
   condiments_spices: [
     "Salt", "Pepper", "Garlic Powder", "Onion Powder", "Paprika", "Cumin", "Oregano",
