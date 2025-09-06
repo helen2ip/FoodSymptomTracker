@@ -109,6 +109,11 @@ export default function TodayLog() {
                         <span className={`text-xs px-2 py-1 rounded-full ${tagColor}`}>
                           {isSymptom ? "Symptom" : "Food"}
                         </span>
+                        {!isSymptom && (entry as FoodEntry).logCount && (entry as FoodEntry).logCount > 1 && (
+                          <span className="text-xs font-mono bg-lab-purple/10 text-lab-purple px-2 py-1 rounded-full">
+                            ×{(entry as FoodEntry).logCount}
+                          </span>
+                        )}
                       </div>
                       {isSymptom && (
                         <div className="flex items-center space-x-1 mt-2">

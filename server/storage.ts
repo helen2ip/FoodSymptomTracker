@@ -281,8 +281,8 @@ export class DatabaseStorage implements IStorage {
       try {
         const [updated] = await db.update(foodEntries)
           .set({ 
-            logCount: (existing.logCount || 0) + 1,
-            timestamp: insertEntry.timestamp || new Date()
+            logCount: (existing.logCount || 0) + 1
+            // Don't update timestamp - keep original time to maintain position in timeline
           })
           .where(eq(foodEntries.id, existing.id))
           .returning();
