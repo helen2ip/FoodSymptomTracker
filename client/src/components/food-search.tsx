@@ -172,7 +172,7 @@ export default function FoodSearch({ selectedTimeOption, setSelectedTimeOption }
               onChange={(e) => setSelectedTimeOption(e.target.value as TimeOption)}
               className={`w-full py-2 px-3 rounded-lg text-sm font-medium appearance-none cursor-pointer focus:outline-none transition-colors ${
                 isUsingTimeSelection
-                  ? 'bg-lab-purple text-white'
+                  ? 'bg-lab-blue text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200'
               }`}
               data-testid="select-past-time"
