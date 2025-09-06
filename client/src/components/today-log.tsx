@@ -160,9 +160,6 @@ export default function TodayLog() {
                             {formatTime(entry.timestamp)}
                           </span>
                         </div>
-                        <span className={`text-xs px-2 py-1 rounded-full ${tagColor}`}>
-                          {isSymptom ? "Symptom" : "Food"}
-                        </span>
                       </div>
                       {isSymptom && (
                         <div className="flex items-center space-x-1 mt-2">
