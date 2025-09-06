@@ -81,7 +81,7 @@ export default function FoodSearch({ selectedTimeOption, setSelectedTimeOption }
   const isUsingTimeSelection = selectedTimeOption !== 'now';
   
   // Get available time options
-  const timeOptions = generateTimeOptions();
+  const timeOptions = generateTimeOptions().reverse();
 
   const addFoodMutation = useMutation({
     mutationFn: async (foodEntry: InsertFoodEntry) => {
