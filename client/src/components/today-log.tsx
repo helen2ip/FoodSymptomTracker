@@ -23,6 +23,9 @@ export default function TodayLog() {
     enabled: !!localStorage.getItem('auth_token'), // Only run when authenticated
     retry: false,
     staleTime: 0, // Always fresh data for real-time updates
+    select: (data) => {
+    return data.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+    },
   });
 
   const deleteFoodMutation = useMutation({
