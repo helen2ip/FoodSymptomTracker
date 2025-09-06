@@ -166,7 +166,7 @@ export default function FoodSearch() {
           {/* Date Dropdown */}
           <div className="relative">
             <select
-              value={selectedTimeOption === 'now' ? 'today' : selectedTimeOption}
+              value={selectedTimeOption === 'now' ? '' : selectedTimeOption}
               onChange={(e) => setSelectedTimeOption(e.target.value as TimeOption)}
               className={`w-full py-2 px-3 rounded-lg text-sm font-medium appearance-none cursor-pointer focus:outline-none transition-colors ${
                 isUsingTimeSelection
@@ -175,6 +175,7 @@ export default function FoodSearch() {
               }`}
               data-testid="select-date"
             >
+              <option value="" disabled>Past</option>
               <option value="today">Today</option>
               <option value="yesterday">Yesterday</option>
               <option value="2-days-ago">2 days ago</option>
@@ -186,25 +187,27 @@ export default function FoodSearch() {
 
           {/* Hour Dropdown */}
           <div className="relative">
-            <select
-              value={selectedHour}
-              onChange={(e) => setSelectedHour(parseInt(e.target.value))}
-              className={`w-full py-2 px-3 rounded-lg text-sm font-medium appearance-none cursor-pointer focus:outline-none transition-colors ${
-                isUsingTimeSelection
-                  ? 'bg-lab-purple text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200'
-              }`}
-              data-testid="select-hour"
-            >
-              {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
-                <option key={hour} value={hour}>
-                  {formatHour(hour)}
-                </option>
-              ))}
-            </select>
-            <ChevronDown size={14} className={`absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none ${
-              isUsingTimeSelection ? 'text-white' : 'text-gray-500'
-            }`} />
+            {isUsingTimeSelection ? (
+              <select
+                value={selectedHour}
+                onChange={(e) => setSelectedHour(parseInt(e.target.value))}
+                className="w-full py-2 px-3 rounded-lg text-sm font-medium appearance-none cursor-pointer focus:outline-none transition-colors bg-lab-purple text-white"
+                data-testid="select-hour"
+              >
+                {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
+                  <option key={hour} value={hour}>
+                    {formatHour(hour)}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <div className="w-full py-2 px-3 rounded-lg text-sm font-medium bg-gray-100 text-gray-700 flex items-center justify-center">
+                --
+              </div>
+            )}
+            {isUsingTimeSelection && (
+              <ChevronDown size={14} className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none text-white" />
+            )}
           </div>
         </div>
       </div>
