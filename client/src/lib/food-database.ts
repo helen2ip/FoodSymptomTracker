@@ -120,3 +120,55 @@ export function searchFoods(query: string, limit = 10): string[] {
   
   return results.slice(0, limit);
 }
+
+// Function to determine food category for a given food name
+export function getFoodCategory(foodName: string): string {
+  const lowerFoodName = foodName.toLowerCase();
+  
+  for (const [category, foods] of Object.entries(foodCategories)) {
+    if (foods.some(food => food.toLowerCase() === lowerFoodName)) {
+      return category;
+    }
+  }
+  
+  // Fallback to general matching if exact match not found
+  if (lowerFoodName.includes('apple') || lowerFoodName.includes('banana') || lowerFoodName.includes('berry') || lowerFoodName.includes('fruit')) return 'fruits';
+  if (lowerFoodName.includes('carrot') || lowerFoodName.includes('broccoli') || lowerFoodName.includes('spinach') || lowerFoodName.includes('vegetable')) return 'vegetables';
+  if (lowerFoodName.includes('rice') || lowerFoodName.includes('bread') || lowerFoodName.includes('pasta') || lowerFoodName.includes('grain')) return 'grains';
+  if (lowerFoodName.includes('milk') || lowerFoodName.includes('cheese') || lowerFoodName.includes('yogurt')) return 'dairy';
+  if (lowerFoodName.includes('chicken') || lowerFoodName.includes('beef') || lowerFoodName.includes('fish') || lowerFoodName.includes('protein')) return 'proteins';
+  if (lowerFoodName.includes('nut') || lowerFoodName.includes('seed')) return 'nuts_seeds';
+  if (lowerFoodName.includes('coffee') || lowerFoodName.includes('tea') || lowerFoodName.includes('juice') || lowerFoodName.includes('water')) return 'beverages';
+  if (lowerFoodName.includes('pizza') || lowerFoodName.includes('burger') || lowerFoodName.includes('fries')) return 'processed_foods';
+  if (lowerFoodName.includes('salt') || lowerFoodName.includes('pepper') || lowerFoodName.includes('sauce')) return 'condiments_spices';
+  
+  return 'other';
+}
+
+// Function to get category-specific icon component
+import { Apple, Carrot, Wheat, Milk, Atom, Nut, Coffee, Pizza, ChefHat, Utensils } from "lucide-react";
+
+export function getCategoryIcon(category: string) {
+  switch (category) {
+    case 'fruits':
+      return Apple;
+    case 'vegetables':
+      return Carrot;
+    case 'grains':
+      return Wheat;
+    case 'dairy':
+      return Milk;
+    case 'proteins':
+      return Atom;
+    case 'nuts_seeds':
+      return Nut;
+    case 'beverages':
+      return Coffee;
+    case 'processed_foods':
+      return Pizza;
+    case 'condiments_spices':
+      return ChefHat;
+    default:
+      return Utensils;
+  }
+}

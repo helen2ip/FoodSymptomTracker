@@ -4,6 +4,7 @@ import { Utensils, AlertTriangle, Clock, Trash2 } from "lucide-react";
 import SymptomLogger from "./symptom-logger";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { getFoodCategory, getCategoryIcon } from "@/lib/food-database";
 
 type TimelineEntry = (FoodEntry | SymptomEntry) & {
   type?: "food" | "symptom";
@@ -145,9 +146,11 @@ export default function TodayLog() {
                     <div className={`w-10 h-10 ${iconBgColor} rounded-full flex items-center justify-center mt-1`}>
                       {isSymptom ? (
                         <AlertTriangle className={iconColor} size={16} />
-                      ) : (
-                        <Utensils className={iconColor} size={16} />
-                      )}
+                      ) : (() => {
+                        const category = getFoodCategory((entry as FoodEntry).foodName);
+                        const IconComponent = getCategoryIcon(category);
+                        return <IconComponent className={iconColor} size={16} />;
+                      })()}
                     </div>
                     <div>
                       <h3 className="font-medium text-gray-800" data-testid={`text-entry-name-${index}`}>
