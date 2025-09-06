@@ -155,7 +155,7 @@ export default function FrequentFoods() {
       </div>
       
       <div className="grid grid-cols-2 gap-3">
-        {frequentFoods?.slice(0, 6).map((food, index) => (
+        {frequentFoods?.slice(0, 4).map((food, index) => (
           <button
             key={food.id}
             className="bg-white p-1 rounded-2xl lab-shadow hover:lab-shadow-strong transition-all active:scale-95 border border-lab-purple/20 hover:border-lab-purple/40 hover:bg-lab-purple/5"
