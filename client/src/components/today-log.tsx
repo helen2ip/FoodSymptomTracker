@@ -259,7 +259,7 @@ export default function TodayLog() {
           <TimePeriodSection 
             title="Morning" 
             entries={groupedEntries.morning} 
-            icon="🌅"
+            icon="⏰"
           />
           <TimePeriodSection 
             title="Afternoon" 
