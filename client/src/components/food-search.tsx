@@ -144,83 +144,86 @@ export default function FoodSearch({ selectedTimeOption, setSelectedTimeOption }
 
   return (
     <section className="py-6">
-      {/* Time Selection Component */}
-      <div className="mb-4 bg-white rounded-2xl lab-shadow p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <Clock size={16} className="text-lab-purple" />
-          <span className="text-sm font-medium text-gray-700">Logging for...</span>
-        </div>
-        
+      {/* Combined Time Selection and Food Search Card */}
+      <div className="bg-white rounded-2xl lab-shadow p-4 mb-4">
         {/* Time Selection */}
-        <div className="grid grid-cols-2 gap-2">
-          {/* Now Button */}
-          <button
-            onClick={() => setSelectedTimeOption('now')}
-            className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
-              selectedTimeOption === 'now'
-                ? 'bg-lab-green text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-            data-testid="button-time-now"
-          >
-            Now
-          </button>
-
-          {/* Combined Past Time Dropdown */}
-          <div className="relative">
-            <select
-              value={selectedTimeOption === 'now' ? '' : selectedTimeOption}
-              onChange={(e) => setSelectedTimeOption(e.target.value as TimeOption)}
-              className={`w-full py-2 px-3 rounded-lg text-sm font-medium appearance-none cursor-pointer focus:outline-none transition-colors ${
-                isUsingTimeSelection
-                  ? 'bg-lab-purple text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200'
+        <div className="mb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Clock size={16} className="text-lab-purple" />
+            <span className="text-sm font-medium text-gray-700">Logging for...</span>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2">
+            {/* Now Button */}
+            <button
+              onClick={() => setSelectedTimeOption('now')}
+              className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
+                selectedTimeOption === 'now'
+                  ? 'bg-lab-green text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
-              data-testid="select-past-time"
+              data-testid="button-time-now"
             >
-              <option value="" disabled>In the Past</option>
-              {timeOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            <ChevronDown size={14} className={`absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none ${
-              isUsingTimeSelection ? 'text-white' : 'text-gray-500'
-            }`} />
+              Now
+            </button>
+
+            {/* Combined Past Time Dropdown */}
+            <div className="relative">
+              <select
+                value={selectedTimeOption === 'now' ? '' : selectedTimeOption}
+                onChange={(e) => setSelectedTimeOption(e.target.value as TimeOption)}
+                className={`w-full py-2 px-3 rounded-lg text-sm font-medium appearance-none cursor-pointer focus:outline-none transition-colors ${
+                  isUsingTimeSelection
+                    ? 'bg-lab-purple text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200'
+                }`}
+                data-testid="select-past-time"
+              >
+                <option value="" disabled>In the Past</option>
+                {timeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown size={14} className={`absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none ${
+                isUsingTimeSelection ? 'text-white' : 'text-gray-500'
+              }`} />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="relative">
-        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-          <Search size={20} />
+        {/* Food Search */}
+        <div className="relative">
+          <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <Search size={20} />
+          </div>
+          <input
+            ref={inputRef}
+            type="text"
+            placeholder="What did you consume??"
+            className="w-full pl-12 pr-16 py-4 bg-gray-50 rounded-xl border-2 border-transparent focus:border-lab-purple focus:outline-none focus:bg-white text-lg placeholder:text-gray-500 transition-colors"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyPress={handleKeyPress}
+            onFocus={() => query.length >= 2 && setShowSuggestions(true)}
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+            data-testid="input-food-search"
+          />
+          <button
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-lab-green to-lab-blue rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-lg"
+            onClick={() => query.trim() && handleAddFood(query.trim())}
+            disabled={!query.trim() || addFoodMutation.isPending}
+            data-testid="button-add-food-quick"
+          >
+            <Plus size={16} className="text-white" />
+          </button>
         </div>
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="What did you consume?"
-          className="w-full pl-12 pr-16 py-4 bg-white rounded-2xl lab-shadow border-2 border-transparent focus:border-lab-purple focus:outline-none text-lg placeholder:text-gray-500"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyPress={handleKeyPress}
-          onFocus={() => query.length >= 2 && setShowSuggestions(true)}
-          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-          data-testid="input-food-search"
-        />
-        <button
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-lab-green to-lab-blue rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-lg"
-          onClick={() => query.trim() && handleAddFood(query.trim())}
-          disabled={!query.trim() || addFoodMutation.isPending}
-          data-testid="button-add-food-quick"
-        >
-          <Plus size={16} className="text-white" />
-        </button>
       </div>
       
       {/* Search suggestions */}
       {showSuggestions && suggestions.length > 0 && (
-        <div className="mt-3 space-y-2 bg-white rounded-xl lab-shadow p-2">
+        <div className="space-y-2 bg-white rounded-xl lab-shadow p-2">
           {suggestions.map((food, index) => (
             <button
               key={index}
