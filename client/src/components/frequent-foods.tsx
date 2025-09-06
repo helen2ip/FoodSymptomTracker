@@ -6,7 +6,7 @@ import {
   Apple, Carrot, Wheat, Milk, Atom, Nut, Coffee, 
   Pizza, ChefHat, Utensils 
 } from "lucide-react";
-import { foodCategories } from "@/lib/food-database";
+import { foodCategories, searchFoods } from "@/lib/food-database";
 
 // Function to determine food category
 function getFoodCategory(foodName: string): string {
@@ -108,8 +108,15 @@ export default function FrequentFoods() {
   });
 
   const handleFoodClick = (foodName: string) => {
+    // First check if there's an exact match in the food database with proper capitalization
+    const foodResults = searchFoods(foodName, 50); // Get more results to find exact matches
+    const exactMatch = foodResults.find(food => food.toLowerCase() === foodName.toLowerCase());
+    
+    // Use the properly capitalized version from food database if found
+    const normalizedFoodName = exactMatch || foodName;
+    
     addFoodMutation.mutate({
-      foodName,
+      foodName: normalizedFoodName,
       timestamp: new Date()
     });
   };

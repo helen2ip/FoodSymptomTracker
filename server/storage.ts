@@ -87,7 +87,7 @@ export class MemStorage implements IStorage {
     });
   }
 
-  async getFoodEntries(): Promise<FoodEntry[]> {
+  async getFoodEntries(userId?: string): Promise<FoodEntry[]> {
     return Array.from(this.foodEntries.values()).sort((a, b) => 
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
@@ -140,7 +140,7 @@ export class MemStorage implements IStorage {
     return;
   }
 
-  async getSymptomEntries(): Promise<SymptomEntry[]> {
+  async getSymptomEntries(userId?: string): Promise<SymptomEntry[]> {
     return Array.from(this.symptomEntries.values()).sort((a, b) => 
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
