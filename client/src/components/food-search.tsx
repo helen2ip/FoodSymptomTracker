@@ -6,7 +6,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { InsertFoodEntry } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
-type TimeOption = "now" | "today" | "yesterday" | "2-days-ago";
+type TimeOption = "now" | string; // "now" or datetime string like "2025-09-05T14:00:00"
 
 export default function FoodSearch() {
   const [query, setQuery] = useState("");
@@ -21,42 +21,58 @@ export default function FoodSearch() {
     const saved = localStorage.getItem('foodLog_timeOption');
     return (saved as TimeOption) || 'now';
   });
-  const [selectedHour, setSelectedHour] = useState<number>(() => {
-    const saved = localStorage.getItem('foodLog_hour');
-    return saved ? parseInt(saved) : 9; // Default to 9 AM
-  });
 
-  // Persist time selections
+  // Persist time selection
   useEffect(() => {
     localStorage.setItem('foodLog_timeOption', selectedTimeOption);
   }, [selectedTimeOption]);
 
-  useEffect(() => {
-    localStorage.setItem('foodLog_hour', selectedHour.toString());
-  }, [selectedHour]);
+  // Generate time options from yesterday midnight to current hour - 1
+  const generateTimeOptions = (): Array<{ value: string; label: string }> => {
+    const options: Array<{ value: string; label: string }> = [];
+    const now = new Date();
+    const currentHour = now.getHours();
+    
+    // Start from yesterday midnight
+    const startTime = new Date();
+    startTime.setDate(startTime.getDate() - 1);
+    startTime.setHours(0, 0, 0, 0);
+    
+    // End at current hour - 1
+    const endTime = new Date();
+    endTime.setHours(currentHour - 1, 0, 0, 0);
+    
+    // Generate hourly options
+    const current = new Date(startTime);
+    while (current <= endTime) {
+      const isToday = current.toDateString() === now.toDateString();
+      const isYesterday = current.toDateString() === new Date(now.getTime() - 24 * 60 * 60 * 1000).toDateString();
+      
+      let dayLabel = '';
+      if (isToday) dayLabel = 'Today';
+      else if (isYesterday) dayLabel = 'Yesterday';
+      
+      const timeLabel = formatHour(current.getHours());
+      const label = `${dayLabel} ${timeLabel}`;
+      
+      options.push({
+        value: current.toISOString(),
+        label: label
+      });
+      
+      // Move to next hour
+      current.setHours(current.getHours() + 1);
+    }
+    
+    return options;
+  };
 
   // Helper function to get the timestamp based on selected options
   const getSelectedTimestamp = (): Date => {
     if (selectedTimeOption === 'now') {
       return new Date();
     }
-
-    const now = new Date();
-    const selectedDate = new Date();
-
-    // Set the date based on selection
-    if (selectedTimeOption === 'today') {
-      // Keep today's date
-    } else if (selectedTimeOption === 'yesterday') {
-      selectedDate.setDate(now.getDate() - 1);
-    } else if (selectedTimeOption === '2-days-ago') {
-      selectedDate.setDate(now.getDate() - 2);
-    }
-
-    // Set the selected hour
-    selectedDate.setHours(selectedHour, 0, 0, 0);
-
-    return selectedDate;
+    return new Date(selectedTimeOption);
   };
 
   // Format hour for display (12-hour format)
@@ -67,18 +83,11 @@ export default function FoodSearch() {
     return `${hour - 12} PM`;
   };
 
-  // Format date option for display
-  const formatDateOption = (option: TimeOption): string => {
-    switch (option) {
-      case 'today': return 'Today';
-      case 'yesterday': return 'Yesterday';
-      case '2-days-ago': return '2 days ago';
-      default: return option;
-    }
-  };
-
   // Check if we're using time selection (not "now")
   const isUsingTimeSelection = selectedTimeOption !== 'now';
+  
+  // Get available time options
+  const timeOptions = generateTimeOptions();
 
   const addFoodMutation = useMutation({
     mutationFn: async (foodEntry: InsertFoodEntry) => {
@@ -149,7 +158,7 @@ export default function FoodSearch() {
         </div>
         
         {/* Time Selection */}
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {/* Now Button */}
           <button
             onClick={() => setSelectedTimeOption('now')}
@@ -163,7 +172,7 @@ export default function FoodSearch() {
             Now
           </button>
 
-          {/* Date Dropdown */}
+          {/* Combined Past Time Dropdown */}
           <div className="relative">
             <select
               value={selectedTimeOption === 'now' ? '' : selectedTimeOption}
@@ -173,41 +182,18 @@ export default function FoodSearch() {
                   ? 'bg-lab-purple text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200'
               }`}
-              data-testid="select-date"
+              data-testid="select-past-time"
             >
               <option value="" disabled>Past</option>
-              <option value="today">Today</option>
-              <option value="yesterday">Yesterday</option>
-              <option value="2-days-ago">2 days ago</option>
+              {timeOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
             <ChevronDown size={14} className={`absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none ${
               isUsingTimeSelection ? 'text-white' : 'text-gray-500'
             }`} />
-          </div>
-
-          {/* Hour Dropdown */}
-          <div className="relative">
-            {isUsingTimeSelection ? (
-              <select
-                value={selectedHour}
-                onChange={(e) => setSelectedHour(parseInt(e.target.value))}
-                className="w-full py-2 px-3 rounded-lg text-sm font-medium appearance-none cursor-pointer focus:outline-none transition-colors bg-lab-purple text-white"
-                data-testid="select-hour"
-              >
-                {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
-                  <option key={hour} value={hour}>
-                    {formatHour(hour)}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <div className="w-full py-2 px-3 rounded-lg text-sm font-medium bg-gray-100 text-gray-700 flex items-center justify-center">
-                --
-              </div>
-            )}
-            {isUsingTimeSelection && (
-              <ChevronDown size={14} className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none text-white" />
-            )}
           </div>
         </div>
       </div>
