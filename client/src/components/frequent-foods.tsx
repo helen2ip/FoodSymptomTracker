@@ -175,9 +175,6 @@ export default function FrequentFoods() {
               <span className="font-medium text-sm text-center" data-testid={`text-food-name-${index}`}>
                 {food.foodName}
               </span>
-              <div className="flex items-center space-x-1 text-xs text-lab-purple">
-                <span className="font-mono bg-lab-purple/10 px-2 py-1 rounded-full">×{food.logCount || 0}</span>
-              </div>
             </div>
           </button>
         ))}
