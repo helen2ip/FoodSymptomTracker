@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { Search, Plus, Clock } from "lucide-react";
+import { Search, Plus, Clock, ChevronDown } from "lucide-react";
 import { searchFoods } from "@/lib/food-database";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { InsertFoodEntry } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
-type TimeOption = "now" | "yesterday" | "2-days-ago";
+type TimeOption = "now" | "yesterday";
 
 export default function FoodSearch() {
   const [query, setQuery] = useState("");
@@ -23,7 +23,7 @@ export default function FoodSearch() {
   });
   const [selectedHour, setSelectedHour] = useState<number>(() => {
     const saved = localStorage.getItem('foodLog_hour');
-    return saved ? parseInt(saved) : new Date().getHours();
+    return saved ? parseInt(saved) : 9; // Default to 9 AM
   });
 
   // Persist time selections
@@ -47,8 +47,6 @@ export default function FoodSearch() {
     // Set the date based on selection
     if (selectedTimeOption === 'yesterday') {
       selectedDate.setDate(now.getDate() - 1);
-    } else if (selectedTimeOption === '2-days-ago') {
-      selectedDate.setDate(now.getDate() - 2);
     }
 
     // Set the selected hour
@@ -133,50 +131,51 @@ export default function FoodSearch() {
           <span className="text-sm font-medium text-gray-700">When did you consume this?</span>
         </div>
         
-        {/* Day Selection */}
-        <div className="grid grid-cols-3 gap-2 mb-3">
-          {[
-            { value: 'now' as TimeOption, label: 'Now' },
-            { value: 'yesterday' as TimeOption, label: 'Yesterday' },
-            { value: '2-days-ago' as TimeOption, label: '2 days ago' }
-          ].map((option) => (
-            <button
-              key={option.value}
-              onClick={() => setSelectedTimeOption(option.value)}
-              className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
-                selectedTimeOption === option.value
-                  ? 'bg-lab-purple text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-              data-testid={`button-time-${option.value}`}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
+        {/* Day and Hour Selection */}
+        <div className="grid grid-cols-3 gap-2">
+          {/* Now Button */}
+          <button
+            onClick={() => setSelectedTimeOption('now')}
+            className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
+              selectedTimeOption === 'now'
+                ? 'bg-lab-purple text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+            data-testid="button-time-now"
+          >
+            Now
+          </button>
 
-        {/* Hour Selection - Only show if not "now" */}
-        {selectedTimeOption !== 'now' && (
-          <div>
-            <span className="text-xs text-gray-600 mb-2 block">Select hour:</span>
-            <div className="grid grid-cols-6 gap-1 max-h-24 overflow-y-auto">
+          {/* Yesterday Button */}
+          <button
+            onClick={() => setSelectedTimeOption('yesterday')}
+            className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
+              selectedTimeOption === 'yesterday'
+                ? 'bg-lab-purple text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+            data-testid="button-time-yesterday"
+          >
+            Yesterday
+          </button>
+
+          {/* Hour Dropdown */}
+          <div className="relative">
+            <select
+              value={selectedHour}
+              onChange={(e) => setSelectedHour(parseInt(e.target.value))}
+              className="w-full py-2 px-3 rounded-lg text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none appearance-none cursor-pointer"
+              data-testid="select-hour"
+            >
               {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
-                <button
-                  key={hour}
-                  onClick={() => setSelectedHour(hour)}
-                  className={`py-1 px-2 rounded text-xs font-medium transition-colors ${
-                    selectedHour === hour
-                      ? 'bg-lab-blue text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                  data-testid={`button-hour-${hour}`}
-                >
+                <option key={hour} value={hour}>
                   {formatHour(hour)}
-                </button>
+                </option>
               ))}
-            </div>
+            </select>
+            <ChevronDown size={14} className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" />
           </div>
-        )}
+        </div>
       </div>
 
       <div className="relative">
