@@ -269,7 +269,7 @@ export class DatabaseStorage implements IStorage {
       .where(
         and(
           eq(foodEntries.userId, userId),
-          sql`LOWER(${foodEntries.foodName}) = LOWER(${insertEntry.foodName})`
+          ilike(foodEntries.foodName, insertEntry.foodName)
         )
       );
     
