@@ -8,24 +8,18 @@ import { useToast } from "@/hooks/use-toast";
 
 type TimeOption = "now" | string; // "now" or datetime string like "2025-09-05T14:00:00"
 
-export default function FoodSearch() {
+interface FoodSearchProps {
+  selectedTimeOption: TimeOption;
+  setSelectedTimeOption: (value: TimeOption) => void;
+}
+
+export default function FoodSearch({ selectedTimeOption, setSelectedTimeOption }: FoodSearchProps) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const { toast } = useToast();
-
-  // Time selection state with persistence
-  const [selectedTimeOption, setSelectedTimeOption] = useState<TimeOption>(() => {
-    const saved = localStorage.getItem('foodLog_timeOption');
-    return (saved as TimeOption) || 'now';
-  });
-
-  // Persist time selection
-  useEffect(() => {
-    localStorage.setItem('foodLog_timeOption', selectedTimeOption);
-  }, [selectedTimeOption]);
 
   // Generate time options from yesterday midnight to current hour - 1
   const generateTimeOptions = (): Array<{ value: string; label: string }> => {

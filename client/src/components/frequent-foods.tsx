@@ -74,7 +74,11 @@ function getCategoryColors(category: string) {
   }
 }
 
-export default function FrequentFoods() {
+interface FrequentFoodsProps {
+  disabled?: boolean;
+}
+
+export default function FrequentFoods({ disabled = false }: FrequentFoodsProps) {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -108,6 +112,9 @@ export default function FrequentFoods() {
   });
 
   const handleFoodClick = (foodName: string) => {
+    // Don't allow clicks when disabled
+    if (disabled) return;
+    
     // First check if there's an exact match in the food database with proper capitalization
     const foodResults = searchFoods(foodName, 50); // Get more results to find exact matches
     const exactMatch = foodResults.find(food => food.toLowerCase() === foodName.toLowerCase());
@@ -149,18 +156,24 @@ export default function FrequentFoods() {
   }
 
   return (
-    <section className="mb-8">
+    <section className={`mb-8 transition-opacity ${disabled ? 'opacity-50' : 'opacity-100'}`}>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-800">⚡ Quick Add</h2>
+        <h2 className={`text-lg font-bold ${disabled ? 'text-gray-400' : 'text-gray-800'}`}>
+          ⚡ Quick Add {disabled && '(Select "Now" to enable)'}
+        </h2>
       </div>
       
       <div className="grid grid-cols-2 gap-3">
         {frequentFoods?.slice(0, 4).map((food, index) => (
           <button
             key={food.id}
-            className="bg-white p-1 rounded-2xl lab-shadow hover:lab-shadow-strong transition-all active:scale-95 border border-lab-purple/20 hover:border-lab-purple/40 hover:bg-lab-purple/5"
+            className={`bg-white p-1 rounded-2xl lab-shadow transition-all border border-lab-purple/20 ${
+              disabled 
+                ? 'cursor-not-allowed' 
+                : 'hover:lab-shadow-strong active:scale-95 hover:border-lab-purple/40 hover:bg-lab-purple/5'
+            }`}
             onClick={() => handleFoodClick(food.foodName)}
-            disabled={addFoodMutation.isPending}
+            disabled={disabled || addFoodMutation.isPending}
             data-testid={`button-frequent-food-${index}`}
           >
             <div className="flex flex-col items-center space-y-2">
@@ -172,7 +185,7 @@ export default function FrequentFoods() {
                   return <IconComponent className="w-6 h-6 text-white" />;
                 })()}
               </div>
-              <span className="font-medium text-sm text-center" data-testid={`text-food-name-${index}`}>
+              <span className={`font-medium text-sm text-center ${disabled ? 'text-gray-400' : ''}`} data-testid={`text-food-name-${index}`}>
                 {food.foodName}
               </span>
             </div>
