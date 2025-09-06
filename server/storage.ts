@@ -264,52 +264,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createFoodEntry(insertEntry: InsertFoodEntry, userId: string): Promise<FoodEntry> {
-    // Check if food already exists for this user (case-insensitive)
-    const existingEntries = await db.select().from(foodEntries)
-      .where(
-        and(
-          eq(foodEntries.userId, userId),
-          ilike(foodEntries.foodName, insertEntry.foodName)
-        )
-      );
-    
-    if (existingEntries.length > 0) {
-      // Update existing entry: increment count and update timestamp
-      const existing = existingEntries[0];
-      console.log(`[DEBUG] Found existing food: ${existing.foodName} (ID: ${existing.id}) with count ${existing.logCount}`);
-      
-      try {
-        const [updated] = await db.update(foodEntries)
-          .set({ 
-            logCount: (existing.logCount || 0) + 1
-            // Don't update timestamp - keep original time to maintain position in timeline
-          })
-          .where(eq(foodEntries.id, existing.id))
-          .returning();
-        
-        console.log(`[DEBUG] Updated food: ${updated.foodName} with new count ${updated.logCount}`);
-        
-        // Double-check by reading back from database
-        const verification = await db.select().from(foodEntries).where(eq(foodEntries.id, existing.id));
-        console.log(`[DEBUG] Verification read: ${verification[0]?.foodName} with count ${verification[0]?.logCount}`);
-        
-        return updated;
-      } catch (error) {
-        console.error(`[DEBUG] Database update failed:`, error);
-        throw error;
-      }
-    } else {
-      // Create new entry
-      const [entry] = await db.insert(foodEntries)
-        .values({
-          ...insertEntry,
-          userId,
-          logCount: 1,
-          timestamp: insertEntry.timestamp || new Date()
-        })
-        .returning();
-      return entry;
-    }
+    // Always create a new entry - show each food log as separate entry in timeline
+    const [entry] = await db.insert(foodEntries)
+      .values({
+        ...insertEntry,
+        userId,
+        logCount: 1,
+        timestamp: insertEntry.timestamp || new Date()
+      })
+      .returning();
+    return entry;
   }
 
   async updateFoodLogCount(foodName: string): Promise<void> {
