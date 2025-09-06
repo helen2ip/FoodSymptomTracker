@@ -85,6 +85,10 @@
   .science-gradient {
     background: linear-gradient(135deg, var(--lab-purple) 0%, var(--lab-blue) 50%, var(--lab-green) 100%);
   }
+
+   .lab-amber-gradient {
+      background: linear-gradient(135deg, var(--lab-amber) 0%, var(--lab-red) 50%, var(--lab-red) 100%);
+    }
   
   .glass-effect {
     backdrop-filter: blur(10px);

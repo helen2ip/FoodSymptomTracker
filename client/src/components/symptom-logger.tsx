@@ -88,7 +88,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
 
   const defaultTrigger = (
     <Button variant="outline" className="text-lab-red border-lab-red/20 hover:bg-lab-red/5 font-mono">
-      ✏️ Log Reaction
+      🧪 Log Reaction
     </Button>
   );
 

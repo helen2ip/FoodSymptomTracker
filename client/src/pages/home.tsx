@@ -101,11 +101,11 @@ export default function Home() {
         <SymptomLogger 
           trigger={
             <button
-              className="w-14 h-14 science-gradient rounded-full lab-shadow-strong flex items-center justify-center text-white text-xl hover:scale-105 transition-transform active:scale-95"
+              className="w-14 h-14 lab-amber-gradient rounded-full lab-shadow-strong flex items-center justify-center text-white text-xl hover:scale-105 transition-transform active:scale-95"
               onClick={handleQuickAdd}
               data-testid="button-floating-action"
             >
-              <Plus size={20} />
+              🧪
             </button>
           }
         />

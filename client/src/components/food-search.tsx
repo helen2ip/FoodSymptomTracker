@@ -92,7 +92,7 @@ export default function FoodSearch() {
           data-testid="input-food-search"
         />
         <button
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-lab-purple to-lab-blue rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-lg"
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-lab-green to-lab-blue rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-lg"
           onClick={() => query.trim() && handleAddFood(query.trim())}
           disabled={!query.trim() || addFoodMutation.isPending}
           data-testid="button-add-food-quick"
