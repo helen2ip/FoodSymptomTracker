@@ -224,7 +224,7 @@ export default function Timeline() {
                       return (
                         <div
                           key={entry.id}
-                          className={`bg-white rounded-2xl p-4 lab-shadow border-l-4 ${borderColor}`}
+                          className={`bg-white rounded-2xl p-2 lab-shadow border-l-4 ${borderColor}`}
                           data-testid={`timeline-entry-${index}`}
                         >
                           <div className="flex items-start justify-between">
