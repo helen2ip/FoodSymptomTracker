@@ -148,7 +148,7 @@ export default function FoodSearch({ selectedTimeOption, setSelectedTimeOption }
       <div className="mb-4 bg-white rounded-2xl lab-shadow p-4">
         <div className="flex items-center gap-2 mb-3">
           <Clock size={16} className="text-lab-purple" />
-          <span className="text-sm font-medium text-gray-700">When did you consume this?</span>
+          <span className="text-sm font-medium text-gray-700">Logging for...</span>
         </div>
         
         {/* Time Selection */}
@@ -178,7 +178,7 @@ export default function FoodSearch({ selectedTimeOption, setSelectedTimeOption }
               }`}
               data-testid="select-past-time"
             >
-              <option value="" disabled>Past</option>
+              <option value="" disabled>In the Past</option>
               {timeOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}

@@ -159,7 +159,7 @@ export default function FrequentFoods({ disabled = false }: FrequentFoodsProps) 
     <section className={`mb-8 transition-opacity ${disabled ? 'opacity-50' : 'opacity-100'}`}>
       <div className="flex items-center justify-between mb-4">
         <h2 className={`text-lg font-bold ${disabled ? 'text-gray-400' : 'text-gray-800'}`}>
-          ⚡ Quick Add {disabled && '(Select "Now" to enable)'}
+          ⚡ Quick Add {disabled && <span className="text-sm font-normal text-gray-400 ml-2">(Disabled)</span>}
         </h2>
       </div>
       
