@@ -54,8 +54,15 @@ export default function FoodSearch() {
   }, [query]);
 
   const handleAddFood = (foodName: string) => {
+    // First check if there's an exact match in the food database with proper capitalization
+    const foodResults = searchFoods(foodName, 50); // Get more results to find exact matches
+    const exactMatch = foodResults.find(food => food.toLowerCase() === foodName.toLowerCase());
+    
+    // Use the properly capitalized version from food database if found
+    const normalizedFoodName = exactMatch || foodName;
+    
     addFoodMutation.mutate({
-      foodName,
+      foodName: normalizedFoodName,
       timestamp: new Date()
     });
   };
