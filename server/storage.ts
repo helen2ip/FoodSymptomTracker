@@ -23,6 +23,7 @@ export interface IStorage {
   getFoodEntriesByDate(date: string, userId?: string): Promise<FoodEntry[]>;
   getFrequentFoods(limit?: number, userId?: string): Promise<FoodEntry[]>;
   createFoodEntry(entry: InsertFoodEntry, userId: string): Promise<FoodEntry>;
+  deleteFoodEntry(id: string, userId: string): Promise<void>;
   updateFoodLogCount(foodName: string): Promise<void>;
   
   // Symptom entries
@@ -30,6 +31,7 @@ export interface IStorage {
   getSymptomEntriesByDate(date: string, userId?: string): Promise<SymptomEntry[]>;
   getRecentSymptoms(limit?: number, userId?: string): Promise<string[]>;
   createSymptomEntry(entry: InsertSymptomEntry, userId: string): Promise<SymptomEntry>;
+  deleteSymptomEntry(id: string, userId: string): Promise<void>;
   
   // Correlations
   getCorrelations(userId?: string): Promise<Correlation[]>;
@@ -134,6 +136,10 @@ export class MemStorage implements IStorage {
     }
   }
 
+  async deleteFoodEntry(id: string, userId: string): Promise<void> {
+    this.foodEntries.delete(id);
+  }
+
   async updateFoodLogCount(foodName: string): Promise<void> {
     // This method is no longer needed since createFoodEntry handles the counting
     // But keeping it for interface compatibility
@@ -173,6 +179,10 @@ export class MemStorage implements IStorage {
     
     this.symptomEntries.set(id, entry);
     return entry;
+  }
+
+  async deleteSymptomEntry(id: string, userId: string): Promise<void> {
+    this.symptomEntries.delete(id);
   }
 
   async getCorrelations(): Promise<Correlation[]> {
@@ -276,6 +286,12 @@ export class DatabaseStorage implements IStorage {
     return entry;
   }
 
+  async deleteFoodEntry(id: string, userId: string): Promise<void> {
+    await db.delete(foodEntries)
+      .where(and(eq(foodEntries.id, id), eq(foodEntries.userId, userId)))
+      .execute();
+  }
+
   async updateFoodLogCount(foodName: string): Promise<void> {
     // This method is no longer needed since createFoodEntry handles the counting
     return;
@@ -334,6 +350,12 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return entry;
+  }
+
+  async deleteSymptomEntry(id: string, userId: string): Promise<void> {
+    await db.delete(symptomEntries)
+      .where(and(eq(symptomEntries.id, id), eq(symptomEntries.userId, userId)))
+      .execute();
   }
 
   async getCorrelations(userId?: string): Promise<Correlation[]> {
