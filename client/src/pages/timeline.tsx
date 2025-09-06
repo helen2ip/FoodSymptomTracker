@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { FoodEntry, SymptomEntry } from "@shared/schema";
-import { Utensils, AlertTriangle, Clock, Calendar, Filter } from "lucide-react";
+import { Utensils, AlertTriangle, Clock, Calendar, Filter, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 type TimelineEntry = (FoodEntry | SymptomEntry) & {
   type?: "food" | "symptom";
@@ -16,6 +18,7 @@ export default function Timeline() {
   // Default to today's date
   const today = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState<string>(today);
+  const { toast } = useToast();
   
   const { data: timelineEntries, isLoading } = useQuery<TimelineEntry[]>({
     queryKey: [`/api/timeline/${selectedDate}`],
@@ -23,6 +26,57 @@ export default function Timeline() {
     retry: false,
     staleTime: 1000 * 60, // 1 minute
   });
+
+  const deleteFoodMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/foods/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/timeline/${selectedDate}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/foods/frequent"] });
+      toast({ 
+        title: "Food entry deleted", 
+        description: "The food log has been removed successfully." 
+      });
+    },
+    onError: () => {
+      toast({ 
+        title: "Delete failed", 
+        description: "Failed to delete food entry. Please try again.",
+        variant: "destructive"
+      });
+    }
+  });
+
+  const deleteSymptomMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/symptoms/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/timeline/${selectedDate}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/symptoms/recent"] });
+      toast({ 
+        title: "Symptom entry deleted", 
+        description: "The symptom log has been removed successfully." 
+      });
+    },
+    onError: () => {
+      toast({ 
+        title: "Delete failed", 
+        description: "Failed to delete symptom entry. Please try again.",
+        variant: "destructive"
+      });
+    }
+  });
+
+  const handleDelete = (entry: TimelineEntry) => {
+    const isSymptom = isSymptomEntry(entry);
+    if (isSymptom) {
+      deleteSymptomMutation.mutate(entry.id);
+    } else {
+      deleteFoodMutation.mutate(entry.id);
+    }
+  };
 
   const formatDateTime = (timestamp: Date | string) => {
     const date = new Date(timestamp);
@@ -191,9 +245,6 @@ export default function Timeline() {
                                     <Clock size={12} />
                                     <span className="font-mono">{time}</span>
                                   </div>
-                                  <span className={`text-xs px-2 py-1 rounded-full ${tagColor}`}>
-                                    {isSymptom ? "Symptom" : "Food"}
-                                  </span>
                                 </div>
                                 {isSymptom && (
                                   <div className="flex items-center space-x-1 mt-2">
@@ -208,6 +259,14 @@ export default function Timeline() {
                                 )}
                               </div>
                             </div>
+                            <button
+                              onClick={() => handleDelete(entry)}
+                              disabled={deleteFoodMutation.isPending || deleteSymptomMutation.isPending}
+                              className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors disabled:opacity-50"
+                              data-testid={`button-delete-timeline-${index}`}
+                            >
+                              <Trash2 size={16} />
+                            </button>
                           </div>
                         </div>
                       );
