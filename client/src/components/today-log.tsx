@@ -1,7 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { FoodEntry, SymptomEntry } from "@shared/schema";
-import { Utensils, AlertTriangle, Clock } from "lucide-react";
+import { Utensils, AlertTriangle, Clock, Trash2 } from "lucide-react";
 import SymptomLogger from "./symptom-logger";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 type TimelineEntry = (FoodEntry | SymptomEntry) & {
   type?: "food" | "symptom";
@@ -13,6 +15,7 @@ function isSymptomEntry(entry: FoodEntry | SymptomEntry): entry is SymptomEntry 
 
 export default function TodayLog() {
   const today = new Date().toISOString().split('T')[0];
+  const { toast } = useToast();
   
   const { data: todayEntries, isLoading } = useQuery<TimelineEntry[]>({
     queryKey: [`/api/timeline/${today}`],
@@ -20,6 +23,57 @@ export default function TodayLog() {
     retry: false,
     staleTime: 0, // Always fresh data for real-time updates
   });
+
+  const deleteFoodMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/foods/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/timeline/${today}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/foods/frequent"] });
+      toast({ 
+        title: "Food entry deleted", 
+        description: "The food log has been removed successfully." 
+      });
+    },
+    onError: () => {
+      toast({ 
+        title: "Delete failed", 
+        description: "Failed to delete food entry. Please try again.",
+        variant: "destructive"
+      });
+    }
+  });
+
+  const deleteSymptomMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/symptoms/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/timeline/${today}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/symptoms/recent"] });
+      toast({ 
+        title: "Symptom entry deleted", 
+        description: "The symptom log has been removed successfully." 
+      });
+    },
+    onError: () => {
+      toast({ 
+        title: "Delete failed", 
+        description: "Failed to delete symptom entry. Please try again.",
+        variant: "destructive"
+      });
+    }
+  });
+
+  const handleDelete = (entry: TimelineEntry) => {
+    const isSymptom = isSymptomEntry(entry);
+    if (isSymptom) {
+      deleteSymptomMutation.mutate(entry.id);
+    } else {
+      deleteFoodMutation.mutate(entry.id);
+    }
+  };
 
   const formatTime = (timestamp: Date | string) => {
     return new Date(timestamp).toLocaleTimeString('en-US', {
@@ -124,6 +178,14 @@ export default function TodayLog() {
                       )}
                     </div>
                   </div>
+                  <button
+                    onClick={() => handleDelete(entry)}
+                    disabled={deleteFoodMutation.isPending || deleteSymptomMutation.isPending}
+                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors disabled:opacity-50"
+                    data-testid={`button-delete-${index}`}
+                  >
+                    <Trash2 size={16} />
+                  </button>
                 </div>
               </div>
             );

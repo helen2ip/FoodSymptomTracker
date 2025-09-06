@@ -244,6 +244,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.delete("/api/foods/:id", requireAuth, async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const id = req.params.id;
+      await storage.deleteFoodEntry(id, userId);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete food entry" });
+    }
+  });
+
   // Symptom entries endpoints
   app.get("/api/symptoms", requireAuth, async (req, res) => {
     try {
@@ -298,6 +309,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else {
         res.status(500).json({ message: "Failed to create symptom entry" });
       }
+    }
+  });
+
+  app.delete("/api/symptoms/:id", requireAuth, async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const id = req.params.id;
+      await storage.deleteSymptomEntry(id, userId);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete symptom entry" });
     }
   });
 
