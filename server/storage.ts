@@ -276,6 +276,7 @@ export class DatabaseStorage implements IStorage {
     if (existingEntries.length > 0) {
       // Update existing entry: increment count and update timestamp
       const existing = existingEntries[0];
+      console.log(`[DEBUG] Found existing food: ${existing.foodName} (ID: ${existing.id}) with count ${existing.logCount}`);
       const [updated] = await db.update(foodEntries)
         .set({ 
           logCount: (existing.logCount || 0) + 1,
@@ -283,6 +284,7 @@ export class DatabaseStorage implements IStorage {
         })
         .where(eq(foodEntries.id, existing.id))
         .returning();
+      console.log(`[DEBUG] Updated food: ${updated.foodName} with new count ${updated.logCount}`);
       return updated;
     } else {
       // Create new entry

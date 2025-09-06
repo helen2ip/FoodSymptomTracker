@@ -18,7 +18,7 @@ export default function TodayLog() {
     queryKey: [`/api/timeline/${today}`],
     enabled: !!localStorage.getItem('auth_token'), // Only run when authenticated
     retry: false,
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 0, // Always fresh data for real-time updates
   });
 
   const formatTime = (timestamp: Date | string) => {
