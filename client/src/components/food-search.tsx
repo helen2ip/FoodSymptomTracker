@@ -6,7 +6,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { InsertFoodEntry } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
-type TimeOption = "now" | "yesterday";
+type TimeOption = "now" | "today" | "yesterday" | "2-days-ago";
 
 export default function FoodSearch() {
   const [query, setQuery] = useState("");
@@ -45,8 +45,12 @@ export default function FoodSearch() {
     const selectedDate = new Date();
 
     // Set the date based on selection
-    if (selectedTimeOption === 'yesterday') {
+    if (selectedTimeOption === 'today') {
+      // Keep today's date
+    } else if (selectedTimeOption === 'yesterday') {
       selectedDate.setDate(now.getDate() - 1);
+    } else if (selectedTimeOption === '2-days-ago') {
+      selectedDate.setDate(now.getDate() - 2);
     }
 
     // Set the selected hour
@@ -62,6 +66,19 @@ export default function FoodSearch() {
     if (hour === 12) return '12 PM';
     return `${hour - 12} PM`;
   };
+
+  // Format date option for display
+  const formatDateOption = (option: TimeOption): string => {
+    switch (option) {
+      case 'today': return 'Today';
+      case 'yesterday': return 'Yesterday';
+      case '2-days-ago': return '2 days ago';
+      default: return option;
+    }
+  };
+
+  // Check if we're using time selection (not "now")
+  const isUsingTimeSelection = selectedTimeOption !== 'now';
 
   const addFoodMutation = useMutation({
     mutationFn: async (foodEntry: InsertFoodEntry) => {
@@ -131,14 +148,14 @@ export default function FoodSearch() {
           <span className="text-sm font-medium text-gray-700">When did you consume this?</span>
         </div>
         
-        {/* Day and Hour Selection */}
+        {/* Time Selection */}
         <div className="grid grid-cols-3 gap-2">
           {/* Now Button */}
           <button
             onClick={() => setSelectedTimeOption('now')}
             className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
               selectedTimeOption === 'now'
-                ? 'bg-lab-purple text-white'
+                ? 'bg-lab-green text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
             data-testid="button-time-now"
@@ -146,25 +163,37 @@ export default function FoodSearch() {
             Now
           </button>
 
-          {/* Yesterday Button */}
-          <button
-            onClick={() => setSelectedTimeOption('yesterday')}
-            className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
-              selectedTimeOption === 'yesterday'
-                ? 'bg-lab-purple text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-            data-testid="button-time-yesterday"
-          >
-            Yesterday
-          </button>
+          {/* Date Dropdown */}
+          <div className="relative">
+            <select
+              value={selectedTimeOption === 'now' ? 'today' : selectedTimeOption}
+              onChange={(e) => setSelectedTimeOption(e.target.value as TimeOption)}
+              className={`w-full py-2 px-3 rounded-lg text-sm font-medium appearance-none cursor-pointer focus:outline-none transition-colors ${
+                isUsingTimeSelection
+                  ? 'bg-lab-purple text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200'
+              }`}
+              data-testid="select-date"
+            >
+              <option value="today">Today</option>
+              <option value="yesterday">Yesterday</option>
+              <option value="2-days-ago">2 days ago</option>
+            </select>
+            <ChevronDown size={14} className={`absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none ${
+              isUsingTimeSelection ? 'text-white' : 'text-gray-500'
+            }`} />
+          </div>
 
           {/* Hour Dropdown */}
           <div className="relative">
             <select
               value={selectedHour}
               onChange={(e) => setSelectedHour(parseInt(e.target.value))}
-              className="w-full py-2 px-3 rounded-lg text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none appearance-none cursor-pointer"
+              className={`w-full py-2 px-3 rounded-lg text-sm font-medium appearance-none cursor-pointer focus:outline-none transition-colors ${
+                isUsingTimeSelection
+                  ? 'bg-lab-purple text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200'
+              }`}
               data-testid="select-hour"
             >
               {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
@@ -173,7 +202,9 @@ export default function FoodSearch() {
                 </option>
               ))}
             </select>
-            <ChevronDown size={14} className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" />
+            <ChevronDown size={14} className={`absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none ${
+              isUsingTimeSelection ? 'text-white' : 'text-gray-500'
+            }`} />
           </div>
         </div>
       </div>
