@@ -277,15 +277,27 @@ export class DatabaseStorage implements IStorage {
       // Update existing entry: increment count and update timestamp
       const existing = existingEntries[0];
       console.log(`[DEBUG] Found existing food: ${existing.foodName} (ID: ${existing.id}) with count ${existing.logCount}`);
-      const [updated] = await db.update(foodEntries)
-        .set({ 
-          logCount: (existing.logCount || 0) + 1,
-          timestamp: insertEntry.timestamp || new Date()
-        })
-        .where(eq(foodEntries.id, existing.id))
-        .returning();
-      console.log(`[DEBUG] Updated food: ${updated.foodName} with new count ${updated.logCount}`);
-      return updated;
+      
+      try {
+        const [updated] = await db.update(foodEntries)
+          .set({ 
+            logCount: (existing.logCount || 0) + 1,
+            timestamp: insertEntry.timestamp || new Date()
+          })
+          .where(eq(foodEntries.id, existing.id))
+          .returning();
+        
+        console.log(`[DEBUG] Updated food: ${updated.foodName} with new count ${updated.logCount}`);
+        
+        // Double-check by reading back from database
+        const verification = await db.select().from(foodEntries).where(eq(foodEntries.id, existing.id));
+        console.log(`[DEBUG] Verification read: ${verification[0]?.foodName} with count ${verification[0]?.logCount}`);
+        
+        return updated;
+      } catch (error) {
+        console.error(`[DEBUG] Database update failed:`, error);
+        throw error;
+      }
     } else {
       // Create new entry
       const [entry] = await db.insert(foodEntries)
