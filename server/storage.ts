@@ -103,29 +103,6 @@ export class MemStorage implements IStorage {
     });
   }
 
-  async getFrequentFoods(limit = 8): Promise<FoodEntry[]> {
-    // Get most recent 70 entries and count frequency
-    const recentEntries = Array.from(this.foodEntries.values())
-      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-      .slice(0, 70);
-    
-    // Count frequency of each food name
-    const foodCounts = new Map<string, { count: number; entry: FoodEntry }>();
-    for (const entry of recentEntries) {
-      const existing = foodCounts.get(entry.foodName);
-      if (existing) {
-        existing.count++;
-      } else {
-        foodCounts.set(entry.foodName, { count: 1, entry });
-      }
-    }
-    
-    // Sort by frequency and return top results
-    return Array.from(foodCounts.values())
-      .sort((a, b) => b.count - a.count)
-      .slice(0, limit)
-      .map(item => item.entry);
-  }
 
   async createFoodEntry(insertEntry: InsertFoodEntry): Promise<FoodEntry> {
     // Check if food already exists (case-insensitive)
@@ -279,54 +256,6 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(foodEntries.timestamp));
   }
 
-  async getFrequentFoods(limit = 8, userId?: string): Promise<FoodEntry[]> {
-    if (!userId) {
-      // Get most recent 70 entries and count frequency
-      const recentEntries = await db.select().from(foodEntries)
-        .orderBy(desc(foodEntries.timestamp))
-        .limit(70);
-      
-      // Count frequency of each food name
-      const foodCounts = new Map<string, { count: number; entry: FoodEntry }>();
-      for (const entry of recentEntries) {
-        const existing = foodCounts.get(entry.foodName);
-        if (existing) {
-          existing.count++;
-        } else {
-          foodCounts.set(entry.foodName, { count: 1, entry });
-        }
-      }
-      
-      // Sort by frequency and return top results
-      return Array.from(foodCounts.values())
-        .sort((a, b) => b.count - a.count)
-        .slice(0, limit)
-        .map(item => item.entry);
-    }
-    
-    // Get most recent 70 entries for this user and count frequency
-    const recentEntries = await db.select().from(foodEntries)
-      .where(eq(foodEntries.userId, userId))
-      .orderBy(desc(foodEntries.timestamp))
-      .limit(70);
-    
-    // Count frequency of each food name
-    const foodCounts = new Map<string, { count: number; entry: FoodEntry }>();
-    for (const entry of recentEntries) {
-      const existing = foodCounts.get(entry.foodName);
-      if (existing) {
-        existing.count++;
-      } else {
-        foodCounts.set(entry.foodName, { count: 1, entry });
-      }
-    }
-    
-    // Sort by frequency and return top results
-    return Array.from(foodCounts.values())
-      .sort((a, b) => b.count - a.count)
-      .slice(0, limit)
-      .map(item => item.entry);
-  }
 
   async createFoodEntry(insertEntry: InsertFoodEntry, userId: string): Promise<FoodEntry> {
     // Always create a new entry - show each food log as separate entry in timeline

@@ -204,16 +204,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/foods/frequent", requireAuth, async (req, res) => {
-    try {
-      const userId = (req as any).userId;
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : 8;
-      const foods = await storage.getFrequentFoods(limit, userId);
-      res.json(foods);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch frequent foods" });
-    }
-  });
 
   app.get("/api/foods/date/:date", requireAuth, async (req, res) => {
     try {

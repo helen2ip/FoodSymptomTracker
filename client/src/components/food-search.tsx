@@ -91,7 +91,6 @@ export default function FoodSearch({ selectedTimeOption, setSelectedTimeOption }
     onSuccess: () => {
       const today = new Date().toISOString().split('T')[0];
       queryClient.invalidateQueries({ queryKey: ["/api/foods"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/foods", "frequent"] });
       queryClient.invalidateQueries({ queryKey: [`/api/timeline/${today}`] });
       queryClient.invalidateQueries({ predicate: (query) => !!query.queryKey[0]?.toString().startsWith('/api/timeline') });
       setQuery("");

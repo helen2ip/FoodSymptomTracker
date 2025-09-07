@@ -34,7 +34,6 @@ export default function Timeline() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/timeline/${selectedDate}`] });
-      queryClient.invalidateQueries({ queryKey: ["/api/foods/frequent"] });
       toast({ 
         title: "Food entry deleted", 
         description: "The food log has been removed successfully." 
