@@ -258,17 +258,17 @@ export default function TodayLog() {
           <TimePeriodSection 
             title="Morning" 
             entries={groupedEntries.morning} 
-            icon="⏰"
+        
           />
           <TimePeriodSection 
             title="Afternoon" 
             entries={groupedEntries.afternoon} 
-            icon="☀️"
+          
           />
           <TimePeriodSection 
             title="Evening" 
             entries={groupedEntries.evening} 
-            icon="🌙"
+          
           />
         </div>
       ) : (

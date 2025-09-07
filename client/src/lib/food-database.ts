@@ -99,7 +99,7 @@ export const foodCategories = {
     "Pie", "Apple Pie", "Pumpkin Pie", "Cherry Pie", "Donuts", "Glazed Donut", "Chocolate Donut",
     "Muffin", "Blueberry Muffin", "Bran Muffin", "Crackers", "Saltines", "Graham Crackers",
     "Pretzels", "Soft Pretzels", "Popcorn", "Caramel Popcorn", "Granola Bar", "Protein Bar",
-    "Energy Bar", "Cereal Bar", "Sandwich", "PB&J", "Grilled Cheese", "BLT", "Club Sandwich", "Flan", "Cheesecake"
+    "Energy Bar", "Cereal Bar", "Sandwich", "PB&J", "Grilled Cheese", "BLT", "Club Sandwich", "Flan", "Cheesecake", "Pancake"
   ],
   condiments_spices: [
     "Salt", "Pepper", "Garlic Powder", "Onion Powder", "Paprika", "Cumin", "Oregano",

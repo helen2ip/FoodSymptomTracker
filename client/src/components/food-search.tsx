@@ -32,9 +32,9 @@ export default function FoodSearch({ selectedTimeOption, setSelectedTimeOption }
     startTime.setDate(startTime.getDate() - 1);
     startTime.setHours(0, 0, 0, 0);
     
-    // End at current hour - 1
+    // End at current hour
     const endTime = new Date();
-    endTime.setHours(currentHour - 1, 0, 0, 0);
+    endTime.setHours(currentHour, 0, 0, 0);
     
     // Generate hourly options
     const current = new Date(startTime);
