@@ -22,13 +22,6 @@ export default function Home() {
   // Check if we're using time selection (not "now")
   const isUsingTimeSelection = selectedTimeOption !== 'now';
 
-  const handleQuickAdd = () => {
-    // Focus on search input
-    const searchInput = document.querySelector('input[data-testid="input-food-search"]') as HTMLInputElement;
-    if (searchInput) {
-      searchInput.focus();
-    }
-  };
 
   return (
     <div className="pb-24">
@@ -114,20 +107,6 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Floating Action Button */}
-      <div className="fixed bottom-20 right-4 max-w-sm mx-auto">
-        <SymptomLogger 
-          trigger={
-            <button
-              className="w-14 h-14 lab-amber-gradient rounded-full lab-shadow-strong flex items-center justify-center text-white text-xl hover:scale-105 transition-transform active:scale-95"
-              onClick={handleQuickAdd}
-              data-testid="button-floating-action"
-            >
-              🧪
-            </button>
-          }
-        />
-      </div>
     </div>
   );
 }
