@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import LabHeader from "@/components/lab-header";
 import FoodSearch from "@/components/food-search";
-import FrequentFoods from "@/components/frequent-foods";
 import TodayLog from "@/components/today-log";
 import SymptomLogger from "@/components/symptom-logger";
 
@@ -40,7 +39,6 @@ export default function Home() {
           selectedTimeOption={selectedTimeOption}
           setSelectedTimeOption={setSelectedTimeOption}
         />
-        <FrequentFoods disabled={isUsingTimeSelection} />
         <TodayLog />
         
         {/* Lab Results Preview */}
