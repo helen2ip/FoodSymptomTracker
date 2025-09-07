@@ -21,7 +21,6 @@ export interface IStorage {
   // Food entries
   getFoodEntries(userId?: string): Promise<FoodEntry[]>;
   getFoodEntriesByDate(date: string, userId?: string): Promise<FoodEntry[]>;
-  getFrequentFoods(limit?: number, userId?: string): Promise<FoodEntry[]>;
   createFoodEntry(entry: InsertFoodEntry, userId: string): Promise<FoodEntry>;
   deleteFoodEntry(id: string, userId: string): Promise<void>;
   updateFoodLogCount(foodName: string): Promise<void>;
