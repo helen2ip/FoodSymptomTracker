@@ -103,9 +103,9 @@ export default function LabHeader() {
           {stats?.achievements && stats.achievements.length > 0 && (
             <div className="achievement-glow bg-lab-amber/20 px-3 py-1 rounded-full border border-lab-amber/30">
               <div className="flex items-center space-x-1">
-                <span className="text-lab-amber text-sm">🏆</span>
+                <span className="text-lab-amber text-sm">👇</span>
                 <span className="text-xs font-mono font-bold">
-                  {stats.achievements[stats.achievements.length - 1]}!
+                  KEEP LOGGING!
                 </span>
               </div>
             </div>
