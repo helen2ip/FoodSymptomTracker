@@ -178,19 +178,6 @@ export default function Timeline() {
           <div className="flex items-center space-x-2">
             <Button
               size="sm"
-              variant={selectedDate === "all" ? "default" : "secondary"}
-              onClick={clearFilter}
-              className={`${
-                selectedDate === "all" 
-                  ? "bg-white text-lab-blue hover:bg-white/90" 
-                  : "bg-white/20 hover:bg-white/30 text-white border-white/20"
-              }`}
-              data-testid="button-filter-all"
-            >
-              Show All
-            </Button>
-            <Button
-              size="sm"
               variant={selectedDate !== "all" ? "default" : "secondary"}
               onClick={todayFilter}
               className={`${
@@ -201,6 +188,19 @@ export default function Timeline() {
               data-testid="button-filter-today"
             >
               Today Only
+            </Button>
+            <Button
+              size="sm"
+              variant={selectedDate === "all" ? "default" : "secondary"}
+              onClick={clearFilter}
+              className={`${
+                selectedDate === "all" 
+                  ? "bg-white text-lab-blue hover:bg-white/90" 
+                  : "bg-white/20 hover:bg-white/30 text-white border-white/20"
+              }`}
+              data-testid="button-filter-all"
+            >
+              Show All
             </Button>
           </div>
           
