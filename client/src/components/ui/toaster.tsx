@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { useToast } from "@/hooks/use-toast"
 import {
   Toast,
@@ -9,7 +10,27 @@ import {
 } from "@/components/ui/toast"
 
 export function Toaster() {
-  const { toasts } = useToast()
+  const { toasts, dismiss } = useToast()
+
+  // Add touch/click to dismiss functionality
+  useEffect(() => {
+    if (toasts.length === 0) return
+
+    const dismissToasts = () => {
+      toasts.forEach((toast) => {
+        dismiss(toast.id)
+      })
+    }
+
+    // Add event listeners for touch and click
+    document.addEventListener('touchstart', dismissToasts)
+    document.addEventListener('click', dismissToasts)
+
+    return () => {
+      document.removeEventListener('touchstart', dismissToasts)
+      document.removeEventListener('click', dismissToasts)
+    }
+  }, [toasts, dismiss])
 
   return (
     <ToastProvider>
