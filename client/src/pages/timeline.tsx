@@ -174,17 +174,35 @@ export default function Timeline() {
         </h1>
         
         {/* Filters */}
-        <div className="flex items-center space-x-2">
-          <Button
-            size="sm"
-            variant={selectedDate === "all" ? "secondary" : "default"}
-            onClick={selectedDate === "all" ? todayFilter : clearFilter}
-            className="bg-white/20 hover:bg-white/30 text-white border-white/20"
-            data-testid="button-filter-today"
-          >
-            <Filter size={14} className="mr-1" />
-            {selectedDate === "all" ? "Today Only" : "Show All"}
-          </Button>
+        <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
+            <Button
+              size="sm"
+              variant={selectedDate === "all" ? "default" : "secondary"}
+              onClick={clearFilter}
+              className={`${
+                selectedDate === "all" 
+                  ? "bg-white text-lab-blue hover:bg-white/90" 
+                  : "bg-white/20 hover:bg-white/30 text-white border-white/20"
+              }`}
+              data-testid="button-filter-all"
+            >
+              Show All
+            </Button>
+            <Button
+              size="sm"
+              variant={selectedDate !== "all" ? "default" : "secondary"}
+              onClick={todayFilter}
+              className={`${
+                selectedDate !== "all" 
+                  ? "bg-white text-lab-blue hover:bg-white/90" 
+                  : "bg-white/20 hover:bg-white/30 text-white border-white/20"
+              }`}
+              data-testid="button-filter-today"
+            >
+              Today Only
+            </Button>
+          </div>
           
           {timelineEntries && (
             <span className="text-sm opacity-80">
