@@ -251,7 +251,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Clock size={16} className="text-lab-purple" />
-              <span className="text-sm font-medium text-gray-700">Logging for...</span>
+              <span className="text-sm font-medium text-gray-700">Started since...</span>
             </div>
             
             <div className="grid grid-cols-2 gap-2">
@@ -261,7 +261,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
                 onClick={() => setSelectedTimeOption('now')}
                 className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
                   selectedTimeOption === 'now'
-                    ? 'bg-lab-green text-white'
+                    ? 'bg-lab-red text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
                 data-testid="button-symptom-time-now"
@@ -276,7 +276,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
                   onChange={(e) => setSelectedTimeOption(e.target.value as TimeOption)}
                   className={`w-full py-2 px-3 rounded-lg text-sm font-medium appearance-none cursor-pointer focus:outline-none transition-colors ${
                     isUsingTimeSelection
-                      ? 'bg-lab-blue text-white'
+                      ? 'bg-lab-red text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200'
                   }`}
                   data-testid="select-symptom-past-time"
