@@ -2,14 +2,15 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { InsertSymptomEntry } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
-import { AlertTriangle } from "lucide-react";
+import { Clock, ChevronDown } from "lucide-react";
 import { searchSymptoms } from "@/lib/symptom-database";
+
+type TimeOption = "now" | string;
 
 interface SymptomLoggerProps {
   trigger?: React.ReactNode;
@@ -19,7 +20,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [symptomName, setSymptomName] = useState("");
   const [severity, setSeverity] = useState(1);
-  const [notes, setNotes] = useState("");
+  const [selectedTimeOption, setSelectedTimeOption] = useState<TimeOption>("now");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -29,6 +30,68 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
     queryKey: ["/api/symptoms/recent"],
     enabled: isOpen // Only fetch when dialog is open
   });
+
+  // Generate time options from yesterday midnight to current hour
+  const generateTimeOptions = (): Array<{ value: string; label: string }> => {
+    const options: Array<{ value: string; label: string }> = [];
+    const now = new Date();
+    const currentHour = now.getHours();
+    
+    // Start from yesterday midnight
+    const startTime = new Date();
+    startTime.setDate(startTime.getDate() - 1);
+    startTime.setHours(0, 0, 0, 0);
+    
+    // End at current hour
+    const endTime = new Date();
+    endTime.setHours(currentHour, 0, 0, 0);
+    
+    // Generate hourly options
+    const current = new Date(startTime);
+    while (current <= endTime) {
+      const isToday = current.toDateString() === now.toDateString();
+      const isYesterday = current.toDateString() === new Date(now.getTime() - 24 * 60 * 60 * 1000).toDateString();
+      
+      let dayLabel = '';
+      if (isToday) dayLabel = 'Today';
+      else if (isYesterday) dayLabel = 'Yesterday';
+      
+      const timeLabel = formatHour(current.getHours());
+      const label = `${dayLabel} ${timeLabel}`;
+      
+      options.push({
+        value: current.toISOString(),
+        label: label
+      });
+      
+      // Move to next hour
+      current.setHours(current.getHours() + 1);
+    }
+    
+    return options;
+  };
+
+  // Format hour for display (12-hour format)
+  const formatHour = (hour: number): string => {
+    if (hour === 0) return '12 AM';
+    if (hour < 12) return `${hour} AM`;
+    if (hour === 12) return '12 PM';
+    return `${hour - 12} PM`;
+  };
+
+  // Helper function to get the timestamp based on selected options
+  const getSelectedTimestamp = (): Date => {
+    if (selectedTimeOption === 'now') {
+      return new Date();
+    }
+    return new Date(selectedTimeOption);
+  };
+
+  // Check if we're using time selection (not "now")
+  const isUsingTimeSelection = selectedTimeOption !== 'now';
+  
+  // Get available time options
+  const timeOptions = generateTimeOptions().reverse();
 
   const addSymptomMutation = useMutation({
     mutationFn: async (symptomEntry: InsertSymptomEntry) => {
@@ -45,13 +108,11 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
       resetForm();
       toast({
         title: "Reaction recorded! ✏️",
-        description: "Added to your experiment timeline",
       });
     },
     onError: () => {
       toast({
         title: "Failed to log symptom",
-        description: "Please try again",
         variant: "destructive",
       });
     },
@@ -60,7 +121,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
   const resetForm = () => {
     setSymptomName("");
     setSeverity(1);
-    setNotes("");
+    setSelectedTimeOption("now");
     setSuggestions([]);
   };
 
@@ -81,8 +142,7 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
     addSymptomMutation.mutate({
       symptomName: symptomName.trim(),
       severity,
-      notes: notes.trim() || undefined,
-      timestamp: new Date(),
+      timestamp: getSelectedTimestamp(),
     });
   };
 
@@ -187,16 +247,52 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
             </div>
           </div>
 
+          {/* Time Selection */}
           <div>
-            <Label htmlFor="notes" className="font-mono text-sm">OBSERVATION_NOTES (optional)</Label>
-            <Textarea
-              id="notes"
-              placeholder="Record additional observations about the reaction..."
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              rows={3}
-              data-testid="textarea-symptom-notes"
-            />
+            <div className="flex items-center gap-2 mb-3">
+              <Clock size={16} className="text-lab-purple" />
+              <span className="text-sm font-medium text-gray-700">Logging for...</span>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-2">
+              {/* Now Button */}
+              <button
+                type="button"
+                onClick={() => setSelectedTimeOption('now')}
+                className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
+                  selectedTimeOption === 'now'
+                    ? 'bg-lab-green text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+                data-testid="button-symptom-time-now"
+              >
+                Now
+              </button>
+
+              {/* Combined Past Time Dropdown */}
+              <div className="relative">
+                <select
+                  value={selectedTimeOption === 'now' ? '' : selectedTimeOption}
+                  onChange={(e) => setSelectedTimeOption(e.target.value as TimeOption)}
+                  className={`w-full py-2 px-3 rounded-lg text-sm font-medium appearance-none cursor-pointer focus:outline-none transition-colors ${
+                    isUsingTimeSelection
+                      ? 'bg-lab-blue text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:bg-gray-200'
+                  }`}
+                  data-testid="select-symptom-past-time"
+                >
+                  <option value="" disabled>In the Past</option>
+                  {timeOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown size={14} className={`absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none ${
+                  isUsingTimeSelection ? 'text-white' : 'text-gray-500'
+                }`} />
+              </div>
+            </div>
           </div>
 
           <div className="flex space-x-2">
