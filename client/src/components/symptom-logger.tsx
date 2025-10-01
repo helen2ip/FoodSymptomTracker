@@ -295,25 +295,14 @@ export default function SymptomLogger({ trigger }: SymptomLoggerProps) {
             </div>
           </div>
 
-          <div className="flex space-x-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setIsOpen(false)}
-              className="flex-1"
-              data-testid="button-cancel-symptom"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={!symptomName.trim() || addSymptomMutation.isPending}
-              className="flex-1 science-gradient text-white font-mono"
-              data-testid="button-submit-symptom"
-            >
-              {addSymptomMutation.isPending ? "PROCESSING..." : "Record Data"}
-            </Button>
-          </div>
+          <Button
+            type="submit"
+            disabled={!symptomName.trim() || addSymptomMutation.isPending}
+            className="w-full science-gradient text-white font-mono"
+            data-testid="button-submit-symptom"
+          >
+            {addSymptomMutation.isPending ? "PROCESSING..." : "Record Data"}
+          </Button>
         </form>
       </DialogContent>
     </Dialog>
