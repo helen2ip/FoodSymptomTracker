@@ -113,10 +113,10 @@ export default function Timeline() {
       return acc;
     }, {} as Record<string, TimelineEntry[]>);
 
-    // Sort each day's entries chronologically (oldest first within each day)
+    // Sort each day's entries with most recent first
     Object.values(grouped).forEach(dayEntries => {
       dayEntries.sort((a, b) => 
-        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
       );
     });
 
