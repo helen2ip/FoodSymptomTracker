@@ -262,7 +262,7 @@ export class MemStorage implements IStorage {
           }
         }
 
-        if (occurrences > 0) {
+        if (occurrences >= 2) {
           const key = `${foodName}-${symptomName}`;
           correlationMap.set(key, {
             occurrences,
@@ -534,7 +534,7 @@ export class DatabaseStorage implements IStorage {
           }
         }
 
-        if (occurrences > 0) {
+        if (occurrences >= 2) {
           const key = `${foodName}-${symptomName}`;
           correlationMap.set(key, {
             occurrences,
