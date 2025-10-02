@@ -254,7 +254,7 @@ export class MemStorage implements IStorage {
           const hasSymptomInWindow = symptoms.some(symptom => {
             if (symptom.symptomName !== symptomName) return false;
             const symptomTime = new Date(symptom.timestamp).getTime();
-            return symptomTime >= foodTime && symptomTime <= windowEnd;
+            return symptomTime >= foodTime + 60000 && symptomTime <= windowEnd;
           });
 
           if (hasSymptomInWindow) {
@@ -526,7 +526,7 @@ export class DatabaseStorage implements IStorage {
           const hasSymptomInWindow = symptoms.some(symptom => {
             if (symptom.symptomName !== symptomName) return false;
             const symptomTime = new Date(symptom.timestamp).getTime();
-            return symptomTime >= foodTime && symptomTime <= windowEnd;
+            return symptomTime >= foodTime + 60000 && symptomTime <= windowEnd;
           });
 
           if (hasSymptomInWindow) {
