@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { path: "/", icon: Home, label: "Lab", testId: "nav-home" },
   { path: "/timeline", icon: Clock, label: "Data", testId: "nav-timeline" },
-  { path: "/insights", icon: TrendingUp, label: "Results", testId: "nav-insights", hasNotification: true },
+  { path: "/insights", icon: TrendingUp, label: "Results", testId: "nav-insights" },
   { path: "/achievements", icon: Trophy, label: "Awards", testId: "nav-achievements" },
   { path: "/settings", icon: Settings, label: "Config", testId: "nav-settings" },
 ];
@@ -16,7 +16,7 @@ export default function BottomNav() {
   return (
     <nav className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-sm bg-white border-t border-gray-100 safe-area-bottom z-50">
       <div className="flex justify-around py-2">
-        {navItems.map(({ path, icon: Icon, label, testId, hasNotification }) => {
+        {navItems.map(({ path, icon: Icon, label, testId }) => {
           const isActive = location === path;
           
           return (
@@ -30,12 +30,6 @@ export default function BottomNav() {
               >
                 <Icon size={20} />
                 <span className="text-xs font-medium">{label}</span>
-                
-                {hasNotification && (
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-lab-amber rounded-full flex items-center justify-center">
-                    <span className="text-xs text-white font-bold">2</span>
-                  </div>
-                )}
               </button>
             </Link>
           );

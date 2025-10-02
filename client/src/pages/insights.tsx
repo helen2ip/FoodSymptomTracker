@@ -285,25 +285,9 @@ export default function Insights() {
               <TrendingUp className="text-gray-400" size={32} />
             </div>
             <h3 className="text-xl font-bold text-gray-800 mb-2">No Patterns Detected Yet</h3>
-            <p className="text-gray-500 mb-6">
+            <p className="text-gray-500">
               Need more data to find correlations between foods and symptoms
             </p>
-            <div className="bg-lab-blue/10 rounded-xl p-4 text-left max-w-sm mx-auto">
-              <h4 className="font-medium text-gray-800 mb-3">📊 Minimum Requirements</h4>
-              <ul className="text-sm text-gray-600 space-y-2">
-                <li className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-lab-blue rounded-full" />
-                  <span>Log at least <strong>5 different foods</strong></span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-lab-red rounded-full" />
-                  <span>Record at least <strong>1 symptom</strong></span>
-                </li>
-              </ul>
-              <p className="text-xs text-gray-500 mt-3">
-                Keep logging daily to build a comprehensive dataset for accurate pattern detection.
-              </p>
-            </div>
           </div>
         )}
       </main>
