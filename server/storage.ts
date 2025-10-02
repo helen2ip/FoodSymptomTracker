@@ -35,6 +35,7 @@ export interface IStorage {
   // Correlations
   getCorrelations(userId?: string): Promise<Correlation[]>;
   updateCorrelation(correlation: InsertCorrelation, userId: string): Promise<Correlation>;
+  calculateCorrelations(userId: string): Promise<Correlation[]>;
   
   // User stats
   getUserStats(userId: string): Promise<UserStats>;
@@ -224,6 +225,74 @@ export class MemStorage implements IStorage {
     return combined.sort((a, b) => 
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
+  }
+
+  async calculateCorrelations(userId: string): Promise<Correlation[]> {
+    const foods = await this.getFoodEntries(userId);
+    const symptoms = await this.getSymptomEntries(userId);
+
+    if (foods.length < 5 || symptoms.length < 1) {
+      return [];
+    }
+
+    const correlationMap = new Map<string, { occurrences: number; totalFoodCount: number; foodName: string; symptomName: string }>();
+
+    const uniqueFoods = Array.from(new Set(foods.map(f => f.foodName)));
+    const uniqueSymptoms = Array.from(new Set(symptoms.map(s => s.symptomName)));
+
+    for (const foodName of uniqueFoods) {
+      const foodOccurrences = foods.filter(f => f.foodName === foodName);
+      const totalFoodCount = foodOccurrences.length;
+
+      for (const symptomName of uniqueSymptoms) {
+        let occurrences = 0;
+
+        for (const foodEntry of foodOccurrences) {
+          const foodTime = new Date(foodEntry.timestamp).getTime();
+          const windowEnd = foodTime + (24 * 60 * 60 * 1000);
+
+          const hasSymptomInWindow = symptoms.some(symptom => {
+            if (symptom.symptomName !== symptomName) return false;
+            const symptomTime = new Date(symptom.timestamp).getTime();
+            return symptomTime >= foodTime && symptomTime <= windowEnd;
+          });
+
+          if (hasSymptomInWindow) {
+            occurrences++;
+          }
+        }
+
+        if (occurrences > 0) {
+          const key = `${foodName}-${symptomName}`;
+          correlationMap.set(key, {
+            occurrences,
+            totalFoodCount,
+            foodName,
+            symptomName
+          });
+        }
+      }
+    }
+
+    this.correlations.clear();
+    const results: Correlation[] = [];
+
+    for (const [key, data] of correlationMap.entries()) {
+      const confidence = data.occurrences / data.totalFoodCount;
+      const correlation: Correlation = {
+        id: randomUUID(),
+        userId: 'mem-user-1',
+        foodName: data.foodName,
+        symptomName: data.symptomName,
+        confidence,
+        occurrences: data.occurrences,
+        lastUpdated: new Date()
+      };
+      this.correlations.set(correlation.id, correlation);
+      results.push(correlation);
+    }
+
+    return results.sort((a, b) => b.confidence - a.confidence);
   }
 }
 
@@ -428,6 +497,77 @@ export class DatabaseStorage implements IStorage {
     return combined.sort((a, b) => 
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
+  }
+
+  async calculateCorrelations(userId: string): Promise<Correlation[]> {
+    const foods = await this.getFoodEntries(userId);
+    const symptoms = await this.getSymptomEntries(userId);
+
+    if (foods.length < 5 || symptoms.length < 1) {
+      return [];
+    }
+
+    const correlationMap = new Map<string, { occurrences: number; totalFoodCount: number; foodName: string; symptomName: string }>();
+
+    const uniqueFoods = Array.from(new Set(foods.map(f => f.foodName)));
+    const uniqueSymptoms = Array.from(new Set(symptoms.map(s => s.symptomName)));
+
+    for (const foodName of uniqueFoods) {
+      const foodOccurrences = foods.filter(f => f.foodName === foodName);
+      const totalFoodCount = foodOccurrences.length;
+
+      for (const symptomName of uniqueSymptoms) {
+        let occurrences = 0;
+
+        for (const foodEntry of foodOccurrences) {
+          const foodTime = new Date(foodEntry.timestamp).getTime();
+          const windowEnd = foodTime + (24 * 60 * 60 * 1000);
+
+          const hasSymptomInWindow = symptoms.some(symptom => {
+            if (symptom.symptomName !== symptomName) return false;
+            const symptomTime = new Date(symptom.timestamp).getTime();
+            return symptomTime >= foodTime && symptomTime <= windowEnd;
+          });
+
+          if (hasSymptomInWindow) {
+            occurrences++;
+          }
+        }
+
+        if (occurrences > 0) {
+          const key = `${foodName}-${symptomName}`;
+          correlationMap.set(key, {
+            occurrences,
+            totalFoodCount,
+            foodName,
+            symptomName
+          });
+        }
+      }
+    }
+
+    await db.delete(correlations).where(eq(correlations.userId, userId));
+
+    const results: Correlation[] = [];
+
+    for (const [key, data] of correlationMap.entries()) {
+      const confidence = data.occurrences / data.totalFoodCount;
+      
+      const [correlation] = await db.insert(correlations)
+        .values({
+          userId,
+          foodName: data.foodName,
+          symptomName: data.symptomName,
+          confidence,
+          occurrences: data.occurrences,
+          lastUpdated: new Date()
+        })
+        .returning();
+      
+      results.push(correlation);
+    }
+
+    return results.sort((a, b) => b.confidence - a.confidence);
   }
 }
 
