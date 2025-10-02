@@ -101,10 +101,6 @@ export default function Insights() {
                     </span>
                   </div>
 
-                  <p className="text-gray-700 mb-4">
-                    <strong className="text-lab-amber">Pattern confirmed!</strong> {correlation.symptomName} symptoms appear {correlation.occurrences} time{correlation.occurrences !== 1 ? 's' : ''} within 24 hours after consuming {correlation.foodName}.
-                  </p>
-
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <div className="flex items-center space-x-2">
@@ -156,9 +152,6 @@ export default function Insights() {
                           {(correlation.confidence * 100).toFixed(1)}%
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 mb-3">
-                        Detecting a possible link between {correlation.foodName} and {correlation.symptomName}. More data needed to confirm.
-                      </p>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                           <div className="flex items-center space-x-2">
