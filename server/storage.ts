@@ -249,7 +249,7 @@ export class MemStorage implements IStorage {
 
         for (const foodEntry of foodOccurrences) {
           const foodTime = new Date(foodEntry.timestamp).getTime();
-          const windowEnd = foodTime + (12 * 60 * 60 * 1000);
+          const windowEnd = foodTime + (18 * 60 * 60 * 1000);
 
           const hasSymptomInWindow = symptoms.some(symptom => {
             if (symptom.symptomName !== symptomName) return false;
@@ -521,7 +521,7 @@ export class DatabaseStorage implements IStorage {
 
         for (const foodEntry of foodOccurrences) {
           const foodTime = new Date(foodEntry.timestamp).getTime();
-          const windowEnd = foodTime + (12 * 60 * 60 * 1000);
+          const windowEnd = foodTime + (18 * 60 * 60 * 1000);
 
           const hasSymptomInWindow = symptoms.some(symptom => {
             if (symptom.symptomName !== symptomName) return false;
