@@ -277,7 +277,7 @@ export class MemStorage implements IStorage {
     this.correlations.clear();
     const results: Correlation[] = [];
 
-    for (const [key, data] of correlationMap.entries()) {
+    for (const [key, data] of Array.from(correlationMap.entries())) {
       const confidence = data.occurrences / data.totalFoodCount;
       const correlation: Correlation = {
         id: randomUUID(),
@@ -550,7 +550,7 @@ export class DatabaseStorage implements IStorage {
 
     const results: Correlation[] = [];
 
-    for (const [key, data] of correlationMap.entries()) {
+    for (const [key, data] of Array.from(correlationMap.entries())) {
       const confidence = data.occurrences / data.totalFoodCount;
       
       const [correlation] = await db.insert(correlations)

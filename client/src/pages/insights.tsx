@@ -7,9 +7,8 @@ import { useEffect } from "react";
 export default function Insights() {
   const analyzeMutation = useMutation({
     mutationFn: async () => {
-      return await apiRequest<Correlation[]>("/api/correlations/analyze", {
-        method: "POST",
-      });
+      const response = await apiRequest("POST", "/api/correlations/analyze");
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/correlations"] });
@@ -218,7 +217,7 @@ export default function Insights() {
                       <span className="text-xs text-gray-600">{correlation.symptomName}</span>
                     </div>
                     <span className="text-xs text-gray-400 font-mono">
-                      {correlation.occurrences}/{correlation.occurrences} times
+                      n={correlation.occurrences}
                     </span>
                   </div>
                 </div>
