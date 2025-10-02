@@ -313,7 +313,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Correlations endpoint
+  // Correlations endpoints
   app.get("/api/correlations", requireAuth, async (req, res) => {
     try {
       const userId = (req as any).userId;
@@ -321,6 +321,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(correlations);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch correlations" });
+    }
+  });
+
+  app.post("/api/correlations/analyze", requireAuth, async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const correlations = await storage.calculateCorrelations(userId);
+      res.json(correlations);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to analyze correlations" });
     }
   });
 
