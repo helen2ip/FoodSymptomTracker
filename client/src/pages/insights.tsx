@@ -75,7 +75,6 @@ export default function Insights() {
         {highConfidenceCorrelations.length > 0 && (
           <section className="mb-8">
             <div className="flex items-center space-x-2 mb-4">
-              <Microscope className="text-lab-amber" size={20} />
               <h2 className="text-lg font-bold text-gray-800">Confirmed Patterns</h2>
               <span className="text-xs bg-lab-amber/20 text-lab-amber px-2 py-1 rounded-full">
                 &gt;70% Confidence
@@ -119,7 +118,6 @@ export default function Insights() {
         {moderateCorrelations.length > 0 && (
           <section className="mb-8">
             <div className="flex items-center space-x-2 mb-4">
-              <Beaker className="text-lab-blue" size={20} />
               <h2 className="text-lg font-bold text-gray-800">Emerging Patterns</h2>
               <span className="text-xs bg-lab-blue/20 text-lab-blue px-2 py-1 rounded-full">
                 50-70% Confidence
@@ -163,7 +161,6 @@ export default function Insights() {
         {lowConfidenceCorrelations.length > 0 && (
           <section className="mb-8">
             <div className="flex items-center space-x-2 mb-4">
-              <Activity className="text-gray-500" size={20} />
               <h2 className="text-lg font-bold text-gray-800">Weak Signals</h2>
               <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full">
                 &lt;50% Confidence
