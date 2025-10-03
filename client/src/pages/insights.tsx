@@ -127,10 +127,16 @@ export default function Insights() {
                   className="bg-white rounded-2xl p-4 lab-shadow border border-lab-blue/10"
                   data-testid={`correlation-moderate-${index}`}
                 >
-                  <div className="flex items-center space-x-3 mb-3">
-                    <span className="text-sm text-gray-600">{correlation.foodName}</span>
-                    <ArrowRight className="text-gray-400" size={12} />
-                    <span className="text-sm text-gray-600">{correlation.symptomName}</span>
+                  <div className="flex items-center space-x-4 mb-3">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-lab-blue rounded-full" />
+                      <span className="text-sm text-gray-600">{correlation.foodName}</span>
+                    </div>
+                    <ArrowRight className="text-gray-400" size={16} />
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-lab-red rounded-full" />
+                      <span className="text-sm text-gray-600">{correlation.symptomName}</span>
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -165,10 +171,16 @@ export default function Insights() {
                   className="bg-gray-50 rounded-xl p-3 border border-gray-200"
                   data-testid={`correlation-low-${index}`}
                 >
-                  <div className="flex items-center space-x-3 mb-3">
-                    <span className="text-sm text-gray-600">{correlation.foodName}</span>
-                    <ArrowRight className="text-gray-400" size={12} />
-                    <span className="text-sm text-gray-600">{correlation.symptomName}</span>
+                  <div className="flex items-center space-x-4 mb-3">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-lab-blue rounded-full" />
+                      <span className="text-sm text-gray-600">{correlation.foodName}</span>
+                    </div>
+                    <ArrowRight className="text-gray-400" size={16} />
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-lab-red rounded-full" />
+                      <span className="text-sm text-gray-600">{correlation.symptomName}</span>
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between">
