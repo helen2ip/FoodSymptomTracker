@@ -224,9 +224,9 @@ export default function Insights() {
         {/* Methodology Explanation */}
         {correlations && correlations.length > 0 && (
           <section className="mt-12 pt-6 border-t border-gray-200">
-            <h3 className="text-sm font-bold text-gray-800 mb-2">How These Numbers Work</h3>
+            <h3 className="text-sm font-bold text-gray-800 mb-2">How these numbers work</h3>
             <p className="text-sm text-gray-600 leading-relaxed">
-              The confidence percentage shows how often a symptom appeared after eating a specific food. For example, 75% means that 3 out of 4 times you ate that food, the symptom occurred within 18 hours afterward. We only show patterns when a food-symptom pair has happened at least twice, and symptoms must start at least 1 minute after eating. The sample size (n=X) shows how many times you logged this food.
+              The confidence percentage shows how often a symptom appeared after eating a specific food. For example, 75% means that 3 out of 4 times you ate that food, the symptom occurred within 18 hours afterward. We only show patterns when a food-symptom pair has occured at least twice, and symptoms must start at least 1 minute after eating. The sample size (n=X) indicates how many times you logged this food.
             </p>
           </section>
         )}
