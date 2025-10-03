@@ -198,35 +198,9 @@ export default function Insights() {
                   </div>
                   <div>
                     <h3 className="font-medium text-gray-800 mb-1">Elimination Challenge</h3>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm text-gray-600">
                       Try removing your most correlated foods for 5 days to test the hypothesis.
                     </p>
-                    <button 
-                      className="text-lab-green text-sm font-medium"
-                      data-testid="button-elimination-challenge"
-                    >
-                      Start Challenge →
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl p-4 lab-shadow border border-lab-blue/10">
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-lab-blue/10 rounded-full flex items-center justify-center">
-                    <span className="text-lab-blue text-sm">📊</span>
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-800 mb-1">Symptom Timing Study</h3>
-                    <p className="text-sm text-gray-600 mb-2">
-                      Log symptoms with precise timing to identify reaction windows.
-                    </p>
-                    <button 
-                      className="text-lab-blue text-sm font-medium"
-                      data-testid="button-timing-study"
-                    >
-                      Begin Study →
-                    </button>
                   </div>
                 </div>
               </div>
