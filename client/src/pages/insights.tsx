@@ -85,7 +85,7 @@ export default function Insights() {
               {highConfidenceCorrelations.map((correlation, index) => (
                 <div
                   key={correlation.id}
-                  className="bg-gradient-to-br from-lab-blue/10 to-lab-blue/20 rounded-2xl p-5 border border-lab-blue/20"
+                  className="bg-gradient-to-br from-lab-blue/10 to-lab-blue/20 rounded-2xl p-4 border border-lab-blue/20"
                   data-testid={`correlation-high-${index}`}
                 >
                   <div className="flex items-center space-x-3 mb-3">
@@ -155,11 +155,11 @@ export default function Insights() {
               </span>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               {lowConfidenceCorrelations.map((correlation, index) => (
                 <div
                   key={correlation.id}
-                  className="bg-white rounded-xl p-4 lab-shadow border border-lab-amber/10"
+                  className="bg-white rounded-2xl p-4 lab-shadow border border-lab-amber/10"
                   data-testid={`correlation-low-${index}`}
                 >
                   <div className="flex items-center space-x-3 mb-3">
