@@ -90,27 +90,24 @@ export default function Insights() {
                   data-testid={`correlation-high-${index}`}
                 >
                   <div className="flex items-start justify-between mb-3">
-                    <span className="font-bold text-gray-800">Strong Correlation</span>
                     <span className="text-xs bg-lab-amber text-white px-3 py-1 rounded-full font-mono font-bold">
                       {(correlation.confidence * 100).toFixed(1)}%
                     </span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-lab-blue rounded-full" />
-                        <span className="text-sm text-gray-600">{correlation.foodName}</span>
-                      </div>
-                      <ArrowRight className="text-gray-400" size={16} />
-                      <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-lab-red rounded-full" />
-                        <span className="text-sm text-gray-600">{correlation.symptomName}</span>
-                      </div>
-                    </div>
                     <span className="text-xs text-gray-500 font-mono">
                       n={correlation.occurrences}
                     </span>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-lab-blue rounded-full" />
+                      <span className="text-sm text-gray-600">{correlation.foodName}</span>
+                    </div>
+                    <ArrowRight className="text-gray-400" size={16} />
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-lab-red rounded-full" />
+                      <span className="text-sm text-gray-600">{correlation.symptomName}</span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -137,26 +134,23 @@ export default function Insights() {
                   data-testid={`correlation-moderate-${index}`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-medium text-gray-800">Potential Connection</h3>
                     <span className="text-xs bg-lab-blue text-white px-3 py-1 rounded-full font-mono font-bold">
                       {(correlation.confidence * 100).toFixed(1)}%
                     </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-lab-blue rounded-full" />
-                        <span className="text-xs text-gray-600">{correlation.foodName}</span>
-                      </div>
-                      <ArrowRight className="text-gray-400" size={12} />
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-lab-red rounded-full" />
-                        <span className="text-xs text-gray-600">{correlation.symptomName}</span>
-                      </div>
-                    </div>
                     <span className="text-xs text-gray-500 font-mono">
                       n={correlation.occurrences}
                     </span>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-lab-blue rounded-full" />
+                      <span className="text-xs text-gray-600">{correlation.foodName}</span>
+                    </div>
+                    <ArrowRight className="text-gray-400" size={12} />
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-lab-red rounded-full" />
+                      <span className="text-xs text-gray-600">{correlation.symptomName}</span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -183,20 +177,17 @@ export default function Insights() {
                   data-testid={`correlation-low-${index}`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">Observed Pattern</span>
                     <span className="text-xs bg-gray-300 text-gray-700 px-2 py-1 rounded-full font-mono">
                       {(correlation.confidence * 100).toFixed(1)}%
                     </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <span className="text-xs text-gray-600">{correlation.foodName}</span>
-                      <ArrowRight className="text-gray-300" size={10} />
-                      <span className="text-xs text-gray-600">{correlation.symptomName}</span>
-                    </div>
                     <span className="text-xs text-gray-400 font-mono">
                       n={correlation.occurrences}
                     </span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <span className="text-xs text-gray-600">{correlation.foodName}</span>
+                    <ArrowRight className="text-gray-300" size={10} />
+                    <span className="text-xs text-gray-600">{correlation.symptomName}</span>
                   </div>
                 </div>
               ))}
