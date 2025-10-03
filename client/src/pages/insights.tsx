@@ -162,7 +162,7 @@ export default function Insights() {
           <section className="mb-8">
             <div className="flex items-center space-x-2 mb-4">
               <h2 className="text-lg font-bold text-gray-800">Weak Signals</h2>
-              <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full">
+              <span className="text-xs bg-lab-purple/20 text-lab-purple px-2 py-1 rounded-full">
                 &lt;50% Confidence
               </span>
             </div>
@@ -171,7 +171,7 @@ export default function Insights() {
               {lowConfidenceCorrelations.map((correlation, index) => (
                 <div
                   key={correlation.id}
-                  className="bg-gray-50 rounded-xl p-3 border border-gray-200"
+                  className="bg-white rounded-xl p-4 lab-shadow border border-lab-purple/10"
                   data-testid={`correlation-low-${index}`}
                 >
                   <div className="flex items-center space-x-4 mb-3">
@@ -187,7 +187,7 @@ export default function Insights() {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-xs bg-gray-300 text-gray-700 px-3 py-1 rounded-full font-mono font-bold">
+                    <span className="text-xs bg-lab-purple text-white px-3 py-1 rounded-full font-mono font-bold">
                       {(correlation.confidence * 100).toFixed(1)}%
                     </span>
                     <span className="text-xs text-gray-500 font-mono">
