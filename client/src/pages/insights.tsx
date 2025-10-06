@@ -87,16 +87,18 @@ export default function Insights() {
                   n ≥ {minSampleSize}
                 </span>
               </div>
-              <Slider
-                value={[minSampleSize]}
-                onValueChange={(value) => setMinSampleSize(value[0])}
-                min={2}
-                max={maxSampleSize}
-                step={1}
-                className="w-full [&>span]:bg-white/20 [&>span>span]:bg-white/80 [&>span:last-child]:bg-white [&>span:last-child]:rounded-full [&>span:last-child]:w-7 [&>span:last-child]:h-7 [&>span:last-child]:p-0"
-                thumbIcon={<Beaker size={16} className="text-lab-blue" />}
-                data-testid="slider-sample-size"
-              />
+              <div className="[&_.slider-thumb]:w-7 [&_.slider-thumb]:h-7 [&_.slider-thumb]:bg-white [&_.slider-thumb]:rounded-full [&_.slider-thumb]:flex [&_.slider-thumb]:items-center [&_.slider-thumb]:justify-center [&_.slider-thumb]:shadow-sm">
+                <Slider
+                  value={[minSampleSize]}
+                  onValueChange={(value) => setMinSampleSize(value[0])}
+                  min={2}
+                  max={maxSampleSize}
+                  step={1}
+                  className="w-full [&>span]:bg-white/20 [&>span>span]:bg-white/80"
+                  thumbIcon={<Beaker size={16} className="text-lab-blue" />}
+                  data-testid="slider-sample-size"
+                />
+              </div>
               <div className="flex justify-between mt-3">
                 <span className="text-xs text-white/70">2</span>
                 <span className="text-xs text-white/70">{maxSampleSize}</span>
