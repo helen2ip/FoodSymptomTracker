@@ -93,7 +93,8 @@ export default function Insights() {
                 min={2}
                 max={maxSampleSize}
                 step={1}
-                className="w-full [&>span]:bg-white/20 [&>span>span]:bg-white/80"
+                className="w-full [&>span]:bg-white/20 [&>span>span]:bg-white/80 [&>span:last-child]:border-white [&>span:last-child]:bg-lab-blue"
+                thumbIcon={<Beaker size={14} className="text-white" />}
                 data-testid="slider-sample-size"
               />
               <div className="flex justify-between mt-1">
