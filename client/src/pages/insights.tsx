@@ -93,7 +93,7 @@ export default function Insights() {
                 min={2}
                 max={maxSampleSize}
                 step={1}
-                className="w-full [&>span]:bg-white/20 [&>span>span]:bg-lab-blue"
+                className="w-full [&>span]:bg-white/20 [&>span>span]:bg-white/80"
                 data-testid="slider-sample-size"
               />
               <div className="flex justify-between mt-1">
