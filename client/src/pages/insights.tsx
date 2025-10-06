@@ -96,7 +96,7 @@ export default function Insights() {
                 className="w-full [&>span]:bg-white/20 [&>span>span]:bg-lab-blue"
                 data-testid="slider-sample-size"
               />
-              <div className="flex justify-between mt-1">
+              <div className="flex justify-between mt-2">
                 <span className="text-xs text-white/70">2</span>
                 <span className="text-xs text-white/70">{maxSampleSize}</span>
               </div>
