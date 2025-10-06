@@ -93,11 +93,11 @@ export default function Insights() {
                 min={2}
                 max={maxSampleSize}
                 step={1}
-                className="w-full [&>span]:bg-white/20 [&>span>span]:bg-white/80 [&>span:last-child]:bg-white [&>span:last-child]:rounded-lg [&>span:last-child]:p-1"
-                thumbIcon={<Beaker size={18} className="text-lab-blue" />}
+                className="w-full [&>span]:bg-white/20 [&>span>span]:bg-white/80 [&>span:last-child]:bg-white [&>span:last-child]:rounded-full [&>span:last-child]:w-7 [&>span:last-child]:h-7 [&>span:last-child]:p-0"
+                thumbIcon={<Beaker size={16} className="text-lab-blue" />}
                 data-testid="slider-sample-size"
               />
-              <div className="flex justify-between mt-1">
+              <div className="flex justify-between mt-3">
                 <span className="text-xs text-white/70">2</span>
                 <span className="text-xs text-white/70">{maxSampleSize}</span>
               </div>
