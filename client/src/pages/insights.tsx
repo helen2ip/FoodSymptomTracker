@@ -71,24 +71,19 @@ export default function Insights() {
         </div>
         
         <div className="relative z-10">
-          <h1 className="text-xl font-bold flex items-center space-x-2 mb-2">
+          <h1 className="text-xl font-bold flex items-center space-x-2 mb-4">
             <TrendingUp size={24} />
             <span>Lab Insights</span>
           </h1>
-          <p className="text-sm opacity-90">Scientific discoveries from your data</p>
-        </div>
-      </header>
-
-      <main className="px-6 py-6">
-        {/* Sample Size Filter */}
-        {correlations && correlations.length > 0 && (
-          <section className="mb-6">
-            <div className="bg-white rounded-2xl p-4 lab-shadow border border-gray-100">
-              <div className="flex items-center justify-between mb-3">
-                <label className="text-sm font-medium text-gray-700">
+          
+          {/* Sample Size Filter */}
+          {correlations && correlations.length > 0 && (
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-sm font-medium text-white/90">
                   Minimum Sample Size
                 </label>
-                <span className="text-sm font-mono font-bold text-lab-blue" data-testid="text-min-sample-size">
+                <span className="text-sm font-mono font-bold text-white" data-testid="text-min-sample-size">
                   n ≥ {minSampleSize}
                 </span>
               </div>
@@ -101,14 +96,16 @@ export default function Insights() {
                 className="w-full"
                 data-testid="slider-sample-size"
               />
-              <div className="flex justify-between mt-2">
-                <span className="text-xs text-gray-500">2</span>
-                <span className="text-xs text-gray-500">{maxSampleSize}</span>
+              <div className="flex justify-between mt-1">
+                <span className="text-xs text-white/70">2</span>
+                <span className="text-xs text-white/70">{maxSampleSize}</span>
               </div>
             </div>
-          </section>
-        )}
+          )}
+        </div>
+      </header>
 
+      <main className="px-6 py-6">
         {/* High Confidence Correlations */}
         {highConfidenceCorrelations.length > 0 && (
           <section className="mb-8">
