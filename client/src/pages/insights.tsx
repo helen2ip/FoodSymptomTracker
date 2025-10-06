@@ -234,7 +234,7 @@ export default function Insights() {
                   <div>
                     <h3 className="font-medium text-gray-800 mb-1">Elimination Challenge</h3>
                     <p className="text-sm text-gray-600">
-                      Try removing your most correlated foods for 5 days to test the hypothesis.
+                      Try removing your most correlated foods for 5 days to test the hypothesis
                     </p>
                   </div>
                 </div>
