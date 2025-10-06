@@ -2,9 +2,12 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { Correlation } from "@shared/schema";
 import { TrendingUp, Lightbulb, Microscope, ArrowRight, Beaker, Activity } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Slider } from "@/components/ui/slider";
 
 export default function Insights() {
+  const [minSampleSize, setMinSampleSize] = useState(2);
+
   const analyzeMutation = useMutation({
     mutationFn: async () => {
       const response = await apiRequest("POST", "/api/correlations/analyze");
@@ -48,9 +51,15 @@ export default function Insights() {
     );
   }
 
-  const highConfidenceCorrelations = correlations?.filter(c => c.confidence > 0.7) || [];
-  const moderateCorrelations = correlations?.filter(c => c.confidence >= 0.5 && c.confidence <= 0.7) || [];
-  const lowConfidenceCorrelations = correlations?.filter(c => c.confidence < 0.5) || [];
+  // Filter by minimum sample size first
+  const filteredCorrelations = correlations?.filter(c => (c.occurrences ?? 0) >= minSampleSize) || [];
+  
+  // Calculate max sample size for slider
+  const maxSampleSize = Math.max(...(correlations?.map(c => c.occurrences ?? 2) || [2]), 10);
+  
+  const highConfidenceCorrelations = filteredCorrelations.filter(c => c.confidence > 0.7);
+  const moderateCorrelations = filteredCorrelations.filter(c => c.confidence >= 0.5 && c.confidence <= 0.7);
+  const lowConfidenceCorrelations = filteredCorrelations.filter(c => c.confidence < 0.5);
 
   return (
     <div className="pb-24">
@@ -71,6 +80,35 @@ export default function Insights() {
       </header>
 
       <main className="px-6 py-6">
+        {/* Sample Size Filter */}
+        {correlations && correlations.length > 0 && (
+          <section className="mb-6">
+            <div className="bg-white rounded-2xl p-4 lab-shadow border border-gray-100">
+              <div className="flex items-center justify-between mb-3">
+                <label className="text-sm font-medium text-gray-700">
+                  Minimum Sample Size
+                </label>
+                <span className="text-sm font-mono font-bold text-lab-blue" data-testid="text-min-sample-size">
+                  n ≥ {minSampleSize}
+                </span>
+              </div>
+              <Slider
+                value={[minSampleSize]}
+                onValueChange={(value) => setMinSampleSize(value[0])}
+                min={2}
+                max={maxSampleSize}
+                step={1}
+                className="w-full"
+                data-testid="slider-sample-size"
+              />
+              <div className="flex justify-between mt-2">
+                <span className="text-xs text-gray-500">2</span>
+                <span className="text-xs text-gray-500">{maxSampleSize}</span>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* High Confidence Correlations */}
         {highConfidenceCorrelations.length > 0 && (
           <section className="mb-8">
