@@ -87,7 +87,7 @@ export default function Insights() {
                   n ≥ {minSampleSize}
                 </span>
               </div>
-              <div className="[&_.slider-thumb]:w-7 [&_.slider-thumb]:h-7 [&_.slider-thumb]:bg-white [&_.slider-thumb]:rounded-full [&_.slider-thumb]:flex [&_.slider-thumb]:items-center [&_.slider-thumb]:justify-center [&_.slider-thumb]:shadow-sm">
+              <div className="[&_.slider-thumb]:w-7 [&_.slider-thumb]:h-7 [&_.slider-thumb]:bg-white [&_.slider-thumb]:rounded-full [&_.slider-thumb]:flex [&_.slider-thumb]:items-center [&_.slider-thumb]:justify-center [&_.slider-thumb]:shadow-sm [&_.slider-thumb]:ring-0 [&_.slider-thumb]:ring-offset-0 [&_.slider-thumb:focus-visible]:ring-0 [&_.slider-thumb:focus-visible]:ring-offset-0">
                 <Slider
                   value={[minSampleSize]}
                   onValueChange={(value) => setMinSampleSize(value[0])}
