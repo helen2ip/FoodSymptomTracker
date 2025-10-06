@@ -63,7 +63,7 @@ export default function Insights() {
 
   return (
     <div className="pb-24">
-      <header className="science-gradient safe-area-top px-6 py-4 text-white relative overflow-hidden">
+      <header className="science-gradient safe-area-top px-6 pt-4 pb-3 text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-2 left-4 w-3 h-3 bg-white rounded-full" />
           <div className="absolute top-6 left-8 w-2 h-2 bg-white rounded-full" />
