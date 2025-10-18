@@ -11,6 +11,7 @@ import {
   insertUserSchema,
 } from "@shared/schema";
 import { z } from "zod";
+import { analyzeFoodImage } from "./gemini";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Session configuration - persistent login until explicit logout
@@ -193,6 +194,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     });
   });
+
+  // Food image analysis endpoint
+  app.post("/api/foods/analyze-image", requireAuth, async (req, res) => {
+    try {
+      const { imageData, mimeType } = req.body;
+      
+      if (!imageData || !mimeType) {
+        return res.status(400).json({ message: "Image data and MIME type required" });
+      }
+
+      // Remove data URL prefix if present (e.g., "data:image/jpeg;base64,")
+      const base64Data = imageData.includes(',') 
+        ? imageData.split(',')[1] 
+        : imageData;
+
+      const result = await analyzeFoodImage(base64Data, mimeType);
+      res.json(result);
+    } catch (error) {
+      console.error("Failed to analyze food image:", error);
+      res.status(500).json({ 
+        message: "Failed to analyze food image", 
+        error: (error as Error).message 
+      });
+    }
+  });
+
   // Food entries endpoints
   app.get("/api/foods", requireAuth, async (req, res) => {
     try {

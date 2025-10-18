@@ -4,6 +4,7 @@ import LabHeader from "@/components/lab-header";
 import FoodSearch from "@/components/food-search";
 import TodayLog from "@/components/today-log";
 import SymptomLogger from "@/components/symptom-logger";
+import PhotoFoodLogger from "@/components/photo-food-logger";
 
 type TimeOption = "now" | string; // "now" or datetime string
 
@@ -32,6 +33,11 @@ export default function Home() {
           selectedTimeOption={selectedTimeOption}
           setSelectedTimeOption={setSelectedTimeOption}
         />
+        
+        <div className="mb-6">
+          <PhotoFoodLogger selectedTimeOption={selectedTimeOption} />
+        </div>
+        
         <TodayLog />
       </main>
 
