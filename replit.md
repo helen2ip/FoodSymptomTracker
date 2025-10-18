@@ -12,10 +12,12 @@ The application follows a scientific approach to food sensitivity detection, enc
 - **Photo-based food logging**: Implemented AI-powered food recognition using Gemini Vision API
   - Users can take photos or upload images of their food
   - Gemini 2.5 Flash analyzes images and identifies all visible foods (names only, no portions)
+  - Allergy-aware prompt: Gemini uses generic food names (e.g., "pasta" instead of "fusilli", "tomatoes" instead of "marinara sauce") to focus on ingredients relevant for allergy tracking
   - Review screen allows editing: remove detected foods, add missing items manually
   - Integrated with existing timestamp selection for accurate logging
   - Comprehensive error handling with retry/manual-entry fallback options
   - Cost-effective solution: ~$0.0004 per image analysis
+  - Increased upload limit to 20MB to support typical phone photos
 
 ### August 30, 2025
 - **Enhanced symptom tracking**: Replaced generic common symptoms with personalized recent symptoms feature - shows user's 5 most recently logged symptoms as clickable quick-select options
