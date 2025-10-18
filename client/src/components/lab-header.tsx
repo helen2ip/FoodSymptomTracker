@@ -1,15 +1,9 @@
-import { FlaskConical, Flame, Trophy, LogOut, User } from "lucide-react";
-import { useStreak } from "@/hooks/use-streak";
+import { FlaskConical, Trophy, LogOut, User } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 
 export default function LabHeader() {
-  const { stats, isLoading } = useStreak();
   const { user, logout, isLoggingOut } = useAuth();
-
-  if (isLoading) {
-    return <div className="h-32 science-gradient animate-pulse" />;
-  }
 
   const formattedDate = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }).replace('.', '').toUpperCase();
   
@@ -32,17 +26,6 @@ export default function LabHeader() {
             <div>
               <h1 className="text-xl font-bold">Food Lab 🚀</h1>
               <p className="text-sm opacity-90">{formattedDate}</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-3">
-            <div className="text-right">
-              <div className="flex items-center space-x-1 mb-1">
-                <Flame className="text-lab-amber" size={16} />
-                <span className="font-mono text-sm" data-testid="text-streak-count">
-                  {stats?.currentStreak || 0}
-                </span>
-              </div>
-              <p className="text-xs opacity-80 font-mono">STREAK</p>
             </div>
           </div>
         </div>
@@ -99,17 +82,6 @@ export default function LabHeader() {
             </div>
           </div>
           
-          {/* Achievement notification */}
-          {stats?.achievements && stats.achievements.length > 0 && (
-            <div className="achievement-glow bg-lab-amber/20 px-3 py-1 rounded-full border border-lab-amber/30">
-              <div className="flex items-center space-x-1">
-                <span className="text-lab-amber text-sm">👇</span>
-                <span className="text-xs font-mono font-bold">
-                  KEEP LOGGING!
-                </span>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </header>
