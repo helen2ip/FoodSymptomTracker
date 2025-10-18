@@ -8,6 +8,15 @@ The application follows a scientific approach to food sensitivity detection, enc
 
 ## Recent Changes
 
+### October 18, 2025
+- **Photo-based food logging**: Implemented AI-powered food recognition using Gemini Vision API
+  - Users can take photos or upload images of their food
+  - Gemini 2.5 Flash analyzes images and identifies all visible foods (names only, no portions)
+  - Review screen allows editing: remove detected foods, add missing items manually
+  - Integrated with existing timestamp selection for accurate logging
+  - Comprehensive error handling with retry/manual-entry fallback options
+  - Cost-effective solution: ~$0.0004 per image analysis
+
 ### August 30, 2025
 - **Enhanced symptom tracking**: Replaced generic common symptoms with personalized recent symptoms feature - shows user's 5 most recently logged symptoms as clickable quick-select options
 - **Improved code organization**: Moved all symptom-related functionality from `food-database.ts` to dedicated `symptom-database.ts` file for better separation of concerns
@@ -64,6 +73,7 @@ Currently implements a simplified authentication model suitable for single-user 
 The REST API provides endpoints for:
 
 - **Food Management**: CRUD operations for food entries, frequent foods lookup, and date-based filtering
+- **AI Food Recognition**: Photo analysis endpoint using Gemini Vision API to identify foods from images
 - **Symptom Tracking**: Creating and retrieving symptom entries with severity tracking
 - **Analytics**: Correlation analysis and timeline data aggregation
 - **User Progress**: Statistics tracking and achievement system
@@ -75,6 +85,7 @@ The REST API provides endpoints for:
 - **drizzle-orm** and **drizzle-kit**: Type-safe ORM with migration support
 - **express**: Web application framework for the REST API
 - **zod**: Schema validation library ensuring data integrity
+- **@google/genai**: Google Gemini AI SDK for image analysis and food recognition
 
 ### Frontend Libraries
 - **@tanstack/react-query**: Server state management and caching solution
